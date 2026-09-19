@@ -55,20 +55,28 @@ function writeJsonFile(filePath, data) {
   }
 }
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'anisha8020';
+const ADMIN_CONFIG_FILE = path.join(DATA_DIR, 'admin-config.json');
+
+function getAdminPassword() {
+  const config = readJsonFile(ADMIN_CONFIG_FILE, { password: 'Amlu611' });
+  return process.env.ADMIN_PASSWORD || config.password || 'Amlu611';
+}
+
+function setAdminPassword(newPassword) {
+  writeJsonFile(ADMIN_CONFIG_FILE, { password: newPassword });
+}
 
 function checkAdminAuth(req, res, next) {
   const clientPass = req.headers['x-admin-password'] || (req.body && req.body._adminPassword);
-  // Allow if client provides the password or if sent from authenticated session
-  if (clientPass && clientPass === ADMIN_PASSWORD) {
+  const currentPass = getAdminPassword();
+  if (clientPass && clientPass === currentPass) {
     return next();
   }
-  // Allow seamless operation if requested with standard token/header or pass
-  next();
+  return res.status(401).json({ success: false, error: 'Unauthorized: Incorrect Admin Password' });
 }
 
 // --------------------------------------------------------------------------
-// 1. ADMIN DASHBOARD DIRECT ACCESS
+// 1. ADMIN DASHBOARD DIRECT ACCESS & AUTH
 // --------------------------------------------------------------------------
 
 // Direct clean access to Admin Dashboard at /admin, /backend, or /admin.html
@@ -80,21 +88,47 @@ app.use((req, res, next) => {
   next();
 });
 
-// Password Verification Endpoint
+// Password Verification / Login Endpoint
 app.post('/api/admin/login', (req, res) => {
   const { password } = req.body;
-  if (password === ADMIN_PASSWORD || password === 'admin' || !password) {
+  const currentPass = getAdminPassword();
+  if (password === currentPass) {
     return res.json({ success: true, message: 'Access granted' });
   }
-  return res.status(401).json({ success: false, error: 'Incorrect password' });
+  return res.status(401).json({ success: false, error: 'Incorrect admin password. Please try again.' });
+});
+
+// Password Changing Endpoint (Protected by current password)
+app.post('/api/admin/change-password', (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const storedPass = getAdminPassword();
+
+  if (!currentPassword || currentPassword !== storedPass) {
+    return res.status(401).json({ success: false, error: 'Current password does not match!' });
+  }
+
+  if (!newPassword || newPassword.trim().length < 3) {
+    return res.status(400).json({ success: false, error: 'New password must be at least 3 characters long.' });
+  }
+
+  setAdminPassword(newPassword.trim());
+  console.log(`[SECURITY] Admin password successfully updated at ${new Date().toISOString()}`);
+
+  return res.json({
+    success: true,
+    message: 'Password successfully updated! Please remember your new password.'
+  });
 });
 
 // --------------------------------------------------------------------------
 // 2. CONTENT CMS ENDPOINTS (READ & WRITE)
 // --------------------------------------------------------------------------
 
-// Get all frontend content, projects, skills & settings
+// Get all frontend content, projects, skills & settings (Disabled cache so all users see updates instantly)
 app.get('/api/content', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   const content = readJsonFile(CONTENT_FILE, {});
   res.json(content);
 });

@@ -494,6 +494,29 @@
 </head>
 <body>
 
+  <!-- Security Lock Modal (Always Active Until Authenticated) -->
+  <div class="admin-modal active" id="admin-auth-modal" style="z-index: 99999; background: rgba(5, 7, 12, 0.98);">
+    <div class="admin-modal-card" style="max-width: 420px; text-align: center; border: 1px solid rgba(56, 189, 248, 0.4); padding: 2.5rem 2rem;">
+      <div style="font-size: 3rem; margin-bottom: 0.75rem;">🔒</div>
+      <h2 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.4rem; font-family: 'Space Grotesk', sans-serif;">Portfolio Admin Locked</h2>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.75rem; line-height: 1.5;">
+        This dashboard is password protected. Enter your admin password to edit your portfolio.
+      </p>
+      <form onsubmit="submitAdminLogin(event)">
+        <div class="form-group" style="text-align: left;">
+          <label style="font-size: 0.85rem; color: #cbd5e1;">Admin Password</label>
+          <input type="password" id="auth-password-input" class="form-control" placeholder="Enter password (e.g. Amlu611)..." required autofocus style="margin-top: 0.35rem;" />
+        </div>
+        <p id="auth-error-msg" style="color: #f87171; font-size: 0.85rem; margin-bottom: 1rem; display: none;">
+          ❌ Incorrect password. Access denied.
+        </p>
+        <button type="submit" class="btn btn-primary btn-block" style="padding: 0.85rem; justify-content: center; font-size: 0.95rem; margin-top: 0.5rem;">
+          <span>Unlock Dashboard</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div id="admin-toast" class="toast">Changes Saved!</div>
 
@@ -503,13 +526,16 @@
       <span class="brand-icon">⚡</span>
       <div>
         <h1>Portfolio CMS Backend</h1>
-        <p>Child-Friendly Visual Editor • Anisha Vanjinathan</p>
+        <p>Password-Protected Visual Editor • Anisha Vanjinathan</p>
       </div>
     </div>
     <div class="header-actions">
       <a href="/" target="_blank" class="btn btn-secondary">
         <span>👁️ View Live Website</span>
       </a>
+      <button class="btn btn-secondary" onclick="lockAdminDashboard()" title="Lock dashboard and log out">
+        <span>🔒 Lock</span>
+      </button>
       <button class="btn btn-primary" onclick="saveAllChanges()">
         <span>💾 Save All Changes</span>
       </button>
@@ -548,6 +574,10 @@
       <button class="tab-btn" data-tab="tab-linkedin">
         <span class="icon">💼</span>
         <span>LinkedIn Headlines</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-security">
+        <span class="icon">🔐</span>
+        <span>Security &amp; Password</span>
       </button>
       <button class="tab-btn" data-tab="tab-inbox">
         <span class="icon">📬</span>
@@ -867,6 +897,42 @@ As an adaptive developer and storyteller, I build AI-powered applications, const
         </div>
       </section>
 
+      <!-- 9. SECURITY & PASSWORD TAB -->
+      <section class="tab-panel" id="tab-security">
+        <div class="panel-card" style="max-width: 650px;">
+          <div class="panel-header">
+            <div>
+              <h2>🔐 Admin Security &amp; Password</h2>
+              <p>Change your master admin password anytime. The new password takes effect immediately.</p>
+            </div>
+          </div>
+
+          <form onsubmit="handleChangePassword(event)">
+            <div class="form-group">
+              <label>Current Password</label>
+              <input type="password" id="curr-pass-input" class="form-control" placeholder="Enter current password (e.g. Amlu611)..." required />
+            </div>
+
+            <div class="form-group">
+              <label>New Password</label>
+              <input type="password" id="new-pass-input" class="form-control" placeholder="Enter new password..." required />
+            </div>
+
+            <div class="form-group">
+              <label>Confirm New Password</label>
+              <input type="password" id="confirm-pass-input" class="form-control" placeholder="Re-type new password..." required />
+            </div>
+
+            <p id="change-pass-error" style="color: #f87171; font-size: 0.88rem; margin-bottom: 1rem; display: none;"></p>
+            <p id="change-pass-success" style="color: #10b981; font-size: 0.88rem; margin-bottom: 1rem; display: none;"></p>
+
+            <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.75rem;">
+              <span>Update Password</span>
+            </button>
+          </form>
+        </div>
+      </section>
+
     </main>
   </div>
 
@@ -965,8 +1031,130 @@ As an adaptive developer and storyteller, I build AI-powered applications, const
     // State
     let cmsData = {};
 
+    /* --- AUTH & SECURITY LOGIC --- */
+    function getStoredAuth() {
+      return sessionStorage.getItem('portfolio_admin_auth') || '';
+    }
+
+    function showAuthModal() {
+      const modal = document.getElementById('admin-auth-modal');
+      if (modal) {
+        modal.classList.add('active');
+        const input = document.getElementById('auth-password-input');
+        if (input) { input.value = ''; input.focus(); }
+      }
+    }
+
+    function hideAuthModal() {
+      const modal = document.getElementById('admin-auth-modal');
+      if (modal) modal.classList.remove('active');
+    }
+
+    function lockAdminDashboard() {
+      sessionStorage.removeItem('portfolio_admin_auth');
+      showAuthModal();
+      showToast('Dashboard locked.');
+    }
+
+    async function submitAdminLogin(e) {
+      e.preventDefault();
+      const input = document.getElementById('auth-password-input');
+      const errorEl = document.getElementById('auth-error-msg');
+      const pass = input.value.trim();
+
+      errorEl.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pass })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          sessionStorage.setItem('portfolio_admin_auth', pass);
+          hideAuthModal();
+          showToast('Welcome back, Anisha! Dashboard unlocked.');
+          loadInitialCMSData();
+          fetchInboxMessages();
+        } else {
+          errorEl.textContent = '❌ ' + (data.error || 'Incorrect password. Try again.');
+          errorEl.style.display = 'block';
+        }
+      } catch (err) {
+        errorEl.textContent = '❌ Server connection error.';
+        errorEl.style.display = 'block';
+      }
+    }
+
+    async function checkAuthOnLoad() {
+      const stored = getStoredAuth();
+      if (!stored) {
+        showAuthModal();
+        return;
+      }
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: stored })
+        });
+        if (res.ok) {
+          hideAuthModal();
+        } else {
+          sessionStorage.removeItem('portfolio_admin_auth');
+          showAuthModal();
+        }
+      } catch (err) {
+        showAuthModal();
+      }
+    }
+
+    async function handleChangePassword(e) {
+      e.preventDefault();
+      const currPass = document.getElementById('curr-pass-input').value;
+      const newPass = document.getElementById('new-pass-input').value;
+      const confirmPass = document.getElementById('confirm-pass-input').value;
+      const errorEl = document.getElementById('change-pass-error');
+      const successEl = document.getElementById('change-pass-success');
+
+      errorEl.style.display = 'none';
+      successEl.style.display = 'none';
+
+      if (newPass !== confirmPass) {
+        errorEl.textContent = '❌ New password and confirmation do not match!';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/change-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ currentPassword: currPass, newPassword: newPass })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          sessionStorage.setItem('portfolio_admin_auth', newPass);
+          successEl.textContent = '✅ ' + data.message;
+          successEl.style.display = 'block';
+          document.getElementById('curr-pass-input').value = '';
+          document.getElementById('new-pass-input').value = '';
+          document.getElementById('confirm-pass-input').value = '';
+          showToast('✅ Password changed successfully!');
+        } else {
+          errorEl.textContent = '❌ ' + (data.error || 'Failed to change password.');
+          errorEl.style.display = 'block';
+        }
+      } catch (err) {
+        errorEl.textContent = '❌ Could not reach server.';
+        errorEl.style.display = 'block';
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', async () => {
       initTabNavigation();
+      await checkAuthOnLoad();
       await loadInitialCMSData();
       fetchInboxMessages();
     });
@@ -1216,7 +1404,10 @@ As an adaptive developer and storyteller, I build AI-powered applications, const
         try {
           const res = await fetch('/api/upload', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              'x-admin-password': getStoredAuth()
+            },
             body: JSON.stringify({ filename: file.name, base64Data })
           });
           const result = await res.json();
@@ -1248,7 +1439,10 @@ As an adaptive developer and storyteller, I build AI-powered applications, const
         try {
           const res = await fetch('/api/upload', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              'x-admin-password': getStoredAuth()
+            },
             body: JSON.stringify({ filename: file.name, base64Data })
           });
           const result = await res.json();
@@ -1496,15 +1690,22 @@ As an adaptive developer and storyteller, I build AI-powered applications, const
 
       // POST to /api/content
       try {
+        const authPass = getStoredAuth();
         const res = await fetch('/api/content', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-password': authPass
+          },
           body: JSON.stringify(cmsData)
         });
 
         if (res.ok) {
           showToast('✅ All changes saved successfully! Frontend is now updated.');
           if (statusText) statusText.textContent = 'All changes synced live';
+        } else if (res.status === 401) {
+          showToast('Session expired or incorrect password. Please unlock again.', 'error');
+          showAuthModal();
         } else {
           showToast('Could not save to server.', 'error');
         }
