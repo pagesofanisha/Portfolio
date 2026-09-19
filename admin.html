@@ -452,6 +452,29 @@
 </head>
 <body>
 
+  <!-- Security Lock Modal -->
+  <div class="admin-modal" id="admin-auth-modal" style="z-index: 99999; background: rgba(5, 5, 8, 0.97);">
+    <div class="admin-modal-card" style="max-width: 400px; text-align: center; border: 1px solid var(--primary); padding: 2.25rem 2rem;">
+      <div style="font-size: 3rem; margin-bottom: 0.75rem;">🔒</div>
+      <h2 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.35rem;">Protected Studio CMS</h2>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+        Enter your admin password to edit your website and view client inquiries.
+      </p>
+      <form onsubmit="submitAdminPassword(event)">
+        <div class="form-group" style="text-align: left;">
+          <label>Admin Password</label>
+          <input type="password" id="auth-password-input" class="form-control" placeholder="Enter password..." required autofocus />
+        </div>
+        <p id="auth-error-msg" style="color: #f87171; font-size: 0.85rem; margin-bottom: 1rem; display: none;">
+          ❌ Incorrect password. Try again.
+        </p>
+        <button type="submit" class="btn btn-primary btn-block" style="padding: 0.85rem; justify-content: center; font-size: 0.95rem;">
+          <span>Unlock Dashboard</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div id="admin-toast" class="toast">Changes Saved!</div>
 
@@ -461,13 +484,16 @@
       <span class="brand-icon">⚡</span>
       <div>
         <h1>Portfolio CMS Backend</h1>
-        <p>Edit anything in your frontend live without coding</p>
+        <p>Protected Admin Dashboard • Anisha Vanjinathan</p>
       </div>
     </div>
     <div class="header-actions">
-      <a href="http://localhost:5174/" target="_blank" class="btn btn-secondary">
+      <a href="/" target="_blank" class="btn btn-secondary">
         <span>👁️ View Live Website</span>
       </a>
+      <button class="btn btn-secondary" onclick="lockDashboard()" title="Lock dashboard and log out">
+        <span>🔒 Lock</span>
+      </button>
       <button class="btn btn-primary" onclick="saveAllChanges()">
         <span>💾 Save Changes</span>
       </button>
@@ -971,8 +997,9 @@
   </div>
 
   <script>
-    // State
+    // State & Security
     let currentData = {};
+    let adminPassword = sessionStorage.getItem('portfolio_admin_pass') || '';
 
     // Tab Navigation
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -985,12 +1012,80 @@
       });
     });
 
-    // Load initial data on load
+    // Check auth and load initial data on load
     window.addEventListener('DOMContentLoaded', () => {
-      loadContent();
-      loadInbox();
-      loadWaitlist();
+      checkAuthStatus();
     });
+
+    async function checkAuthStatus() {
+      const authModal = document.getElementById('admin-auth-modal');
+      if (!adminPassword) {
+        authModal.classList.add('active');
+        return;
+      }
+
+      // Verify stored password
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: adminPassword })
+        });
+        if (res.ok) {
+          authModal.classList.remove('active');
+          loadContent();
+          loadInbox();
+          loadWaitlist();
+        } else {
+          sessionStorage.removeItem('portfolio_admin_pass');
+          adminPassword = '';
+          authModal.classList.add('active');
+        }
+      } catch (err) {
+        // Fallback allow loading
+        loadContent();
+      }
+    }
+
+    async function submitAdminPassword(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('auth-password-input');
+      const errorMsg = document.getElementById('auth-error-msg');
+      const pass = input.value.trim();
+      if (!pass) return;
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pass })
+        });
+
+        if (res.ok) {
+          adminPassword = pass;
+          sessionStorage.setItem('portfolio_admin_pass', pass);
+          document.getElementById('admin-auth-modal').classList.remove('active');
+          errorMsg.style.display = 'none';
+          showToast('✓ Unlocked successfully!');
+          loadContent();
+          loadInbox();
+          loadWaitlist();
+        } else {
+          errorMsg.style.display = 'block';
+        }
+      } catch (err) {
+        errorMsg.textContent = 'Server connection error. Make sure server is running.';
+        errorMsg.style.display = 'block';
+      }
+    }
+
+    function lockDashboard() {
+      sessionStorage.removeItem('portfolio_admin_pass');
+      adminPassword = '';
+      document.getElementById('admin-auth-modal').classList.add('active');
+      document.getElementById('auth-password-input').value = '';
+      showToast('Dashboard locked.');
+    }
 
     async function loadContent() {
       try {
@@ -1125,7 +1220,10 @@
         try {
           const res = await fetch('/api/upload', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              'x-admin-password': adminPassword
+            },
             body: JSON.stringify({ filename: file.name, base64Data })
           });
           const data = await res.json();
@@ -1391,9 +1489,18 @@
       try {
         const res = await fetch('/api/content', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-password': adminPassword
+          },
           body: JSON.stringify(updated)
         });
+
+        if (res.status === 401) {
+          showToast('❌ Unauthorized: Invalid admin password.');
+          lockDashboard();
+          return;
+        }
 
         const data = await res.json();
         if (data.success) {
@@ -1402,7 +1509,7 @@
           showToast('✓ Saved! Changes are now live on your frontend website.');
         } else {
           statusText.textContent = 'Error saving changes.';
-          showToast('Failed to save changes.');
+          showToast('Failed to save changes: ' + (data.error || ''));
         }
       } catch (err) {
         console.error(err);
@@ -1462,7 +1569,10 @@
 
     async function deleteMessage(id) {
       if (!confirm('Delete this message?')) return;
-      await fetch(`/api/contact/messages/${id}`, { method: 'DELETE' });
+      await fetch(`/api/contact/messages/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-password': adminPassword }
+      });
       loadInbox();
       showToast('Message deleted.');
     }

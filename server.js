@@ -56,9 +56,28 @@ function writeJsonFile(filePath, data) {
   }
 }
 
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'anisha8020';
+
+function checkAdminAuth(req, res, next) {
+  const clientPass = req.headers['x-admin-password'] || (req.body && req.body._adminPassword);
+  if (clientPass !== ADMIN_PASSWORD) {
+    return res.status(401).json({ success: false, error: 'Unauthorized: Incorrect Admin Password' });
+  }
+  next();
+}
+
 // --------------------------------------------------------------------------
 // 1. CONTENT CMS ENDPOINTS (READ & WRITE FROM ADMIN DASHBOARD)
 // --------------------------------------------------------------------------
+
+// Password Verification Endpoint
+app.post('/api/admin/login', (req, res) => {
+  const { password } = req.body;
+  if (password === ADMIN_PASSWORD) {
+    return res.json({ success: true, message: 'Access granted' });
+  }
+  return res.status(401).json({ success: false, error: 'Incorrect password' });
+});
 
 // Get all frontend content, colors & settings
 app.get('/api/content', (req, res) => {
@@ -66,13 +85,16 @@ app.get('/api/content', (req, res) => {
   res.json(content);
 });
 
-// Save modified content & colors from Admin Dashboard
-app.post('/api/content', (req, res) => {
+// Save modified content & colors from Admin Dashboard (Password Protected)
+app.post('/api/content', checkAdminAuth, (req, res) => {
   try {
     const updatedContent = req.body;
     if (!updatedContent || typeof updatedContent !== 'object') {
       return res.status(400).json({ success: false, error: 'Invalid content data payload' });
     }
+
+    // Clean internal password field before saving
+    delete updatedContent._adminPassword;
 
     writeJsonFile(CONTENT_FILE, updatedContent);
     console.log(`[CMS UPDATE] Content & theme successfully updated at ${new Date().toISOString()}`);
@@ -88,8 +110,8 @@ app.post('/api/content', (req, res) => {
   }
 });
 
-// Photo / Image Upload (Base64 file uploader)
-app.post('/api/upload', (req, res) => {
+// Photo / Image Upload (Base64 file uploader, Password Protected)
+app.post('/api/upload', checkAdminAuth, (req, res) => {
   try {
     const { filename, base64Data } = req.body;
     if (!base64Data) {

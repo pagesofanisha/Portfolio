@@ -8,11 +8,12 @@ export const profileConfig = {
     name: "Anisha Vanjinathan",
     preferredName: "Anisha",
     role: "Full-Stack Developer & Aspiring EdTech Founder",
-    greeting: "Hey, I'm",
+    greeting: "Hey, I'm Anisha Vanjinathan",
     tagline: "B.Tech CSBS 2nd Year @ SRM IST Ramapuram • Freelance Engineer • Future Founder",
     heroQuote: "Great technology should feel effortless. Bridging computer science and business strategy to build high-impact digital products and the next generation of EdTech.",
-    email: "anisha.vanjinathan@example.com", // update with your real email
-    location: "Chennai, India",
+    email: "anisha8020@gmail.com",
+    location: "Chennai, Tamil Nadu, India",
+    heroImage: "/uploads/photo_1789806319224.jpg",
     education: {
       institution: "SRM Institute of Science and Technology, Ramapuram",
       degree: "B.Tech in Computer Science and Business Systems (CSBS)",
@@ -20,10 +21,10 @@ export const profileConfig = {
       focus: "Full-Stack Web Dev, UI/UX Engineering, Data Structures, Business Analytics"
     },
     socials: {
-      github: "https://github.com",
-      linkedin: "https://linkedin.com",
+      github: "https://github.com/pagesofanisha",
+      linkedin: "https://www.linkedin.com/in/anishaaaaaaaaa",
       twitter: "https://x.com",
-      instagram: "https://instagram.com"
+      instagram: "https://www.instagram.com/pages_of_anisha/?hl=en"
     }
   },
 
