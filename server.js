@@ -57,6 +57,7 @@ function writeJsonFile(filePath, data) {
 }
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'anisha8020';
+const SECRET_ADMIN_PATH = process.env.ADMIN_SECRET_PATH || 'studio-anisha-8020';
 
 function checkAdminAuth(req, res, next) {
   const clientPass = req.headers['x-admin-password'] || (req.body && req.body._adminPassword);
@@ -271,16 +272,41 @@ app.get('/api/waitlist/subscribers', (req, res) => {
 });
 
 // --------------------------------------------------------------------------
-// 3. ADMIN DASHBOARD & STATIC SERVING
+// 3. ADMIN DASHBOARD & SECURITY (STEALTH MODE)
 // --------------------------------------------------------------------------
 
-// Serve the Visual Admin CMS Dashboard directly at /admin
-app.get('/admin', (req, res) => {
-  const adminPath = path.join(__dirname, 'admin.html');
-  if (fs.existsSync(adminPath)) {
-    return res.sendFile('admin.html', { root: __dirname });
+// Block standard predictable admin URLs completely (Return Fake 404)
+app.use((req, res, next) => {
+  const p = req.path.toLowerCase();
+  if (
+    p === '/admin' || 
+    p.startsWith('/admin/') || 
+    p === '/admin.html' || 
+    p === '/dashboard' || 
+    p.startsWith('/dashboard/') || 
+    p === '/cms' || 
+    p.startsWith('/cms/') || 
+    p === '/login' || 
+    p === '/wp-admin' ||
+    p === '/public/admin.html'
+  ) {
+    return res.status(404).send(`Cannot GET ${req.path}`);
   }
-  return res.status(404).send('Admin dashboard file not found.');
+  next();
+});
+
+// Serve the Visual Admin CMS Dashboard ONLY on the unguessable secret URL
+app.use((req, res, next) => {
+  const p = req.path.toLowerCase();
+  const secret = `/${SECRET_ADMIN_PATH.toLowerCase()}`;
+  if (p === secret || p.startsWith(`${secret}/`)) {
+    const adminPath = path.join(__dirname, 'admin.html');
+    if (fs.existsSync(adminPath)) {
+      return res.sendFile('admin.html', { root: __dirname });
+    }
+    return res.status(404).send('Not found.');
+  }
+  next();
 });
 
 // Serve frontend static files
@@ -300,7 +326,7 @@ if (fs.existsSync(DIST_DIR)) {
 app.listen(PORT, () => {
   console.log(`\n======================================================`);
   console.log(`🚀 Portfolio Backend API running on: http://localhost:${PORT}`);
-  console.log(`🎛️  VISUAL ADMIN CMS DASHBOARD:     http://localhost:${PORT}/admin`);
+  console.log(`🔒 SECRET ADMIN CMS DASHBOARD:     http://localhost:${PORT}/${SECRET_ADMIN_PATH}`);
   console.log(`📡 Health Check:                    http://localhost:${PORT}/api/health`);
   console.log(`✉️  Contact Messages:                http://localhost:${PORT}/api/contact/messages`);
   console.log(`🎯 Waitlist Signups:                http://localhost:${PORT}/api/waitlist/subscribers`);

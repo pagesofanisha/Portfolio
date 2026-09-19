@@ -1012,6 +1012,8 @@
       });
     });
 
+    let failedAttempts = 0;
+
     // Check auth and load initial data on load
     window.addEventListener('DOMContentLoaded', () => {
       checkAuthStatus();
@@ -1019,6 +1021,15 @@
 
     async function checkAuthStatus() {
       const authModal = document.getElementById('admin-auth-modal');
+      
+      // Allow instant unlock via ?key=anisha8020
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlKey = urlParams.get('key');
+      if (urlKey) {
+        adminPassword = urlKey;
+        sessionStorage.setItem('portfolio_admin_pass', urlKey);
+      }
+
       if (!adminPassword) {
         authModal.classList.add('active');
         return;
@@ -1042,7 +1053,6 @@
           authModal.classList.add('active');
         }
       } catch (err) {
-        // Fallback allow loading
         loadContent();
       }
     }
@@ -1063,6 +1073,7 @@
 
         if (res.ok) {
           adminPassword = pass;
+          failedAttempts = 0;
           sessionStorage.setItem('portfolio_admin_pass', pass);
           document.getElementById('admin-auth-modal').classList.remove('active');
           errorMsg.style.display = 'none';
@@ -1071,6 +1082,16 @@
           loadInbox();
           loadWaitlist();
         } else {
+          failedAttempts++;
+          if (failedAttempts >= 3) {
+            errorMsg.textContent = 'Too many failed attempts. Redirecting...';
+            errorMsg.style.display = 'block';
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 1000);
+            return;
+          }
+          errorMsg.textContent = `Incorrect password. (${3 - failedAttempts} attempts remaining)`;
           errorMsg.style.display = 'block';
         }
       } catch (err) {
