@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" width="100%" height="100%">
+  <defs>
+    <linearGradient id="desBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#14121a" />
+      <stop offset="100%" stop-color="#0b0910" />
+    </linearGradient>
+  </defs>
+  <rect width="700" height="440" rx="16" fill="url(#desBg)" stroke="#312842" stroke-width="1.5" />
+  <rect x="0" y="0" width="700" height="42" rx="16" fill="#1b1626" />
+  <circle cx="28" cy="21" r="5" fill="#ff5f56" />
+  <circle cx="44" cy="21" r="5" fill="#ffbd2e" />
+  <circle cx="60" cy="21" r="5" fill="#27c93f" />
+  <text x="350" y="26" fill="#9d8fb3" font-size="11" font-family="sans-serif" text-anchor="middle">Figma Design System • CodeCraft 2.0</text>
+
+  <!-- Canvas Design Area -->
+  <g transform="translate(40, 65)">
+    <!-- Color Palette Tokens -->
+    <rect x="0" y="0" width="620" height="100" rx="10" fill="#1f182c" stroke="#3d3055" stroke-width="1" />
+    <text x="20" y="28" fill="#d1c4e9" font-size="12" font-family="sans-serif" font-weight="bold">Design Tokens &amp; Warm Sunset Accents</text>
+    <circle cx="40" cy="65" r="20" fill="#ff5722" />
+    <circle cx="95" cy="65" r="20" fill="#ff9800" />
+    <circle cx="150" cy="65" r="20" fill="#ffc107" />
+    <circle cx="205" cy="65" r="20" fill="#8e24aa" />
+    <circle cx="260" cy="65" r="20" fill="#1e1e2d" stroke="#ffffff" stroke-width="1" />
+    <circle cx="315" cy="65" r="20" fill="#ffffff" />
+    <text x="370" y="70" fill="#a79db7" font-size="11" font-family="monospace">Primary: #FF5722 | Surface: #1E1E2D</text>
+
+    <!-- Component Previews -->
+    <g transform="translate(0, 120)">
+      <!-- Button System -->
+      <rect x="0" y="0" width="295" height="210" rx="10" fill="#1c1626" stroke="#332746" stroke-width="1" />
+      <text x="20" y="30" fill="#ffffff" font-size="13" font-family="sans-serif" font-weight="bold">Interactive Button Variants</text>
+      <rect x="20" y="50" width="130" height="36" rx="18" fill="#ff5722" />
+      <text x="85" y="72" fill="#ffffff" font-size="11" font-family="sans-serif" font-weight="bold" text-anchor="middle">Primary Solid →</text>
+      <rect x="160" y="50" width="115" height="36" rx="18" fill="none" stroke="#ff5722" stroke-width="1.5" />
+      <text x="217" y="72" fill="#ff5722" font-size="11" font-family="sans-serif" font-weight="bold" text-anchor="middle">Outlined Pill</text>
+      <rect x="20" y="100" width="255" height="36" rx="18" fill="#292038" />
+      <text x="147" y="122" fill="#d1c4e9" font-size="11" font-family="sans-serif" text-anchor="middle">Secondary Ghost Action</text>
+      <rect x="20" y="150" width="255" height="40" rx="8" fill="#0f0c16" stroke="#ff5722" stroke-width="1" stroke-dasharray="4" />
+      <text x="147" y="175" fill="#ff9800" font-size="11" font-family="sans-serif" text-anchor="middle">⚡ Focus State / Active Hover</text>
+
+      <!-- Input and Badge Tokens -->
+      <rect x="325" y="0" width="295" height="210" rx="10" fill="#1c1626" stroke="#332746" stroke-width="1" />
+      <text x="345" y="30" fill="#ffffff" font-size="13" font-family="sans-serif" font-weight="bold">Form Inputs &amp; Badges</text>
+      <rect x="345" y="50" width="255" height="38" rx="8" fill="#0e0a16" stroke="#3d3055" stroke-width="1" />
+      <text x="360" y="74" fill="#75698b" font-size="11" font-family="sans-serif">Enter student email...</text>
+      <!-- Badges -->
+      <rect x="345" y="105" width="80" height="26" rx="13" fill="#ff5722" fill-opacity="0.2" stroke="#ff5722" stroke-width="1" />
+      <text x="385" y="122" fill="#ff7a00" font-size="10" font-family="sans-serif" text-anchor="middle">Founder</text>
+      <rect x="435" y="105" width="80" height="26" rx="13" fill="#00bcd4" fill-opacity="0.2" stroke="#00bcd4" stroke-width="1" />
+      <text x="475" y="122" fill="#26c6da" font-size="10" font-family="sans-serif" text-anchor="middle">Student</text>
+      <rect x="525" y="105" width="75" height="26" rx="13" fill="#4caf50" fill-opacity="0.2" stroke="#4caf50" stroke-width="1" />
+      <text x="562" y="122" fill="#81c784" font-size="10" font-family="sans-serif" text-anchor="middle">Live</text>
+      <!-- Stats Card Token -->
+      <rect x="345" y="145" width="255" height="45" rx="8" fill="#221b30" />
+      <text x="360" y="172" fill="#ffffff" font-size="12" font-family="sans-serif" font-weight="bold">42 Tokens Auto-Exported</text>
+      <text x="560" y="172" fill="#ff5722" font-size="12" font-family="sans-serif">CSS / TS</text>
+    </g>
+  </g>
+</svg>
+

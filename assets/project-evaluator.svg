@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" width="100%" height="100%">
+  <defs>
+    <linearGradient id="codeBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#12161f" />
+      <stop offset="100%" stop-color="#080b10" />
+    </linearGradient>
+  </defs>
+  <rect width="700" height="440" rx="16" fill="url(#codeBg)" stroke="#1e2638" stroke-width="1.5" />
+  <rect x="0" y="0" width="700" height="42" rx="16" fill="#171d2b" />
+  <circle cx="28" cy="21" r="5" fill="#ff5f56" />
+  <circle cx="44" cy="21" r="5" fill="#ffbd2e" />
+  <circle cx="60" cy="21" r="5" fill="#27c93f" />
+  <text x="350" y="26" fill="#697a9b" font-size="11" font-family="sans-serif" text-anchor="middle">CSBS-AutoGrader-v2.py — Python 3.12</text>
+
+  <!-- Left: Code Editor Window -->
+  <g transform="translate(25, 60)">
+    <rect x="0" y="0" width="370" height="355" rx="8" fill="#0d1117" stroke="#21262d" stroke-width="1" />
+    <!-- Line numbers and code -->
+    <text x="15" y="30" fill="#484f58" font-family="monospace" font-size="12">1</text>
+    <text x="40" y="30" fill="#ff7b72" font-family="monospace" font-size="12">from</text>
+    <text x="75" y="30" fill="#79c0ff" font-family="monospace" font-size="12">fastapi</text>
+    <text x="135" y="30" fill="#ff7b72" font-family="monospace" font-size="12">import</text>
+    <text x="190" y="30" fill="#c9d1d9" font-family="monospace" font-size="12">FastAPI, Evaluator</text>
+
+    <text x="15" y="55" fill="#484f58" font-family="monospace" font-size="12">2</text>
+    <text x="40" y="55" fill="#ff7b72" font-family="monospace" font-size="12">class</text>
+    <text x="85" y="55" fill="#ffa657" font-family="monospace" font-size="12">CSBSSubmissionReview</text>
+    <text x="235" y="55" fill="#c9d1d9" font-family="monospace" font-size="12">:</text>
+
+    <text x="15" y="80" fill="#484f58" font-family="monospace" font-size="12">3</text>
+    <text x="55" y="80" fill="#d2a8ff" font-family="monospace" font-size="12">def</text>
+    <text x="85" y="80" fill="#79c0ff" font-family="monospace" font-size="12">evaluate_code</text>
+    <text x="180" y="80" fill="#c9d1d9" font-family="monospace" font-size="12">(self, file):</text>
+
+    <text x="15" y="105" fill="#484f58" font-family="monospace" font-size="12">4</text>
+    <text x="70" y="105" fill="#8b949e" font-family="monospace" font-size="12"># 100% automated test coverage</text>
+
+    <text x="15" y="130" fill="#484f58" font-family="monospace" font-size="12">5</text>
+    <text x="70" y="130" fill="#c9d1d9" font-family="monospace" font-size="12">score = analyze_ast(file.tree)</text>
+
+    <text x="15" y="155" fill="#484f58" font-family="monospace" font-size="12">6</text>
+    <text x="70" y="155" fill="#ff7b72" font-family="monospace" font-size="12">if</text>
+    <text x="90" y="155" fill="#c9d1d9" font-family="monospace" font-size="12">score.business_logic ==</text>
+    <text x="250" y="155" fill="#79c0ff" font-family="monospace" font-size="12">True</text>
+    <text x="280" y="155" fill="#c9d1d9" font-family="monospace" font-size="12">:</text>
+
+    <text x="15" y="180" fill="#484f58" font-family="monospace" font-size="12">7</text>
+    <text x="85" y="180" fill="#ff7b72" font-family="monospace" font-size="12">return</text>
+    <text x="135" y="180" fill="#a5d6ff" font-family="monospace" font-size="12">{"status": "PASS", "grade": "O"}</text>
+  </g>
+
+  <!-- Right: Test Runner Output Console -->
+  <g transform="translate(415, 60)">
+    <rect x="0" y="0" width="260" height="355" rx="8" fill="#0b0e14" stroke="#222c3e" stroke-width="1" />
+    <rect x="0" y="0" width="260" height="34" rx="8" fill="#131924" />
+    <text x="15" y="22" fill="#56d364" font-family="sans-serif" font-size="12" font-weight="bold">● Test Runner: Passed</text>
+
+    <g transform="translate(15, 55)">
+      <!-- Check 1 -->
+      <circle cx="8" cy="8" r="8" fill="#238636" />
+      <text x="5" y="12" fill="#ffffff" font-size="10" font-family="sans-serif" font-weight="bold">✓</text>
+      <text x="24" y="12" fill="#e6edf3" font-size="11" font-family="sans-serif">Memory Complexity: O(1)</text>
+
+      <!-- Check 2 -->
+      <g transform="translate(0, 35)">
+        <circle cx="8" cy="8" r="8" fill="#238636" />
+        <text x="5" y="12" fill="#ffffff" font-size="10" font-family="sans-serif" font-weight="bold">✓</text>
+        <text x="24" y="12" fill="#e6edf3" font-size="11" font-family="sans-serif">Time Complexity: O(N log N)</text>
+      </g>
+
+      <!-- Check 3 -->
+      <g transform="translate(0, 70)">
+        <circle cx="8" cy="8" r="8" fill="#238636" />
+        <text x="5" y="12" fill="#ffffff" font-size="10" font-family="sans-serif" font-weight="bold">✓</text>
+        <text x="24" y="12" fill="#e6edf3" font-size="11" font-family="sans-serif">Edge Cases Handled (24/24)</text>
+      </g>
+
+      <!-- Check 4 -->
+      <g transform="translate(0, 105)">
+        <circle cx="8" cy="8" r="8" fill="#238636" />
+        <text x="5" y="12" fill="#ffffff" font-size="10" font-family="sans-serif" font-weight="bold">✓</text>
+        <text x="24" y="12" fill="#e6edf3" font-size="11" font-family="sans-serif">Business Rule Compliance</text>
+      </g>
+    </g>
+
+    <!-- Score pill -->
+    <rect x="20" y="240" width="220" height="75" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1" />
+    <text x="35" y="270" fill="#7ee787" font-size="24" font-family="sans-serif" font-weight="bold">100 / 100</text>
+    <text x="35" y="295" fill="#8b949e" font-size="11" font-family="sans-serif">Assigned: SRM IST CSBS Portal</text>
+  </g>
+</svg>
+

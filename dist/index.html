@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anisha Vanjinathan | Creative Developer, Freelancer & EdTech Founder</title>
+  <meta name="description" content="Portfolio of Anisha Vanjinathan - 2nd Year B.Tech CSBS student at SRM IST Ramapuram, Freelance Web Engineer, and Future EdTech Startup Founder." />
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+  <script type="module" crossorigin src="/assets/index-DMnV9l2Q.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DIkkefjr.css">
+</head>
+<body>
+
+  <!-- Ambient Glow Effects in Background -->
+  <div class="ambient-glow glow-top" aria-hidden="true"></div>
+  <div class="ambient-glow glow-middle" aria-hidden="true"></div>
+  <div class="ambient-glow glow-bottom" aria-hidden="true"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Navigation Bar -->
+  <header class="site-header" id="site-header">
+    <div class="nav-container">
+      <a href="#hero" class="brand-logo" aria-label="Anisha Vanjinathan Home">
+        <span class="logo-accent">Anisha</span><span class="logo-dot">.</span><span class="logo-sub">v</span>
+        <span class="college-badge">SRM IST</span>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="desktop-nav" aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li><a href="#hero" class="nav-link active">Home</a></li>
+          <li><a href="#about" class="nav-link">Journey</a></li>
+          <li><a href="#projects" class="nav-link">Projects</a></li>
+          <li><a href="#services" class="nav-link">Services</a></li>
+          <li><a href="#startup" class="nav-link">Startup Lab</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Right CTA -->
+      <div class="nav-actions">
+        <a href="http://localhost:5000/admin" target="_blank" class="btn btn-secondary nav-admin-btn" style="padding: 0.5rem 0.85rem; font-size: 0.8rem;" title="Open Visual CMS Backend">
+          <span>⚙️ Admin</span>
+        </a>
+        <a href="#contact" class="btn btn-primary nav-cta">
+          <span>Get in touch</span>
+          <svg class="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+
+        <!-- Mobile Menu Hamburger Button -->
+        <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="mobile-drawer">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+    <div class="mobile-drawer-content">
+      <div class="mobile-drawer-header">
+        <span class="mobile-logo">Anisha<span>.v</span></span>
+        <span class="mobile-tag">B.Tech CSBS @ SRM IST</span>
+      </div>
+      <ul class="mobile-nav-links">
+        <li><a href="#hero" class="mobile-link">Home</a></li>
+        <li><a href="#about" class="mobile-link">About &amp; Journey</a></li>
+        <li><a href="#projects" class="mobile-link">Featured Projects</a></li>
+        <li><a href="#services" class="mobile-link">Freelance Services</a></li>
+        <li><a href="#startup" class="mobile-link">EdTech Startup Lab</a></li>
+        <li><a href="#contact" class="mobile-link">Get in Touch</a></li>
+        <li><a href="http://localhost:5000/admin" target="_blank" class="mobile-link" style="color: var(--primary-orange);">⚙️ Backend Admin CMS</a></li>
+      </ul>
+      <div class="mobile-drawer-footer">
+        <a href="#contact" class="btn btn-primary mobile-cta-btn">
+          <span>Let's Build Together</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+        <div class="mobile-contact-preview">
+          <p class="mobile-email">anisha.vanjinathan@example.com</p>
+          <span class="mobile-location">📍 Chennai, India</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO SECTION (Framer Folioblox Style) -->
+    <section class="hero-section" id="hero">
+      <div class="container hero-container">
+        
+        <!-- Hero Header Row -->
+        <div class="hero-header-row">
+          <div class="hero-title-col">
+            <div class="hero-badge">
+              <span class="badge-pulse"></span>
+              <span class="badge-text" id="hero-badge-text">Hey, I'm Anisha Vanjinathan</span>
+            </div>
+            <h1 class="hero-headline" id="hero-headline">
+              Creative <span class="gradient-text">Developer</span> &amp;<br />
+              Future <span class="gradient-text-amber">Founder</span>
+            </h1>
+          </div>
+
+          <div class="hero-quote-col">
+            <p class="hero-quote" id="hero-quote">
+              "Great technology should feel effortless. Bridging computer science and business strategy to build high-impact digital products, client solutions, and the future of EdTech."
+            </p>
+            <div class="hero-cta-group">
+              <a href="#projects" class="btn btn-primary">
+                <span>Explore Work</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+              </a>
+              <a href="#about" class="btn btn-secondary">
+                <span>My Journey</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Visual Showcase Card (Warm Sunset Aesthetic from Image) -->
+        <div class="hero-visual-card">
+          <div class="hero-visual-inner">
+            <img 
+              id="hero-portrait-img"
+              src="/assets/hero-portrait-Ble5QtjR.svg" 
+              alt="Anisha Vanjinathan - Creative Developer & Future Founder" 
+              class="hero-portrait-img"
+              width="800" 
+              height="900" 
+            />
+            <div class="hero-portrait-overlay">
+              <div class="hero-portrait-tag">
+                <span class="dot-live"></span>
+                <span>Available for Freelance &amp; Stealth EdTech</span>
+              </div>
+              <div class="hero-portrait-caption">
+                <h3 id="hero-caption-name">Anisha Vanjinathan</h3>
+                <p id="hero-caption-sub">2nd Year B.Tech CSBS • SRM IST Ramapuram</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4-Pillar Indicator Strip (Matching the 01 02 03 04 from user reference image) -->
+        <div class="hero-pillars-grid" id="hero-pillars-grid">
+          <div class="pillar-card">
+            <span class="pillar-num">01</span>
+            <div class="pillar-info">
+              <h4 class="pillar-title">CSBS Engineering</h4>
+              <p class="pillar-sub">SRM IST Ramapuram</p>
+            </div>
+          </div>
+          <div class="pillar-card">
+            <span class="pillar-num">02</span>
+            <div class="pillar-info">
+              <h4 class="pillar-title">Freelance Solutions</h4>
+              <p class="pillar-sub">Web Apps &amp; Client MVPs</p>
+            </div>
+          </div>
+          <div class="pillar-card">
+            <span class="pillar-num">03</span>
+            <div class="pillar-info">
+              <h4 class="pillar-title">UI/UX &amp; Design</h4>
+              <p class="pillar-sub">Modern Framer Aesthetic</p>
+            </div>
+          </div>
+          <div class="pillar-card">
+            <span class="pillar-num">04</span>
+            <div class="pillar-info">
+              <h4 class="pillar-title">EdTech Startup Lab</h4>
+              <p class="pillar-sub">Incubating Next-Gen Tools</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tech Stack Ticker Strip -->
+        <div class="tech-ticker-container">
+          <p class="ticker-label">Technologies &amp; Tools Mastered</p>
+          <div class="ticker-slider">
+            <div class="ticker-track">
+              <span class="ticker-item"><span class="ticker-icon">⚛️</span> React.js</span>
+              <span class="ticker-item"><span class="ticker-icon">▲</span> Next.js</span>
+              <span class="ticker-item"><span class="ticker-icon">🔷</span> TypeScript</span>
+              <span class="ticker-item"><span class="ticker-icon">🟢</span> Node.js</span>
+              <span class="ticker-item"><span class="ticker-icon">🐍</span> Python</span>
+              <span class="ticker-item"><span class="ticker-icon">🎨</span> Tailwind CSS</span>
+              <span class="ticker-item"><span class="ticker-icon">❖</span> Figma</span>
+              <span class="ticker-item"><span class="ticker-icon">🐘</span> PostgreSQL</span>
+              <span class="ticker-item"><span class="ticker-icon">🚀</span> Fast MVPs</span>
+              <span class="ticker-item"><span class="ticker-icon">🏛️</span> SRM IST CSBS</span>
+              <!-- Repeated for seamless loop -->
+              <span class="ticker-item"><span class="ticker-icon">⚛️</span> React.js</span>
+              <span class="ticker-item"><span class="ticker-icon">▲</span> Next.js</span>
+              <span class="ticker-item"><span class="ticker-icon">🔷</span> TypeScript</span>
+              <span class="ticker-item"><span class="ticker-icon">🟢</span> Node.js</span>
+              <span class="ticker-item"><span class="ticker-icon">🐍</span> Python</span>
+              <span class="ticker-item"><span class="ticker-icon">🎨</span> Tailwind CSS</span>
+              <span class="ticker-item"><span class="ticker-icon">❖</span> Figma</span>
+              <span class="ticker-item"><span class="ticker-icon">🐘</span> PostgreSQL</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ABOUT / JOURNEY SECTION ("Behind the Designs") -->
+    <section class="about-section" id="about">
+      <div class="container">
+        
+        <div class="section-header">
+          <span class="section-eyebrow">Behind the Journey</span>
+          <h2 class="section-title">Shaping Experiences That <span class="gradient-text">Make an Impact</span></h2>
+          <p class="section-subtitle">
+            A blend of academic rigor, real-world freelance execution, and ambitious startup discovery.
+          </p>
+        </div>
+
+        <!-- 3 Persona Highlight Cards -->
+        <div class="persona-grid" id="persona-grid">
+          <!-- Persona 1: College Student -->
+          <div class="persona-card glass-card">
+            <div class="persona-card-header">
+              <span class="persona-icon-box">🎓</span>
+              <span class="persona-tag">SRM IST Ramapuram</span>
+            </div>
+            <h3 class="persona-title">B.Tech CSBS Student</h3>
+            <p class="persona-desc">
+              Currently in my <strong>2nd Year</strong> studying Computer Science and Business Systems. I don't just write code—I analyze business architecture, algorithmic efficiency, and product workflows. Active in hackathons and college tech clubs.
+            </p>
+            <ul class="persona-points">
+              <li><span class="check-bullet">✓</span> Data Structures, OOPs &amp; Systems</li>
+              <li><span class="check-bullet">✓</span> Business Analysis &amp; Product Strategy</li>
+              <li><span class="check-bullet">✓</span> Campus Hackathons &amp; Team Building</li>
+            </ul>
+          </div>
+
+          <!-- Persona 2: Freelancer -->
+          <div class="persona-card glass-card highlighted-persona">
+            <div class="persona-card-header">
+              <span class="persona-icon-box">💼</span>
+              <span class="persona-tag">Freelance Engineer</span>
+            </div>
+            <h3 class="persona-title">Full-Stack &amp; MVP Builder</h3>
+            <p class="persona-desc">
+              Partnering with startups, creators, and brands to deliver production-ready web apps and fast prototypes. I focus on lightning-fast delivery, bulletproof responsive design on laptops and phones, and high conversion.
+            </p>
+            <ul class="persona-points">
+              <li><span class="check-bullet">✓</span> 15+ Projects &amp; Prototypes Delivered</li>
+              <li><span class="check-bullet">✓</span> 100% On-Time Client Delivery</li>
+              <li><span class="check-bullet">✓</span> High-Performance Responsive Web Apps</li>
+            </ul>
+          </div>
+
+          <!-- Persona 3: Future Founder -->
+          <div class="persona-card glass-card">
+            <div class="persona-card-header">
+              <span class="persona-icon-box">🚀</span>
+              <span class="persona-tag">Future Founder</span>
+            </div>
+            <h3 class="persona-title">EdTech Visionary</h3>
+            <p class="persona-desc">
+              Building the future of learning. Incubating an AI-powered peer learning ecosystem to bridge the massive gap between traditional college lectures and the practical skills demanded by top tech companies.
+            </p>
+            <ul class="persona-points">
+              <li><span class="check-bullet">✓</span> SkillPulse AI Platform in Incubation</li>
+              <li><span class="check-bullet">✓</span> Student-Centric Interactive Roadmaps</li>
+              <li><span class="check-bullet">✓</span> Real-World Sprints &amp; Peer Accountability</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Metrics Counters Strip -->
+        <div class="metrics-row" id="metrics-row">
+          <div class="metric-item">
+            <span class="metric-number">2nd</span>
+            <span class="metric-label">Year B.Tech CSBS</span>
+          </div>
+          <div class="metric-divider"></div>
+          <div class="metric-item">
+            <span class="metric-number">15+</span>
+            <span class="metric-label">Delivered Projects</span>
+          </div>
+          <div class="metric-divider"></div>
+          <div class="metric-item">
+            <span class="metric-number">100%</span>
+            <span class="metric-label">Client Satisfaction</span>
+          </div>
+          <div class="metric-divider"></div>
+          <div class="metric-item">
+            <span class="metric-number">1</span>
+            <span class="metric-label">EdTech Startup Incubating</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PROJECTS SECTION -->
+    <section class="projects-section" id="projects">
+      <div class="container">
+        
+        <div class="section-header-flex">
+          <div>
+            <span class="section-eyebrow">Portfolio &amp; Ventures</span>
+            <h2 class="section-title">Selected <span class="gradient-text">Projects</span></h2>
+            <p class="section-subtitle">Real-world freelance client work, college hackathons, and startup prototypes.</p>
+          </div>
+          
+          <!-- Category Filter Tabs -->
+          <div class="filter-tabs" role="tablist" aria-label="Project Categories">
+            <button class="filter-tab active" data-filter="all" role="tab" aria-selected="true">All Works</button>
+            <button class="filter-tab" data-filter="startup" role="tab" aria-selected="false">EdTech &amp; Startup</button>
+            <button class="filter-tab" data-filter="freelance" role="tab" aria-selected="false">Freelance</button>
+            <button class="filter-tab" data-filter="college" role="tab" aria-selected="false">College &amp; SRM</button>
+          </div>
+        </div>
+
+        <!-- Dynamic Projects Grid -->
+        <div class="projects-grid" id="projects-grid">
+          <!-- Populated dynamically by main.js with fallback content -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FREELANCE SERVICES SECTION -->
+    <section class="services-section" id="services">
+      <div class="container">
+        
+        <div class="section-header">
+          <span class="section-eyebrow">Freelance Capabilities</span>
+          <h2 class="section-title">How We Can <span class="gradient-text">Work Together</span></h2>
+          <p class="section-subtitle">
+            Reliable, high-speed engineering tailored for founders, businesses, and creators.
+          </p>
+        </div>
+
+        <div class="services-grid" id="services-grid">
+          <!-- Dynamic rendering via main.js from profile-config.js -->
+        </div>
+
+        <!-- Freelance Guarantee Banner -->
+        <div class="freelance-banner glass-card">
+          <div class="freelance-banner-text">
+            <h3>Need an MVP or Website Built Fast?</h3>
+            <p>From initial design mockups to production deployment, let's ship your project without unnecessary delays.</p>
+          </div>
+          <a href="#contact" class="btn btn-primary">
+            <span>Discuss Your Project</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- STARTUP INCUBATOR LAB SECTION -->
+    <section class="startup-section" id="startup">
+      <div class="container">
+        
+        <div class="startup-card glass-card">
+          <div class="startup-badge-row">
+            <span class="startup-badge" id="startup-badge">⚡ Stealth Venture in Incubation</span>
+            <span class="startup-origin" id="startup-origin">Born @ SRM IST Ramapuram</span>
+          </div>
+
+          <h2 class="startup-headline" id="startup-headline">
+            Reimagining How Engineering Students <span class="gradient-text">Learn, Build &amp; Launch</span>
+          </h2>
+
+          <p class="startup-desc" id="startup-desc">
+            Most students graduate with strong theory but lack the hands-on project portfolio to thrive in modern tech or start their own ventures. <strong>SkillPulse AI</strong> combines personalized syllabus mapping, interactive daily coding sprints, and peer accountability rooms.
+          </p>
+
+          <div class="startup-features-grid">
+            <div class="startup-feat-item">
+              <span class="startup-feat-icon">🎯</span>
+              <h4>Syllabus to Industry Mapping</h4>
+              <p>Translates college subjects (DBMS, OS, DSA) directly into production-grade projects.</p>
+            </div>
+            <div class="startup-feat-item">
+              <span class="startup-feat-icon">🤝</span>
+              <h4>Peer Accountability Pods</h4>
+              <p>Study in curated squads of 4-6 students with daily standups and collaborative code review.</p>
+            </div>
+            <div class="startup-feat-item">
+              <span class="startup-feat-icon">🤖</span>
+              <h4>AI Pair-Mentor</h4>
+              <p>Instant code explanations and architectural feedback tuned to your learning speed.</p>
+            </div>
+          </div>
+
+          <!-- Early Access Waitlist Form -->
+          <div class="startup-waitlist-box">
+            <div class="waitlist-header">
+              <h4>Get Early Access When We Launch Beta</h4>
+              <p>Join fellow college students, educators, and mentors on our private waitlist.</p>
+            </div>
+            <form class="waitlist-form" id="waitlist-form">
+              <input type="email" id="waitlist-email" placeholder="Enter your student or personal email..." required />
+              <button type="submit" class="btn btn-primary">
+                <span>Join Waitlist</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section class="contact-section" id="contact">
+      <div class="container">
+        
+        <div class="contact-grid">
+          
+          <!-- Left Info -->
+          <div class="contact-info">
+            <span class="section-eyebrow">Let's Connect</span>
+            <h2 class="section-title">Have a Project or <span class="gradient-text">Startup Idea?</span></h2>
+            <p class="contact-desc">
+              Whether you need a dedicated freelance engineer, want to discuss EdTech ideas, or just want to say hi, my inbox is always open.
+            </p>
+
+            <div class="contact-direct-card glass-card">
+              <div class="contact-email-row">
+                <div>
+                  <span class="direct-label">Direct Email</span>
+                  <p class="direct-value" id="contact-email-display">anisha.vanjinathan@example.com</p>
+                </div>
+                <button class="btn btn-copy" id="copy-email-btn" title="Copy email address">
+                  <svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  <span id="copy-text">Copy</span>
+                </button>
+              </div>
+              <div class="direct-meta">
+                <span>📍 Chennai, Tamil Nadu, India</span>
+                <span>⚡ SRM IST Ramapuram, B.Tech CSBS</span>
+              </div>
+            </div>
+
+            <!-- Social Links -->
+            <div class="social-links-row">
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-pill" aria-label="LinkedIn Profile">
+                <span>LinkedIn</span>
+                <span class="social-arrow">↗</span>
+              </a>
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="social-pill" aria-label="GitHub Profile">
+                <span>GitHub</span>
+                <span class="social-arrow">↗</span>
+              </a>
+              <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="social-pill" aria-label="X / Twitter Profile">
+                <span>X (Twitter)</span>
+                <span class="social-arrow">↗</span>
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-pill" aria-label="Instagram Profile">
+                <span>Instagram</span>
+                <span class="social-arrow">↗</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Right Contact Form -->
+          <div class="contact-form-container glass-card">
+            <h3 class="form-title">Send a Message</h3>
+            <form id="contact-form" class="contact-form">
+              <div class="form-group">
+                <label for="contact-name">Your Name</label>
+                <input type="text" id="contact-name" name="name" placeholder="e.g. Rahul Sharma" required />
+              </div>
+
+              <div class="form-group">
+                <label for="contact-email">Email Address</label>
+                <input type="email" id="contact-email" name="email" placeholder="name@company.com" required />
+              </div>
+
+              <div class="form-group">
+                <label for="contact-service">What are you looking for?</label>
+                <select id="contact-service" name="service">
+                  <option value="freelance-mvp">Freelance Project / MVP Development</option>
+                  <option value="ui-ux">UI/UX &amp; Landing Page Design</option>
+                  <option value="edtech-startup">EdTech Startup Collaboration</option>
+                  <option value="internship-hiring">Internship / Job Opportunity</option>
+                  <option value="other">General Chat / College Network</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="contact-message">Your Message</label>
+                <textarea id="contact-message" name="message" rows="4" placeholder="Tell me about your project, timeline, or idea..." required></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block" id="form-submit-btn">
+                <span>Send Message</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Case Study Modal Dialog -->
+  <div class="modal-backdrop" id="case-study-modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-card glass-card">
+      <button class="modal-close-btn" id="modal-close-btn" aria-label="Close Case Study Modal">&times;</button>
+      <div class="modal-body" id="modal-content">
+        <!-- Injected dynamically by main.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-left">
+        <a href="#hero" class="brand-logo footer-logo">
+          <span class="logo-accent">Anisha</span><span class="logo-dot">.</span><span class="logo-sub">v</span>
+        </a>
+        <p class="footer-copy">
+          Designed with the Framer Folioblox sunset aesthetic. Built with clean code for laptops and mobile phones.
+        </p>
+        <p class="footer-college">SRM IST Ramapuram • B.Tech CSBS Class of 2028</p>
+      </div>
+
+      <div class="footer-links">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#about">About &amp; Journey</a></li>
+          <li><a href="#projects">Selected Work</a></li>
+          <li><a href="#services">Freelance Services</a></li>
+          <li><a href="#startup">Startup Lab</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-right">
+        <h4>Connect</h4>
+        <ul>
+          <li><a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="https://github.com" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://x.com" target="_blank" rel="noopener">X / Twitter</a></li>
+          <li><a href="mailto:anisha.vanjinathan@example.com">Email</a></li>
+        </ul>
+        <button class="back-to-top-btn" id="back-to-top-btn" aria-label="Scroll back to top">
+          <span>Back to Top</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="12" y1="19" x2="12" y2="5"></line>
+            <polyline points="5 12 12 5 19 12"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <div class="footer-bottom-bar">
+      <div class="container bottom-bar-inner">
+        <p>© 2026 Anisha Vanjinathan. All rights reserved.</p>
+        <p class="status-indicator"><span class="dot-online"></span> Open for Freelance &amp; EdTech Inquiries</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
+

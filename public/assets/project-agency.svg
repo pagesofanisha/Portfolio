@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" width="100%" height="100%">
+  <defs>
+    <linearGradient id="agnBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#111116" />
+      <stop offset="100%" stop-color="#07070a" />
+    </linearGradient>
+    <linearGradient id="sunsetOrange" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ff7a00" />
+      <stop offset="100%" stop-color="#ff3300" />
+    </linearGradient>
+  </defs>
+  <rect width="700" height="440" rx="16" fill="url(#agnBg)" stroke="#262630" stroke-width="1.5" />
+  <rect x="0" y="0" width="700" height="42" rx="16" fill="#17171f" />
+  <circle cx="28" cy="21" r="5" fill="#ff5f56" />
+  <circle cx="44" cy="21" r="5" fill="#ffbd2e" />
+  <circle cx="60" cy="21" r="5" fill="#27c93f" />
+  <text x="350" y="26" fill="#7a7a8f" font-size="11" font-family="sans-serif" text-anchor="middle">zenith-agency.digital</text>
+
+  <!-- Agency Content -->
+  <g transform="translate(40, 65)">
+    <!-- Brand Nav -->
+    <text x="10" y="25" fill="#ffffff" font-size="16" font-family="sans-serif" font-weight="900" letter-spacing="2">ZENITH</text>
+    <text x="440" y="22" fill="#9e9eb0" font-size="12" font-family="sans-serif">Work • Vision • Contact</text>
+    <rect x="520" y="5" width="90" height="26" rx="13" fill="url(#sunsetOrange)" />
+    <text x="565" y="22" fill="#ffffff" font-size="10" font-family="sans-serif" font-weight="bold" text-anchor="middle">Hire Us</text>
+
+    <!-- Big Headline -->
+    <text x="10" y="85" fill="#ffffff" font-size="34" font-family="sans-serif" font-weight="900">WE CRAFT BOLD</text>
+    <text x="10" y="125" fill="url(#sunsetOrange)" font-size="34" font-family="sans-serif" font-weight="900">DIGITAL IDENTITIES.</text>
+    <text x="10" y="155" fill="#88889c" font-size="13" font-family="sans-serif">Award-winning creative engineering for high-growth tech startups and innovators.</text>
+
+    <!-- 2 Featured Works Showcases -->
+    <g transform="translate(10, 180)">
+      <rect x="0" y="0" width="285" height="150" rx="12" fill="#1b1b24" stroke="#2d2d3a" stroke-width="1" />
+      <circle cx="60" cy="65" r="35" fill="#ff5500" fill-opacity="0.3" />
+      <text x="20" y="120" fill="#ffffff" font-size="14" font-family="sans-serif" font-weight="bold">Nova AI Platform</text>
+      <text x="20" y="136" fill="#8d8d9f" font-size="11" font-family="sans-serif">Brand Identity &amp; Web 3.0</text>
+
+      <rect x="315" y="0" width="285" height="150" rx="12" fill="#1b1b24" stroke="#2d2d3a" stroke-width="1" />
+      <circle cx="375" cy="65" r="35" fill="#8b5cf6" fill-opacity="0.3" />
+      <text x="335" y="120" fill="#ffffff" font-size="14" font-family="sans-serif" font-weight="bold">Apex FinTech Portal</text>
+      <text x="335" y="136" fill="#8d8d9f" font-size="11" font-family="sans-serif">Web Application &amp; UI System</text>
+    </g>
+  </g>
+</svg>

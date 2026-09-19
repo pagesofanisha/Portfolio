@@ -1,0 +1,290 @@
+{
+  "theme": {
+    "primaryColor": "#a855f7",
+    "primaryHover": "#a855f7",
+    "amberColor": "#ec4899",
+    "bgMain": "#0d0714",
+    "bgSurface": "#121216"
+  },
+  "personal": {
+    "name": "Anisha Vanjinathan",
+    "preferredName": "Anisha",
+    "role": "Creative Developer & Future EdTech Founder",
+    "institution": "SRM IST Ramapuram",
+    "degree": "B.Tech in Computer Science and Business Systems (CSBS)",
+    "year": "2nd Year Undergraduate",
+    "email": "anisha8020@gmail.com",
+    "location": "Chennai, Tamil Nadu, India",
+    "greeting": "Hey, I'm Anisha Vanjinathan",
+    "headlineMain": "Creative",
+    "headlineGradient": "Developer",
+    "headlineSub": "Future",
+    "headlineSubGradient": "Founder",
+    "heroQuote": "Great technology should feel effortless. Bridging computer science and business strategy to build high-impact digital products, client solutions, and the future of EdTech.",
+    "heroImage": "assets/hero-portrait.svg",
+    "socials": {
+      "linkedin": "www.linkedin.com/in/anishaaaaaaaaa",
+      "github": "https://github.com/pagesofanisha",
+      "twitter": "https://x.com",
+      "instagram": "https://www.instagram.com/pages_of_anisha/?hl=en"
+    }
+  },
+  "pillars": [
+    {
+      "number": "01",
+      "title": "CSBS Engineering",
+      "subtitle": "SRM IST Ramapuram"
+    },
+    {
+      "number": "02",
+      "title": "Freelance Solutions",
+      "subtitle": "Web Apps & MVPs"
+    },
+    {
+      "number": "03",
+      "title": "UI/UX & Design",
+      "subtitle": "Modern Framer Aesthetic"
+    },
+    {
+      "number": "04",
+      "title": "EdTech Startup Lab",
+      "subtitle": "Building the Future"
+    }
+  ],
+  "stats": [
+    {
+      "value": "2nd",
+      "label": "Year B.Tech CSBS"
+    },
+    {
+      "value": "15+",
+      "label": "Delivered Projects"
+    },
+    {
+      "value": "100%",
+      "label": "Client Satisfaction"
+    },
+    {
+      "value": "1",
+      "label": "EdTech Startup Incubating"
+    }
+  ],
+  "aboutCards": [
+    {
+      "id": "student",
+      "icon": "🎓",
+      "tag": "SRM IST Ramapuram",
+      "title": "B.Tech CSBS Student",
+      "description": "Currently in my 2nd Year studying Computer Science and Business Systems. I don't just write code—I analyze business architecture, algorithmic efficiency, and product workflows. Active in hackathons and college tech clubs.",
+      "points": [
+        "Data Structures, OOPs & Systems",
+        "Business Analysis & Product Strategy",
+        "Campus Hackathons & Team Building"
+      ]
+    },
+    {
+      "id": "freelancer",
+      "icon": "💼",
+      "tag": "Freelance Engineer",
+      "title": "Full-Stack & MVP Builder",
+      "description": "Partnering with startups, creators, and brands to deliver production-ready web apps and fast prototypes. I focus on lightning-fast delivery, bulletproof responsive design on laptops and phones, and high conversion.",
+      "points": [
+        "15+ Projects & Prototypes Delivered",
+        "100% On-Time Client Delivery",
+        "High-Performance Responsive Web Apps"
+      ]
+    },
+    {
+      "id": "founder",
+      "icon": "🚀",
+      "tag": "Future Founder",
+      "title": "EdTech Visionary",
+      "description": "Building the future of learning. Incubating an AI-powered peer learning ecosystem to bridge the massive gap between traditional college lectures and the practical skills demanded by top tech companies.",
+      "points": [
+        "SkillPulse AI Platform in Incubation",
+        "Student-Centric Interactive Roadmaps",
+        "Real-World Sprints & Peer Accountability"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "skillpulse",
+      "title": "SkillPulse AI - EdTech Platform",
+      "category": "startup",
+      "categoryLabel": "Startup Prototype",
+      "year": "2026",
+      "tagline": "AI-driven personalized learning roadmap and peer study rooms for engineering students.",
+      "description": "My flagship startup project. SkillPulse analyzes a college student's curriculum and current skillset to generate real-time roadmaps, interactive coding challenges, and peer-to-peer accountability rooms.",
+      "tags": [
+        "React",
+        "Node.js",
+        "AI / LLM API",
+        "Tailwind CSS",
+        "PostgreSQL"
+      ],
+      "image": "assets/project-edtech.svg",
+      "liveUrl": "#",
+      "githubUrl": "#"
+    },
+    {
+      "id": "lumina-mvp",
+      "title": "Lumina Brand Storefront",
+      "category": "freelance",
+      "categoryLabel": "Freelance Client",
+      "year": "2025",
+      "tagline": "Ultra-fast headless e-commerce experience with seamless mobile checkout.",
+      "description": "Delivered a high-conversion e-commerce web platform for a boutique lifestyle brand, featuring dynamic catalog filtering, instant cart drawer, and 98+ PageSpeed performance.",
+      "tags": [
+        "Next.js",
+        "TypeScript",
+        "Stripe API",
+        "Framer Motion"
+      ],
+      "image": "assets/project-ecommerce.svg",
+      "liveUrl": "#",
+      "githubUrl": "#"
+    },
+    {
+      "id": "campussync",
+      "title": "CampusSync - SRM Student Hub",
+      "category": "college",
+      "categoryLabel": "College & Hackathon",
+      "year": "2025",
+      "tagline": "A collaborative student portal for hackathon team-finding, notes, and events.",
+      "description": "Built for SRM IST Ramapuram students to easily discover hackathon partners based on skill tags, share verified lecture notes, and track internal department events in real time.",
+      "tags": [
+        "React",
+        "Express.js",
+        "MongoDB",
+        "Tailwind"
+      ],
+      "image": "assets/project-campus.svg",
+      "liveUrl": "#",
+      "githubUrl": "#"
+    },
+    {
+      "id": "codecraft-ui",
+      "title": "CodeCraft Design System",
+      "category": "freelance",
+      "categoryLabel": "Freelance Design",
+      "year": "2025",
+      "tagline": "Comprehensive Figma & Web design kit for interactive learning tools.",
+      "description": "Designed and developed a 40+ component design system used by online education creators, featuring accessible dark-mode variants, code editors, and animated reward badges.",
+      "tags": [
+        "Figma",
+        "UI/UX",
+        "Tailwind CSS",
+        "Storybook"
+      ],
+      "image": "assets/project-design.svg",
+      "liveUrl": "#",
+      "githubUrl": "#"
+    },
+    {
+      "id": "evaluator-ai",
+      "title": "CSBS AutoGrader & Evaluator",
+      "category": "college",
+      "categoryLabel": "College Project",
+      "year": "2025",
+      "tagline": "Automated business logic and code review engine for CSBS coursework.",
+      "description": "Created an intelligent test runner and code analyzer to assist students in evaluating assignment logic against test cases with actionable debugging suggestions.",
+      "tags": [
+        "Python",
+        "FastAPI",
+        "Docker",
+        "Algorithms"
+      ],
+      "image": "assets/project-evaluator.svg",
+      "liveUrl": "#",
+      "githubUrl": "#"
+    },
+    {
+      "id": "zenith-landing",
+      "title": "Zenith Studio Showcase",
+      "category": "freelance",
+      "categoryLabel": "Freelance Client",
+      "year": "2025",
+      "tagline": "Award-worthy dark aesthetic portfolio for a creative agency.",
+      "description": "Designed and implemented a fluid, responsive landing page featuring smooth micro-interactions, scroll-driven storytelling, and responsive layouts across all mobile screens.",
+      "tags": [
+        "HTML5",
+        "Modern CSS",
+        "JavaScript",
+        "GSAP"
+      ],
+      "image": "assets/project-agency.svg",
+      "liveUrl": "#",
+      "githubUrl": "#"
+    }
+  ],
+  "services": [
+    {
+      "number": "01",
+      "title": "Full-Stack Web Development",
+      "description": "Modern, responsive, blazing-fast web applications built with React, Next.js, and Node.js. Clean code architecture designed to scale with your business.",
+      "deliverables": [
+        "Responsive Web Apps",
+        "API Integration",
+        "Database Architecture",
+        "Performance Optimization"
+      ]
+    },
+    {
+      "number": "02",
+      "title": "Startup MVP in 14 Days",
+      "description": "Fast-track your startup idea from concept to launch. I build lean, high-fidelity prototypes and clickable MVPs ready for initial customers or investor demos.",
+      "deliverables": [
+        "Product Scoping",
+        "Rapid Prototyping",
+        "User Auth & Payments",
+        "Production Deployment"
+      ]
+    },
+    {
+      "number": "03",
+      "title": "UI/UX & Framer Design",
+      "description": "Visually stunning, conversion-focused digital designs. I craft intuitive user interfaces, custom landing pages, and interactive design systems in Figma and code.",
+      "deliverables": [
+        "Landing Page Design",
+        "Mobile-First UX",
+        "Design Systems",
+        "Interactive Prototypes"
+      ]
+    },
+    {
+      "number": "04",
+      "title": "CSBS Tech & Business Strategy",
+      "description": "Leveraging my Computer Science & Business Systems background to help early founders evaluate technical feasibility, product market fit, and tech stack choices.",
+      "deliverables": [
+        "Tech Stack Selection",
+        "System Architecture",
+        "Product Roadmap",
+        "College Tech Consulting"
+      ]
+    }
+  ],
+  "startupLab": {
+    "badge": "⚡ Stealth Venture in Incubation",
+    "origin": "Born @ SRM IST Ramapuram",
+    "headline": "Reimagining How Engineering Students Learn, Build & Launch",
+    "description": "Most students graduate with strong theory but lack the hands-on project portfolio to thrive in modern tech or start their own ventures. SkillPulse AI combines personalized syllabus mapping, interactive daily coding sprints, and peer accountability rooms.",
+    "features": [
+      {
+        "icon": "🎯",
+        "title": "Syllabus to Industry Mapping",
+        "description": "Translates college subjects (DBMS, OS, DSA) directly into production-grade projects."
+      },
+      {
+        "icon": "🤝",
+        "title": "Peer Accountability Pods",
+        "description": "Study in curated squads of 4-6 students with daily standups and collaborative code review."
+      },
+      {
+        "icon": "🤖",
+        "title": "AI Pair-Mentor",
+        "description": "Instant code explanations and architectural feedback tuned to your learning speed."
+      }
+    ]
+  }
+}
