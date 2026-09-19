@@ -13,7 +13,7 @@ export const profileConfig = {
     heroQuote: "Great technology should feel effortless. Bridging computer science and business strategy to build high-impact digital products and the next generation of EdTech.",
     email: "anisha8020@gmail.com",
     location: "Chennai, Tamil Nadu, India",
-    heroImage: "/uploads/photo_1789806319224.jpg",
+    heroImage: "/uploads/photo_1789809740156.jpg",
     education: {
       institution: "SRM Institute of Science and Technology, Ramapuram",
       degree: "B.Tech in Computer Science and Business Systems (CSBS)",

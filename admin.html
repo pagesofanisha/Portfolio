@@ -1229,7 +1229,10 @@
           const data = await res.json();
           if (data.success) {
             document.getElementById('hero-img-url').value = data.url;
-            showToast('Photo uploaded successfully!');
+            showToast('Photo uploaded successfully! Saving to website...');
+            if (typeof saveAllContent === 'function') {
+              setTimeout(() => saveAllContent(), 400);
+            }
           }
         } catch (err) {
           console.error(err);
@@ -1246,7 +1249,10 @@
       const defaultImg = 'assets/hero-portrait.svg';
       document.getElementById('hero-img-preview').src = defaultImg;
       document.getElementById('hero-img-url').value = defaultImg;
-      showToast('Reset to default sunset silhouette.');
+      showToast('Reset to default sunset silhouette. Saving...');
+      if (typeof saveAllContent === 'function') {
+        setTimeout(() => saveAllContent(), 400);
+      }
     }
 
     // Projects Manager Render

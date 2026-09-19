@@ -133,6 +133,12 @@ app.post('/api/upload', checkAdminAuth, (req, res) => {
     if (!fs.existsSync(devUploadDir)) fs.mkdirSync(devUploadDir, { recursive: true });
     fs.writeFileSync(path.join(devUploadDir, safeName), buffer);
 
+    // Also copy to dist/uploads if production build exists
+    const distUploadDir = path.join(__dirname, 'dist', 'uploads');
+    if (fs.existsSync(distUploadDir)) {
+      fs.writeFileSync(path.join(distUploadDir, safeName), buffer);
+    }
+
     const publicUrl = `/uploads/${safeName}`;
     console.log(`[PHOTO UPLOAD] New image saved: ${publicUrl}`);
 
@@ -281,6 +287,10 @@ app.get('/admin', (req, res) => {
 const DIST_DIR = path.join(__dirname, 'dist');
 if (fs.existsSync(DIST_DIR)) {
   app.use(express.static(DIST_DIR));
+  // Asset 404 guard so broken images never return 200 index.html
+  app.use(['/uploads', '/assets'], (req, res) => {
+    res.status(404).send('Asset not found');
+  });
   app.use((req, res) => {
     res.sendFile('index.html', { root: DIST_DIR });
   });
