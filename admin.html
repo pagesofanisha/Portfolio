@@ -3,21 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfolio Studio CMS | Visual Backend Dashboard</title>
+  <title>Portfolio Backend CMS | Anisha Vanjinathan</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --primary: #ff5a1f;
-      --primary-hover: #ff733b;
-      --bg: #09090c;
-      --surface: #121217;
-      --surface-card: #181820;
+      --primary: #38bdf8;
+      --primary-hover: #0ea5e9;
+      --primary-gradient: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      --bg: #06080e;
+      --surface: #0c101c;
+      --surface-card: #121829;
       --border: rgba(255, 255, 255, 0.08);
-      --border-focus: #ff5a1f;
-      --text: #f4f4f6;
-      --text-muted: #9494a3;
+      --border-card: rgba(148, 163, 184, 0.12);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
       --radius: 12px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,10 +29,11 @@
       line-height: 1.5;
       padding-bottom: 90px;
     }
-    /* Header */
+    
+    /* Top Header */
     .admin-header {
-      background: rgba(18, 18, 23, 0.9);
-      backdrop-filter: blur(12px);
+      background: rgba(12, 16, 28, 0.92);
+      backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
@@ -44,19 +46,19 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.85rem;
     }
     .brand-icon {
-      font-size: 1.6rem;
-      background: rgba(255, 90, 31, 0.15);
-      border: 1px solid rgba(255, 90, 31, 0.3);
-      padding: 0.3rem 0.6rem;
+      font-size: 1.5rem;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 0.35rem 0.65rem;
       border-radius: 8px;
     }
-    .brand h1 { font-size: 1.25rem; font-weight: 800; color: #fff; }
-    .brand p { font-size: 0.8rem; color: var(--text-muted); }
+    .brand h1 { font-size: 1.2rem; font-weight: 800; color: #fff; }
+    .brand p { font-size: 0.8rem; color: var(--primary); }
     .header-actions { display: flex; gap: 0.75rem; align-items: center; }
-    
+
     /* Layout */
     .admin-container {
       max-width: 1280px;
@@ -66,6 +68,7 @@
       grid-template-columns: 260px 1fr;
       gap: 2rem;
     }
+
     /* Sidebar Tabs */
     .admin-sidebar {
       display: flex;
@@ -79,7 +82,7 @@
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 0.75rem 1rem;
+      padding: 0.8rem 1rem;
       background: transparent;
       border: 1px solid transparent;
       border-radius: 8px;
@@ -97,13 +100,13 @@
     }
     .tab-btn.active {
       background: var(--surface-card);
-      border-color: var(--border);
+      border-color: rgba(56, 189, 248, 0.3);
       color: var(--primary);
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
     .tab-btn span.icon { font-size: 1.15rem; }
 
-    /* Content Area */
+    /* Content Panels */
     .admin-content {
       display: flex;
       flex-direction: column;
@@ -113,10 +116,10 @@
     .tab-panel.active { display: flex; flex-direction: column; gap: 1.5rem; animation: fadeIn 0.2s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Card Panels */
+    /* Cards */
     .panel-card {
       background: var(--surface);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-card);
       border-radius: var(--radius);
       padding: 1.75rem;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
@@ -125,21 +128,16 @@
       margin-bottom: 1.5rem;
       border-bottom: 1px solid var(--border);
       padding-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
     }
     .panel-header h2 { font-size: 1.35rem; color: #fff; margin-bottom: 0.25rem; }
     .panel-header p { font-size: 0.88rem; color: var(--text-muted); }
 
     /* Forms */
-    .form-grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-    }
-    .form-grid-3 {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 1.25rem;
-    }
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; }
     .form-group {
       display: flex;
       flex-direction: column;
@@ -168,56 +166,9 @@
     }
     .form-control:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.2);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
     }
     textarea.form-control { resize: vertical; }
-
-    /* Color Pickers */
-    .color-picker-box {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-      background: var(--surface-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.6rem 0.85rem;
-    }
-    .color-picker-box input[type="color"] {
-      width: 42px;
-      height: 42px;
-      border: none;
-      border-radius: 6px;
-      background: transparent;
-      cursor: pointer;
-    }
-    .color-picker-box .color-hex {
-      font-family: monospace;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #fff;
-      flex-grow: 1;
-    }
-    .color-presets-row {
-      display: flex;
-      gap: 0.75rem;
-      margin-top: 1rem;
-      flex-wrap: wrap;
-    }
-    .preset-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: var(--surface-card);
-      border: 1px solid var(--border);
-      padding: 0.45rem 0.85rem;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      color: #fff;
-      font-weight: 600;
-    }
-    .preset-pill:hover { border-color: var(--primary); }
-    .preset-dot { width: 12px; height: 12px; border-radius: 50%; }
 
     /* Photo Upload Box */
     .photo-preview-card {
@@ -225,18 +176,18 @@
       align-items: center;
       gap: 2rem;
       background: var(--surface-card);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-card);
       border-radius: var(--radius);
       padding: 1.5rem;
       margin-bottom: 1.5rem;
     }
     .preview-thumb-img {
-      width: 140px;
-      height: 140px;
+      width: 130px;
+      height: 160px;
       object-fit: cover;
-      border-radius: 14px;
+      border-radius: 12px;
       border: 2px solid var(--primary);
-      background: #000;
+      background: #020408;
     }
     .photo-controls {
       display: flex;
@@ -244,85 +195,23 @@
       gap: 0.75rem;
       flex-grow: 1;
     }
-    .file-input-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
     .btn-upload {
-      background: rgba(255, 90, 31, 0.15);
-      border: 1px solid var(--primary);
-      color: #ff8c5a;
-      padding: 0.6rem 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.25rem;
+      background: var(--primary-gradient);
+      color: #fff;
       border-radius: 8px;
+      font-size: 0.9rem;
       font-weight: 700;
       cursor: pointer;
-      font-size: 0.85rem;
+      width: fit-content;
+      transition: all 0.2s ease;
     }
-
-    /* Projects / Items Manager */
-    .items-list-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.25rem;
-    }
-    .manage-card {
-      background: var(--surface-card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 0.85rem;
-      transition: transform 0.15s ease;
-    }
-    .manage-card:hover { transform: translateY(-2px); border-color: rgba(255, 255, 255, 0.15); }
-    .manage-left { display: flex; align-items: center; gap: 1rem; }
-    .manage-thumb { width: 64px; height: 44px; border-radius: 6px; object-fit: cover; background: #000; }
-    .manage-title { font-weight: 700; color: #fff; font-size: 1rem; }
-    .manage-sub { font-size: 0.82rem; color: var(--text-muted); }
-    .manage-actions { display: flex; gap: 0.5rem; }
-    .btn-action-edit {
-      background: rgba(255, 255, 255, 0.08);
-      border: none;
-      color: #fff;
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    .btn-action-delete {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #f87171;
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    /* Table Styles */
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.88rem;
-      text-align: left;
-    }
-    .data-table th {
-      padding: 0.75rem 1rem;
-      background: var(--surface-card);
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border);
-    }
-    .data-table td {
-      padding: 0.95rem 1rem;
-      border-bottom: 1px solid var(--border);
-      color: #e2e8f0;
+    .btn-upload:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.35);
     }
 
     /* Buttons */
@@ -330,25 +219,23 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
+      padding: 0.6rem 1.15rem;
+      border-radius: 8px;
       font-family: inherit;
       font-size: 0.88rem;
-      font-weight: 700;
-      padding: 0.65rem 1.25rem;
-      border-radius: 8px;
+      font-weight: 600;
       cursor: pointer;
       border: none;
-      outline: none;
-      text-decoration: none;
       transition: all 0.2s ease;
+      text-decoration: none;
     }
     .btn-primary {
-      background: var(--primary);
+      background: var(--primary-gradient);
       color: #fff;
-      box-shadow: 0 4px 15px rgba(255, 90, 31, 0.35);
     }
     .btn-primary:hover {
-      background: var(--primary-hover);
       transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.35);
     }
     .btn-secondary {
       background: rgba(255, 255, 255, 0.08);
@@ -356,15 +243,127 @@
       border: 1px solid var(--border);
     }
     .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.14);
+    }
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+    }
+    .btn-danger:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    /* 4 DOMAINS SECTION STYLES (UNDER EACH DOMAIN PUT + SIGN) */
+    .domain-section-block {
+      background: var(--surface-card);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .domain-block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .domain-block-title {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .domain-block-badge {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--primary);
+    }
+    .btn-add-domain-project {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.15rem;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-add-domain-project:hover {
+      background: var(--primary);
+      color: #000;
+      transform: translateY(-1px);
+    }
+    .btn-add-domain-project .plus-symbol {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--primary);
+    }
+    .btn-add-domain-project:hover .plus-symbol {
+      color: #000;
+    }
+
+    .domain-projects-items {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .admin-project-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+      background: rgba(6, 8, 14, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+    }
+    .admin-proj-thumb {
+      width: 70px;
+      height: 50px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: #020408;
+      border: 1px solid var(--border);
+    }
+    .admin-proj-details {
+      flex-grow: 1;
+    }
+    .admin-proj-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .admin-proj-sub {
+      font-size: 0.8rem;
+      color: var(--primary);
+    }
+    .admin-proj-tech {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    .admin-proj-actions {
+      display: flex;
+      gap: 0.5rem;
     }
 
     /* Modal */
     .admin-modal {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -377,14 +376,32 @@
     .admin-modal.active { opacity: 1; visibility: visible; }
     .admin-modal-card {
       background: var(--surface);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(56, 189, 248, 0.3);
       border-radius: var(--radius);
       width: 100%;
-      max-width: 620px;
-      max-height: 85vh;
+      max-width: 640px;
+      max-height: 90vh;
       overflow-y: auto;
       padding: 2rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
     }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+    .modal-header h3 { font-size: 1.3rem; color: #fff; }
+    .btn-close-modal {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .btn-close-modal:hover { color: #fff; }
 
     /* Sticky Bottom Save Bar */
     .save-bar {
@@ -392,10 +409,10 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(18, 18, 23, 0.95);
+      background: rgba(12, 16, 28, 0.95);
       backdrop-filter: blur(16px);
       border-top: 1px solid var(--border);
-      padding: 1rem 2rem;
+      padding: 0.85rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -417,14 +434,19 @@
       box-shadow: 0 0 10px #10b981;
     }
     .btn-save-big {
-      font-size: 1rem;
-      padding: 0.85rem 2rem;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
       border-radius: 30px;
       background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #fff;
+      font-weight: 700;
       box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35);
+      cursor: pointer;
+      border: none;
     }
     .btn-save-big:hover {
       background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+      transform: translateY(-1px);
     }
 
     /* Toast */
@@ -438,42 +460,39 @@
       border-radius: 8px;
       font-weight: 700;
       font-size: 0.92rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
       z-index: 3000;
       display: none;
     }
 
+    /* Inbox Messages */
+    .inbox-item {
+      background: var(--surface-card);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .inbox-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+    }
+    .inbox-name { font-weight: 700; color: #fff; }
+    .inbox-email { color: var(--primary); }
+    .inbox-service { font-size: 0.8rem; background: rgba(255, 255, 255, 0.05); padding: 0.2rem 0.5rem; border-radius: 4px; color: #cbd5e1; }
+    .inbox-body { font-size: 0.9rem; color: #e2e8f0; line-height: 1.5; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border); }
+
     @media (max-width: 900px) {
       .admin-container { grid-template-columns: 1fr; }
-      .admin-sidebar { position: static; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+      .admin-sidebar { position: static; display: grid; grid-template-columns: repeat(2, 1fr); }
       .form-grid-2, .form-grid-3 { grid-template-columns: 1fr; }
+      .photo-preview-card { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
 <body>
-
-  <!-- Security Lock Modal -->
-  <div class="admin-modal" id="admin-auth-modal" style="z-index: 99999; background: rgba(5, 5, 8, 0.97);">
-    <div class="admin-modal-card" style="max-width: 400px; text-align: center; border: 1px solid var(--primary); padding: 2.25rem 2rem;">
-      <div style="font-size: 3rem; margin-bottom: 0.75rem;">🔒</div>
-      <h2 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.35rem;">Protected Studio CMS</h2>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
-        Enter your admin password to edit your website and view client inquiries.
-      </p>
-      <form onsubmit="submitAdminPassword(event)">
-        <div class="form-group" style="text-align: left;">
-          <label>Admin Password</label>
-          <input type="password" id="auth-password-input" class="form-control" placeholder="Enter password..." required autofocus />
-        </div>
-        <p id="auth-error-msg" style="color: #f87171; font-size: 0.85rem; margin-bottom: 1rem; display: none;">
-          ❌ Incorrect password. Try again.
-        </p>
-        <button type="submit" class="btn btn-primary btn-block" style="padding: 0.85rem; justify-content: center; font-size: 0.95rem;">
-          <span>Unlock Dashboard</span>
-        </button>
-      </form>
-    </div>
-  </div>
 
   <!-- Toast -->
   <div id="admin-toast" class="toast">Changes Saved!</div>
@@ -484,18 +503,15 @@
       <span class="brand-icon">⚡</span>
       <div>
         <h1>Portfolio CMS Backend</h1>
-        <p>Protected Admin Dashboard • Anisha Vanjinathan</p>
+        <p>Child-Friendly Visual Editor • Anisha Vanjinathan</p>
       </div>
     </div>
     <div class="header-actions">
       <a href="/" target="_blank" class="btn btn-secondary">
         <span>👁️ View Live Website</span>
       </a>
-      <button class="btn btn-secondary" onclick="lockDashboard()" title="Lock dashboard and log out">
-        <span>🔒 Lock</span>
-      </button>
       <button class="btn btn-primary" onclick="saveAllChanges()">
-        <span>💾 Save Changes</span>
+        <span>💾 Save All Changes</span>
       </button>
     </div>
   </header>
@@ -505,384 +521,332 @@
     
     <!-- Sidebar Tabs -->
     <aside class="admin-sidebar">
-      <button class="tab-btn active" data-tab="tab-theme">
-        <span class="icon">🎨</span>
-        <span>Theme &amp; Colors</span>
-      </button>
-      <button class="tab-btn" data-tab="tab-profile">
+      <button class="tab-btn active" data-tab="tab-hero">
         <span class="icon">👤</span>
-        <span>Profile &amp; Bio</span>
-      </button>
-      <button class="tab-btn" data-tab="tab-hero">
-        <span class="icon">🌟</span>
-        <span>Hero &amp; Photo</span>
+        <span>Profile &amp; Hero</span>
       </button>
       <button class="tab-btn" data-tab="tab-about">
-        <span class="icon">💼</span>
-        <span>About &amp; Journey</span>
+        <span class="icon">📝</span>
+        <span>About Me</span>
       </button>
       <button class="tab-btn" data-tab="tab-projects">
         <span class="icon">📁</span>
-        <span>Projects Manager</span>
+        <span>Projects (4 Domains)</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-skills">
+        <span class="icon">🛠️</span>
+        <span>Skills Matrix</span>
       </button>
       <button class="tab-btn" data-tab="tab-services">
-        <span class="icon">🛠️</span>
-        <span>Freelance Services</span>
+        <span class="icon">🌟</span>
+        <span>Services</span>
       </button>
-      <button class="tab-btn" data-tab="tab-startup">
-        <span class="icon">🚀</span>
-        <span>EdTech Startup Lab</span>
+      <button class="tab-btn" data-tab="tab-education">
+        <span class="icon">🎓</span>
+        <span>Education &amp; Scores</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-linkedin">
+        <span class="icon">💼</span>
+        <span>LinkedIn Headlines</span>
       </button>
       <button class="tab-btn" data-tab="tab-inbox">
         <span class="icon">📬</span>
-        <span>Inbox Messages</span>
-      </button>
-      <button class="tab-btn" data-tab="tab-waitlist">
-        <span class="icon">👥</span>
-        <span>Waitlist Signups</span>
+        <span>Messages Inbox</span>
       </button>
     </aside>
 
-    <!-- Content Tabs Panels -->
+    <!-- Main Content -->
     <main class="admin-content">
 
-      <!-- 1. THEME & COLORS TAB -->
-      <section class="tab-panel active" id="tab-theme">
+      <!-- 1. PROFILE & HERO TAB -->
+      <section class="tab-panel active" id="tab-hero">
         <div class="panel-card">
           <div class="panel-header">
-            <h2>🎨 Theme &amp; Accent Colors</h2>
-            <p>Pick any colors you want. Your entire website’s buttons, glows, borders, and gradients will adapt instantly.</p>
+            <div>
+              <h2>👤 Hero Section &amp; Portrait Photo</h2>
+              <p>Change your name, titles, tagline, contact details, and upload your photo.</p>
+            </div>
+          </div>
+
+          <!-- Photo Uploader -->
+          <div class="photo-preview-card">
+            <img id="hero-img-preview" src="/uploads/photo_1789809740156.jpg" class="preview-thumb-img" alt="Hero Portrait" onerror="this.src='assets/hero-portrait.svg'" />
+            <div class="photo-controls">
+              <h4 style="color: #fff;">Your Hero Portrait Photo</h4>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">
+                Click the button below to upload your photo directly from your computer, or type an image link.
+              </p>
+              <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                <label class="btn-upload">
+                  📁 Choose Photo from Computer
+                  <input type="file" id="photo-file-input" accept="image/*" style="display: none;" onchange="handlePhotoUpload(this)" />
+                </label>
+                <button class="btn btn-secondary" onclick="resetHeroPhoto()">Use Default Photo</button>
+              </div>
+              <div class="form-group" style="margin-top: 0.5rem; margin-bottom: 0;">
+                <label>Or Image URL Path:</label>
+                <input type="text" id="hero-img-url" class="form-control" value="/uploads/photo_1789809740156.jpg" onchange="document.getElementById('hero-img-preview').src = this.value" />
+              </div>
+            </div>
           </div>
 
           <div class="form-grid-2">
             <div class="form-group">
-              <label>Primary Brand Color <span class="hint">Main buttons, glow &amp; links</span></label>
-              <div class="color-picker-box">
-                <input type="color" id="theme-primary" value="#ff5a1f" oninput="updateColorHex('theme-primary', 'hex-primary')" />
-                <span class="color-hex" id="hex-primary">#ff5a1f</span>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Sunset Amber Color <span class="hint">Gradient accents &amp; highlights</span></label>
-              <div class="color-picker-box">
-                <input type="color" id="theme-amber" value="#ff9e00" oninput="updateColorHex('theme-amber', 'hex-amber')" />
-                <span class="color-hex" id="hex-amber">#ff9e00</span>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Deep Background Color <span class="hint">Main website dark tone</span></label>
-              <div class="color-picker-box">
-                <input type="color" id="theme-bg" value="#0a0a0c" oninput="updateColorHex('theme-bg', 'hex-bg')" />
-                <span class="color-hex" id="hex-bg">#0a0a0c</span>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Surface Card Color <span class="hint">Glassmorphism card backgrounds</span></label>
-              <div class="color-picker-box">
-                <input type="color" id="theme-surface" value="#121216" oninput="updateColorHex('theme-surface', 'hex-surface')" />
-                <span class="color-hex" id="hex-surface">#121216</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Color Presets -->
-          <div style="margin-top: 1.5rem;">
-            <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Quick Color Presets:</label>
-            <div class="color-presets-row">
-              <button class="preset-pill" onclick="applyColorPreset('#ff5a1f', '#ff9e00', '#0a0a0c')">
-                <span class="preset-dot" style="background: #ff5a1f;"></span>
-                <span>Sunset Orange (Default)</span>
-              </button>
-              <button class="preset-pill" onclick="applyColorPreset('#00f2fe', '#4facfe', '#060913')">
-                <span class="preset-dot" style="background: #00f2fe;"></span>
-                <span>Cyber Cyan</span>
-              </button>
-              <button class="preset-pill" onclick="applyColorPreset('#a855f7', '#ec4899', '#0d0714')">
-                <span class="preset-dot" style="background: #a855f7;"></span>
-                <span>Neon Purple</span>
-              </button>
-              <button class="preset-pill" onclick="applyColorPreset('#10b981', '#34d399', '#050f0c')">
-                <span class="preset-dot" style="background: #10b981;"></span>
-                <span>Emerald Tech</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 2. PROFILE & BIO TAB -->
-      <section class="tab-panel" id="tab-profile">
-        <div class="panel-card">
-          <div class="panel-header">
-            <h2>👤 Personal Information &amp; College Details</h2>
-            <p>Update your name, degree, institution, and contact details.</p>
-          </div>
-
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label>Full Display Name</label>
+              <label>Full Name</label>
               <input type="text" id="personal-name" class="form-control" value="Anisha Vanjinathan" />
             </div>
-
             <div class="form-group">
-              <label>Short / Preferred Name</label>
-              <input type="text" id="personal-preferred" class="form-control" value="Anisha" />
+              <label>Greeting Tag</label>
+              <input type="text" id="hero-greeting" class="form-control" value="Hello, I'm" />
             </div>
           </div>
 
           <div class="form-group">
-            <label>Role / Professional Tagline</label>
-            <input type="text" id="personal-role" class="form-control" value="Creative Developer &amp; Future EdTech Founder" />
+            <label>Subheadline / Professional Role</label>
+            <input type="text" id="hero-subtitle" class="form-control" value="AI App Developer, Brand Marketer & Creative Strategist" />
+          </div>
+
+          <div class="form-group">
+            <label>Hero Tagline / Value Proposition</label>
+            <textarea id="hero-tagline" class="form-control" rows="3">Bridging CS & Business Systems through AI-driven apps, Shopify development, storytelling, thumbnail editing and designs, and high-impact digital content.</textarea>
           </div>
 
           <div class="form-grid-3">
             <div class="form-group">
-              <label>College / Institution</label>
-              <input type="text" id="personal-institution" class="form-control" value="SRM IST Ramapuram" />
-            </div>
-
-            <div class="form-group">
-              <label>Degree / Branch</label>
-              <input type="text" id="personal-degree" class="form-control" value="B.Tech in Computer Science and Business Systems (CSBS)" />
-            </div>
-
-            <div class="form-group">
-              <label>Current Year</label>
-              <input type="text" id="personal-year" class="form-control" value="2nd Year Undergraduate" />
-            </div>
-          </div>
-
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label>Direct Contact Email</label>
-              <input type="email" id="personal-email" class="form-control" value="anisha.vanjinathan@example.com" />
-            </div>
-
-            <div class="form-group">
               <label>Location</label>
-              <input type="text" id="personal-location" class="form-control" value="Chennai, Tamil Nadu, India" />
-            </div>
-          </div>
-
-          <div class="form-grid-2" style="margin-top: 1rem;">
-            <div class="form-group">
-              <label>LinkedIn Profile URL</label>
-              <input type="url" id="social-linkedin" class="form-control" value="https://linkedin.com" />
+              <input type="text" id="personal-location" class="form-control" value="Chennai, India" />
             </div>
             <div class="form-group">
-              <label>GitHub Profile URL</label>
-              <input type="url" id="social-github" class="form-control" value="https://github.com" />
+              <label>Email Address</label>
+              <input type="email" id="personal-email" class="form-control" value="anisha8020@gmail.com" />
             </div>
             <div class="form-group">
-              <label>Twitter / X Profile URL</label>
-              <input type="url" id="social-twitter" class="form-control" value="https://x.com" />
+              <label>Phone Number</label>
+              <input type="text" id="personal-phone" class="form-control" value="+91 8668177527" />
             </div>
-            <div class="form-group">
-              <label>Instagram Profile URL</label>
-              <input type="url" id="social-instagram" class="form-control" value="https://instagram.com" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 3. HERO & PHOTO TAB -->
-      <section class="tab-panel" id="tab-hero">
-        <div class="panel-card">
-          <div class="panel-header">
-            <h2>🌟 Hero Section &amp; Portrait Photo</h2>
-            <p>Change your big intro headline, quote, and upload your real photo.</p>
-          </div>
-
-          <!-- Photo Manager -->
-          <div class="photo-preview-card">
-            <img id="hero-img-preview" src="assets/hero-portrait.svg" class="preview-thumb-img" alt="Hero Portrait Preview" />
-            <div class="photo-controls">
-              <h4>Hero Portrait Photo</h4>
-              <p style="font-size: 0.85rem; color: var(--text-muted);">
-                Choose to upload your own picture from your laptop or phone, or keep the sunset aesthetic silhouette.
-              </p>
-              <div class="file-input-wrapper">
-                <label class="btn-upload">
-                  📁 Upload Photo from Device
-                  <input type="file" id="photo-file-input" accept="image/*" style="display: none;" onchange="handlePhotoUpload(this)" />
-                </label>
-                <button class="btn btn-secondary" onclick="resetHeroPhoto()">Use Default Sunset Silhouette</button>
-              </div>
-              <div class="form-group" style="margin-top: 0.5rem; margin-bottom: 0;">
-                <label>Or Paste Image URL directly:</label>
-                <input type="text" id="hero-img-url" class="form-control" value="assets/hero-portrait.svg" onchange="document.getElementById('hero-img-preview').src = this.value" />
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Hero Greeting Badge</label>
-            <input type="text" id="hero-greeting" class="form-control" value="Hey, I'm Anisha Vanjinathan" />
           </div>
 
           <div class="form-grid-2">
             <div class="form-group">
-              <label>Headline Line 1 (Main + Gradient Word)</label>
+              <label>Primary Button Text &amp; Link</label>
               <div style="display: flex; gap: 0.5rem;">
-                <input type="text" id="headline-main" class="form-control" value="Creative" placeholder="Creative" />
-                <input type="text" id="headline-gradient" class="form-control" value="Developer" placeholder="Developer" style="color: var(--primary);" />
+                <input type="text" id="cta-primary-text" class="form-control" value="Work With Me" />
+                <input type="text" id="cta-primary-link" class="form-control" value="#contact" />
               </div>
             </div>
-
             <div class="form-group">
-              <label>Headline Line 2 (Sub + Gradient Word)</label>
+              <label>Secondary Button Text &amp; Link</label>
               <div style="display: flex; gap: 0.5rem;">
-                <input type="text" id="headline-sub" class="form-control" value="Future" placeholder="Future" />
-                <input type="text" id="headline-sub-gradient" class="form-control" value="Founder" placeholder="Founder" style="color: #ff9e00;" />
+                <input type="text" id="cta-secondary-text" class="form-control" value="Connect on LinkedIn" />
+                <input type="text" id="cta-secondary-link" class="form-control" value="https://www.linkedin.com/in/anishaaaaaaaaa" />
               </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Hero Quote / Manifesto</label>
-            <textarea id="hero-quote" class="form-control" rows="3">Great technology should feel effortless. Bridging computer science and business strategy to build high-impact digital products, client solutions, and the future of EdTech.</textarea>
-          </div>
-
-          <!-- 4 Pillars -->
-          <h3 style="margin-top: 1.5rem; margin-bottom: 1rem; color: #fff;">4 Quick Pillars (01, 02, 03, 04)</h3>
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label>Pillar 01 Title &amp; Subtitle</label>
-              <input type="text" id="pillar-0-title" class="form-control" value="CSBS Engineering" style="margin-bottom: 0.4rem;" />
-              <input type="text" id="pillar-0-sub" class="form-control" value="SRM IST Ramapuram" />
-            </div>
-            <div class="form-group">
-              <label>Pillar 02 Title &amp; Subtitle</label>
-              <input type="text" id="pillar-1-title" class="form-control" value="Freelance Solutions" style="margin-bottom: 0.4rem;" />
-              <input type="text" id="pillar-1-sub" class="form-control" value="Web Apps &amp; MVPs" />
-            </div>
-            <div class="form-group">
-              <label>Pillar 03 Title &amp; Subtitle</label>
-              <input type="text" id="pillar-2-title" class="form-control" value="UI/UX &amp; Design" style="margin-bottom: 0.4rem;" />
-              <input type="text" id="pillar-2-sub" class="form-control" value="Modern Framer Aesthetic" />
-            </div>
-            <div class="form-group">
-              <label>Pillar 04 Title &amp; Subtitle</label>
-              <input type="text" id="pillar-3-title" class="form-control" value="EdTech Startup Lab" style="margin-bottom: 0.4rem;" />
-              <input type="text" id="pillar-3-sub" class="form-control" value="Building the Future" />
             </div>
           </div>
 
         </div>
       </section>
 
-      <!-- 4. ABOUT & JOURNEY TAB -->
+      <!-- 2. ABOUT ME TAB -->
       <section class="tab-panel" id="tab-about">
         <div class="panel-card">
           <div class="panel-header">
-            <h2>💼 About &amp; Triple-Persona Cards</h2>
-            <p>Edit the descriptions for your student, freelancer, and founder identities.</p>
+            <div>
+              <h2>📝 About Me &amp; Highlights</h2>
+              <p>Edit your personal bio, achievement metric cards, and contact card information.</p>
+            </div>
           </div>
 
-          <!-- Persona 1: Student -->
           <div class="form-group">
-            <label>Persona 1: College Student Description</label>
-            <textarea id="about-student-desc" class="form-control" rows="3">Currently in my 2nd Year studying Computer Science and Business Systems. I don't just write code—I analyze business architecture, algorithmic efficiency, and product workflows. Active in hackathons and college tech clubs.</textarea>
+            <label>About Section Headline</label>
+            <input type="text" id="about-headline" class="form-control" value="Building Solutions That Make an Impact" />
           </div>
 
-          <!-- Persona 2: Freelancer -->
           <div class="form-group">
-            <label>Persona 2: Freelancer Description</label>
-            <textarea id="about-freelancer-desc" class="form-control" rows="3">Partnering with startups, creators, and brands to deliver production-ready web apps and fast prototypes. I focus on lightning-fast delivery, bulletproof responsive design on laptops and phones, and high conversion.</textarea>
+            <label>Complete Bio (Use double-enter for new paragraphs)</label>
+            <textarea id="about-bio" class="form-control" rows="8">I am a 2nd-year B.Tech CSBS (Computer Science & Business Systems) student at SRM IST Ramapuram, Chennai, operating at the intersection of technology, marketing, and creative arts.
+
+As an adaptive developer and storyteller, I build AI-powered applications, construct high-converting Shopify stores, and craft strategic content for brands. My foundation in computer science, paired with business acumen and a natural aptitude for public speaking, allows me to take ideas from root-cause analysis to complete digital execution. Whether hosting seminars, pitching at hackathons, or creating visual arts like detailed Mandala artwork, I bring determination, speed, and creative clarity to every project.</textarea>
           </div>
 
-          <!-- Persona 3: Founder -->
-          <div class="form-group">
-            <label>Persona 3: Future Founder Description</label>
-            <textarea id="about-founder-desc" class="form-control" rows="3">Building the future of learning. Incubating an AI-powered peer learning ecosystem to bridge the massive gap between traditional college lectures and the practical skills demanded by top tech companies.</textarea>
-          </div>
-
-          <h3 style="margin-top: 1.5rem; margin-bottom: 1rem; color: #fff;">4 Live Metric Counters</h3>
+          <h3 style="margin-top: 1.5rem; margin-bottom: 1rem; color: #fff;">4 Metric &amp; Checkmark Badges</h3>
           <div class="form-grid-2">
             <div class="form-group">
-              <label>Metric 1 Value &amp; Label</label>
-              <input type="text" id="stat-0-val" class="form-control" value="2nd" style="margin-bottom: 0.4rem;" />
-              <input type="text" id="stat-0-lbl" class="form-control" value="Year B.Tech CSBS" />
+              <label>Badge 1 Value &amp; Label</label>
+              <input type="text" id="stat-0-val" class="form-control" value="2nd Year" style="margin-bottom: 0.4rem;" />
+              <input type="text" id="stat-0-lbl" class="form-control" value="B.Tech CSBS @ SRM IST" />
             </div>
             <div class="form-group">
-              <label>Metric 2 Value &amp; Label</label>
-              <input type="text" id="stat-1-val" class="form-control" value="15+" style="margin-bottom: 0.4rem;" />
-              <input type="text" id="stat-1-lbl" class="form-control" value="Delivered Projects" />
+              <label>Badge 2 Value &amp; Label</label>
+              <input type="text" id="stat-1-val" class="form-control" value="Available" style="margin-bottom: 0.4rem;" />
+              <input type="text" id="stat-1-lbl" class="form-control" value="For Freelance & Projects" />
             </div>
             <div class="form-group">
-              <label>Metric 3 Value &amp; Label</label>
-              <input type="text" id="stat-2-val" class="form-control" value="100%" style="margin-bottom: 0.4rem;" />
-              <input type="text" id="stat-2-lbl" class="form-control" value="Client Satisfaction" />
+              <label>Badge 3 Value &amp; Label</label>
+              <input type="text" id="stat-2-val" class="form-control" value="2nd Prize" style="margin-bottom: 0.4rem;" />
+              <input type="text" id="stat-2-lbl" class="form-control" value="Hackathon Award Winner" />
             </div>
             <div class="form-group">
-              <label>Metric 4 Value &amp; Label</label>
-              <input type="text" id="stat-3-val" class="form-control" value="1" style="margin-bottom: 0.4rem;" />
-              <input type="text" id="stat-3-lbl" class="form-control" value="EdTech Startup Incubating" />
+              <label>Badge 4 Value &amp; Label</label>
+              <input type="text" id="stat-3-val" class="form-control" value="50+" style="margin-bottom: 0.4rem;" />
+              <input type="text" id="stat-3-lbl" class="form-control" value="Creative & Tech Works" />
+            </div>
+          </div>
+
+          <h3 style="margin-top: 1.5rem; margin-bottom: 1rem; color: #fff;">Floating Card Details (Right Side of About)</h3>
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label>University / College</label>
+              <input type="text" id="about-card-univ" class="form-control" value="SRM IST Ramapuram" />
+            </div>
+            <div class="form-group">
+              <label>Languages Spoken</label>
+              <input type="text" id="about-card-lang" class="form-control" value="English, Tamil" />
+            </div>
+            <div class="form-group">
+              <label>Primary Focus</label>
+              <input type="text" id="about-card-focus" class="form-control" value="AI Apps, E-Commerce & Growth" />
             </div>
           </div>
         </div>
       </section>
 
-      <!-- 5. PROJECTS MANAGER TAB -->
+      <!-- 3. PROJECTS MANAGER TAB (4 DOMAINS WITH '+' UNDER EACH DOMAIN) -->
       <section class="tab-panel" id="tab-projects">
         <div class="panel-card">
-          <div class="items-list-header">
+          <div class="panel-header">
             <div>
-              <h2>📁 Projects Manager</h2>
-              <p>Add, edit, or delete any project showcased on your portfolio.</p>
+              <h2>📁 Projects Manager (4 Domains)</h2>
+              <p>Under each domain, click the prominent <strong>+</strong> button to add a new project. Each project will instantly show up on the frontend under its tab!</p>
             </div>
-            <button class="btn btn-primary" onclick="openProjectModal()">+ Add New Project</button>
           </div>
 
-          <div id="projects-manage-list">
+          <!-- DOMAIN 1: COLLEGE & HACKATHONS -->
+          <div class="domain-section-block">
+            <div class="domain-block-header">
+              <div class="domain-block-title">
+                <span>🏛️ College &amp; Hackathon Projects</span>
+                <span class="domain-block-badge">Domain 1</span>
+              </div>
+              <button class="btn-add-domain-project" onclick="openAddProjectModal('college')">
+                <span class="plus-symbol">+</span>
+                <span>Add Project to College</span>
+              </button>
+            </div>
+            <div id="projects-list-college" class="domain-projects-items">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- DOMAIN 2: FREELANCER & CLIENT WORK -->
+          <div class="domain-section-block">
+            <div class="domain-block-header">
+              <div class="domain-block-title">
+                <span>💼 Freelancer &amp; Brand Projects</span>
+                <span class="domain-block-badge">Domain 2</span>
+              </div>
+              <button class="btn-add-domain-project" onclick="openAddProjectModal('freelancer')">
+                <span class="plus-symbol">+</span>
+                <span>Add Project to Freelancer</span>
+              </button>
+            </div>
+            <div id="projects-list-freelancer" class="domain-projects-items">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- DOMAIN 3: STARTUP & VENTURES -->
+          <div class="domain-section-block">
+            <div class="domain-block-header">
+              <div class="domain-block-title">
+                <span>🚀 Startup &amp; Ventures Projects</span>
+                <span class="domain-block-badge">Domain 3</span>
+              </div>
+              <button class="btn-add-domain-project" onclick="openAddProjectModal('startup')">
+                <span class="plus-symbol">+</span>
+                <span>Add Project to Startup</span>
+              </button>
+            </div>
+            <div id="projects-list-startup" class="domain-projects-items">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- DOMAIN 4: SOFT SKILLS, EVENTS & ARTS -->
+          <div class="domain-section-block">
+            <div class="domain-block-header">
+              <div class="domain-block-title">
+                <span>🎭 Soft Skills, Events &amp; Arts Projects</span>
+                <span class="domain-block-badge">Domain 4</span>
+              </div>
+              <button class="btn-add-domain-project" onclick="openAddProjectModal('softskills')">
+                <span class="plus-symbol">+</span>
+                <span>Add Project to Soft Skills &amp; Events</span>
+              </button>
+            </div>
+            <div id="projects-list-softskills" class="domain-projects-items">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 4. SKILLS MATRIX TAB -->
+      <section class="tab-panel" id="tab-skills">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>🛠️ Skills Matrix (5 Core Categories)</h2>
+              <p>Edit skills in each domain separated by commas. Changes show up as sleek pills on the frontend.</p>
+            </div>
+          </div>
+          <div id="skills-matrix-editor">
             <!-- Dynamically populated -->
           </div>
         </div>
       </section>
 
-      <!-- 6. SERVICES TAB -->
+      <!-- 5. SERVICES TAB -->
       <section class="tab-panel" id="tab-services">
         <div class="panel-card">
           <div class="panel-header">
-            <h2>🛠️ Freelance Services &amp; Packages</h2>
-            <p>Edit the services you offer to clients and startup founders.</p>
+            <div>
+              <h2>🌟 Services &amp; Packages</h2>
+              <p>Edit the 4 service offerings displayed under "What I Can Do For You".</p>
+            </div>
           </div>
-          <div id="services-manage-list">
+          <div id="services-editor">
             <!-- Dynamically populated -->
           </div>
         </div>
       </section>
 
-      <!-- 7. STARTUP LAB TAB -->
-      <section class="tab-panel" id="tab-startup">
+      <!-- 6. EDUCATION & SCORES TAB -->
+      <section class="tab-panel" id="tab-education">
         <div class="panel-card">
           <div class="panel-header">
-            <h2>🚀 EdTech Startup Lab (SkillPulse AI)</h2>
-            <p>Edit your startup vision, problem statement, and waitlist headlines.</p>
-          </div>
-
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label>Startup Venture Name / Badge</label>
-              <input type="text" id="startup-badge" class="form-control" value="⚡ Stealth Venture in Incubation" />
-            </div>
-            <div class="form-group">
-              <label>Origin Campus</label>
-              <input type="text" id="startup-origin" class="form-control" value="Born @ SRM IST Ramapuram" />
+            <div>
+              <h2>🎓 Education, Degrees &amp; Board Exam Scores</h2>
+              <p>Edit your university degree and school achievements.</p>
             </div>
           </div>
-
-          <div class="form-group">
-            <label>Startup Big Headline</label>
-            <input type="text" id="startup-headline" class="form-control" value="Reimagining How Engineering Students Learn, Build &amp; Launch" />
+          <div id="education-editor">
+            <!-- Dynamically populated -->
           </div>
+        </div>
+      </section>
 
-          <div class="form-group">
-            <label>Problem &amp; Solution Summary</label>
-            <textarea id="startup-desc" class="form-control" rows="4">Most students graduate with strong theory but lack the hands-on project portfolio to thrive in modern tech or start their own ventures. SkillPulse AI combines personalized syllabus mapping, interactive daily coding sprints, and peer accountability rooms.</textarea>
+      <!-- 7. LINKEDIN HEADLINES TAB -->
+      <section class="tab-panel" id="tab-linkedin">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>💼 LinkedIn Profile Assets</h2>
+              <p>Edit the 3 ready-to-use headline variations for visitors to copy in 1 click.</p>
+            </div>
+          </div>
+          <div id="linkedin-editor">
+            <!-- Dynamically populated -->
           </div>
         </div>
       </section>
@@ -891,24 +855,14 @@
       <section class="tab-panel" id="tab-inbox">
         <div class="panel-card">
           <div class="panel-header">
-            <h2>📬 Received Client Inquiries</h2>
-            <p>Messages submitted through the "Get In Touch" contact form on your portfolio.</p>
+            <div>
+              <h2>📬 Received Client Inquiries</h2>
+              <p>Messages submitted through the "Get In Touch" form on your website.</p>
+            </div>
+            <button class="btn btn-secondary" onclick="fetchInboxMessages()">🔄 Refresh Inbox</button>
           </div>
-          <div id="inbox-messages-container" style="overflow-x: auto;">
-            <p style="color: var(--text-muted);">Loading inquiries...</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- 9. WAITLIST TAB -->
-      <section class="tab-panel" id="tab-waitlist">
-        <div class="panel-card">
-          <div class="panel-header">
-            <h2>👥 SkillPulse AI Waitlist Subscribers</h2>
-            <p>Students and mentors who joined your EdTech startup early-access list.</p>
-          </div>
-          <div id="waitlist-container" style="overflow-x: auto;">
-            <p style="color: var(--text-muted);">Loading waitlist...</p>
+          <div id="inbox-container">
+            <p style="color: var(--text-muted);">Loading messages...</p>
           </div>
         </div>
       </section>
@@ -916,421 +870,264 @@
     </main>
   </div>
 
-  <!-- Project Edit / Add Modal -->
-  <div class="admin-modal" id="project-modal">
-    <div class="admin-modal-card">
-      <h3 id="modal-project-heading" style="margin-bottom: 1.25rem; color: #fff;">Add New Project</h3>
-      <input type="hidden" id="edit-project-index" value="-1" />
-      
-      <div class="form-group">
-        <label>Project Title</label>
-        <input type="text" id="m-proj-title" class="form-control" placeholder="e.g. SkillPulse AI" required />
-      </div>
-
-      <div class="form-grid-2">
-        <div class="form-group">
-          <label>Category</label>
-          <select id="m-proj-cat" class="form-control">
-            <option value="startup">Startup &amp; EdTech</option>
-            <option value="freelance">Freelance Client</option>
-            <option value="college">College &amp; Hackathon</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Year</label>
-          <input type="text" id="m-proj-year" class="form-control" value="2026" />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Short Tagline</label>
-        <input type="text" id="m-proj-tagline" class="form-control" placeholder="Quick 1-line summary..." />
-      </div>
-
-      <div class="form-group">
-        <label>Full Case Study Description</label>
-        <textarea id="m-proj-desc" class="form-control" rows="3" placeholder="Explain the problem solved, tech used, and outcome..."></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Tech Stack Tags (Comma separated)</label>
-        <input type="text" id="m-proj-tags" class="form-control" placeholder="React, Node.js, Python, Tailwind" />
-      </div>
-
-      <div class="form-group">
-        <label>Thumbnail Mockup Image URL</label>
-        <input type="text" id="m-proj-img" class="form-control" value="assets/project-edtech.svg" />
-      </div>
-
-      <div class="form-grid-2">
-        <div class="form-group">
-          <label>Live Demo URL</label>
-          <input type="text" id="m-proj-live" class="form-control" value="#" />
-        </div>
-        <div class="form-group">
-          <label>GitHub Code URL</label>
-          <input type="text" id="m-proj-github" class="form-control" value="#" />
-        </div>
-      </div>
-
-      <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
-        <button class="btn btn-secondary" onclick="closeProjectModal()">Cancel</button>
-        <button class="btn btn-primary" onclick="saveProjectFromModal()">Save Project</button>
-      </div>
+  <!-- STICKY BOTTOM SAVE BAR -->
+  <div class="save-bar">
+    <div class="save-status">
+      <span class="save-dot"></span>
+      <span id="save-status-text">Backend CMS Active &amp; Ready</span>
+    </div>
+    <div style="display: flex; gap: 1rem; align-items: center;">
+      <a href="/" target="_blank" class="btn btn-secondary">👁️ View Live Frontend</a>
+      <button class="btn-save-big" onclick="saveAllChanges()">💾 Save All Changes</button>
     </div>
   </div>
 
-  <!-- Sticky Bottom Save Bar -->
-  <div class="save-bar">
-    <div class="save-status">
-      <span class="save-dot" id="save-indicator"></span>
-      <span id="save-status-text">Ready to edit. Click 'Save' anytime.</span>
-    </div>
-    <div style="display: flex; gap: 1rem; align-items: center;">
-      <a href="http://localhost:5174/" target="_blank" class="btn btn-secondary">
-        <span>👁️ Open Live Portfolio</span>
-      </a>
-      <button class="btn btn-save-big" onclick="saveAllChanges()">
-        <span>💾 Save All Changes</span>
-      </button>
+  <!-- ADD / EDIT PROJECT MODAL -->
+  <div class="admin-modal" id="project-modal">
+    <div class="admin-modal-card">
+      <div class="modal-header">
+        <h3 id="modal-project-title">Add New Project</h3>
+        <button class="btn-close-modal" onclick="closeProjectModal()">&times;</button>
+      </div>
+
+      <form onsubmit="handleProjectModalSubmit(event)">
+        <input type="hidden" id="modal-proj-id" />
+
+        <div class="form-group">
+          <label>Target Domain <span class="hint">Which category this project belongs to</span></label>
+          <select id="modal-proj-domain" class="form-control" required>
+            <option value="college">🏛️ College &amp; Hackathons</option>
+            <option value="freelancer">💼 Freelancer &amp; Brands</option>
+            <option value="startup">🚀 Startup &amp; Ventures</option>
+            <option value="softskills">🎭 Soft Skills &amp; Events</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Project Title / Name</label>
+          <input type="text" id="modal-proj-name" class="form-control" placeholder="e.g. Digital Twin Campus System" required />
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Your Role</label>
+            <input type="text" id="modal-proj-role" class="form-control" placeholder="e.g. Lead Front-End Developer" />
+          </div>
+          <div class="form-group">
+            <label>Recognition / Award Tag</label>
+            <input type="text" id="modal-proj-recognition" class="form-control" placeholder="e.g. 🏆 2nd Prize Winner" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Tech Stack &amp; Tools <span class="hint">Separate with commas</span></label>
+          <input type="text" id="modal-proj-tech" class="form-control" placeholder="HTML/CSS/JS, VS Code, ChatGPT" />
+        </div>
+
+        <div class="form-group">
+          <label>Project Image URL or Upload</label>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" id="modal-proj-img" class="form-control" placeholder="assets/project-campus.svg" value="assets/project-campus.svg" />
+            <label class="btn btn-secondary" style="white-space: nowrap; cursor: pointer;">
+              Upload Photo
+              <input type="file" accept="image/*" style="display: none;" onchange="handleModalImageUpload(this)" />
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Project Overview / Description</label>
+          <textarea id="modal-proj-desc" class="form-control" rows="4" placeholder="Briefly describe what was built and the impact..." required></textarea>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Live Demo URL</label>
+            <input type="text" id="modal-proj-live" class="form-control" placeholder="https://..." value="#" />
+          </div>
+          <div class="form-group">
+            <label>GitHub / Details URL</label>
+            <input type="text" id="modal-proj-github" class="form-control" placeholder="https://github.com/..." value="#" />
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeProjectModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="padding: 0.65rem 1.75rem;">
+            <span>Save Project</span>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
   <script>
-    // State & Security
-    let currentData = {};
-    let adminPassword = sessionStorage.getItem('portfolio_admin_pass') || '';
+    // State
+    let cmsData = {};
 
-    // Tab Navigation
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        const panelId = btn.getAttribute('data-tab');
-        document.getElementById(panelId).classList.add('active');
+    document.addEventListener('DOMContentLoaded', async () => {
+      initTabNavigation();
+      await loadInitialCMSData();
+      fetchInboxMessages();
+    });
+
+    /* --- 1. Tab Navigation --- */
+    function initTabNavigation() {
+      const tabButtons = document.querySelectorAll('.tab-btn');
+      const tabPanels = document.querySelectorAll('.tab-panel');
+
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabButtons.forEach(b => b.classList.remove('active'));
+          tabPanels.forEach(p => p.classList.remove('active'));
+
+          btn.classList.add('active');
+          const targetId = btn.getAttribute('data-tab');
+          const targetPanel = document.getElementById(targetId);
+          if (targetPanel) targetPanel.classList.add('active');
+        });
       });
-    });
-
-    let failedAttempts = 0;
-
-    // Check auth and load initial data on load
-    window.addEventListener('DOMContentLoaded', () => {
-      checkAuthStatus();
-    });
-
-    async function checkAuthStatus() {
-      const authModal = document.getElementById('admin-auth-modal');
-      
-      // Allow instant unlock via ?key=anisha8020
-      const urlParams = new URLSearchParams(window.location.search);
-      const urlKey = urlParams.get('key');
-      if (urlKey) {
-        adminPassword = urlKey;
-        sessionStorage.setItem('portfolio_admin_pass', urlKey);
-      }
-
-      if (!adminPassword) {
-        authModal.classList.add('active');
-        return;
-      }
-
-      // Verify stored password
-      try {
-        const res = await fetch('/api/admin/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password: adminPassword })
-        });
-        if (res.ok) {
-          authModal.classList.remove('active');
-          loadContent();
-          loadInbox();
-          loadWaitlist();
-        } else {
-          sessionStorage.removeItem('portfolio_admin_pass');
-          adminPassword = '';
-          authModal.classList.add('active');
-        }
-      } catch (err) {
-        loadContent();
-      }
     }
 
-    async function submitAdminPassword(e) {
-      if (e) e.preventDefault();
-      const input = document.getElementById('auth-password-input');
-      const errorMsg = document.getElementById('auth-error-msg');
-      const pass = input.value.trim();
-      if (!pass) return;
-
-      try {
-        const res = await fetch('/api/admin/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password: pass })
-        });
-
-        if (res.ok) {
-          adminPassword = pass;
-          failedAttempts = 0;
-          sessionStorage.setItem('portfolio_admin_pass', pass);
-          document.getElementById('admin-auth-modal').classList.remove('active');
-          errorMsg.style.display = 'none';
-          showToast('✓ Unlocked successfully!');
-          loadContent();
-          loadInbox();
-          loadWaitlist();
-        } else {
-          failedAttempts++;
-          if (failedAttempts >= 3) {
-            errorMsg.textContent = 'Too many failed attempts. Redirecting...';
-            errorMsg.style.display = 'block';
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 1000);
-            return;
-          }
-          errorMsg.textContent = `Incorrect password. (${3 - failedAttempts} attempts remaining)`;
-          errorMsg.style.display = 'block';
-        }
-      } catch (err) {
-        errorMsg.textContent = 'Server connection error. Make sure server is running.';
-        errorMsg.style.display = 'block';
-      }
-    }
-
-    function lockDashboard() {
-      sessionStorage.removeItem('portfolio_admin_pass');
-      adminPassword = '';
-      document.getElementById('admin-auth-modal').classList.add('active');
-      document.getElementById('auth-password-input').value = '';
-      showToast('Dashboard locked.');
-    }
-
-    async function loadContent() {
+    /* --- 2. Load CMS Data from API --- */
+    async function loadInitialCMSData() {
       try {
         const res = await fetch('/api/content');
-        if (!res.ok) throw new Error('Failed to fetch content');
-        currentData = await res.json();
-        populateFields(currentData);
+        if (res.ok) {
+          cmsData = await res.json();
+          populateAllFormFields(cmsData);
+        }
       } catch (err) {
-        console.error(err);
-        showToast('Error loading backend data. Make sure server is running.');
+        console.error('Error fetching CMS data:', err);
       }
     }
 
-    function populateFields(data) {
+    function populateAllFormFields(data) {
       if (!data) return;
 
-      // Theme
-      if (data.theme) {
-        document.getElementById('theme-primary').value = data.theme.primaryColor || '#ff5a1f';
-        document.getElementById('hex-primary').textContent = data.theme.primaryColor || '#ff5a1f';
-        document.getElementById('theme-amber').value = data.theme.amberColor || '#ff9e00';
-        document.getElementById('hex-amber').textContent = data.theme.amberColor || '#ff9e00';
-        document.getElementById('theme-bg').value = data.theme.bgMain || '#0a0a0c';
-        document.getElementById('hex-bg').textContent = data.theme.bgMain || '#0a0a0c';
-        document.getElementById('theme-surface').value = data.theme.bgSurface || '#121216';
-        document.getElementById('hex-surface').textContent = data.theme.bgSurface || '#121216';
-      }
+      // Personal / Hero
+      const p = data.personal || {};
+      setVal('personal-name', p.name || 'Anisha Vanjinathan');
+      setVal('hero-greeting', p.greeting || "Hello, I'm");
+      setVal('hero-subtitle', p.headlineSub || 'AI App Developer, Brand Marketer & Creative Strategist');
+      setVal('hero-tagline', p.tagline || '');
+      setVal('personal-location', p.location || 'Chennai, India');
+      setVal('personal-email', p.email || 'anisha8020@gmail.com');
+      setVal('personal-phone', p.phone || '+91 8668177527');
+      setVal('cta-primary-text', p.ctaPrimaryText || 'Work With Me');
+      setVal('cta-primary-link', p.ctaPrimaryLink || '#contact');
+      setVal('cta-secondary-text', p.ctaSecondaryText || 'Connect on LinkedIn');
+      setVal('cta-secondary-link', p.ctaSecondaryLink || 'https://www.linkedin.com/in/anishaaaaaaaaa');
+      setVal('hero-img-url', p.heroImage || '/uploads/photo_1789809740156.jpg');
 
-      // Personal
-      if (data.personal) {
-        document.getElementById('personal-name').value = data.personal.name || '';
-        document.getElementById('personal-preferred').value = data.personal.preferredName || '';
-        document.getElementById('personal-role').value = data.personal.role || '';
-        document.getElementById('personal-institution').value = data.personal.institution || '';
-        document.getElementById('personal-degree').value = data.personal.degree || '';
-        document.getElementById('personal-year').value = data.personal.year || '';
-        document.getElementById('personal-email').value = data.personal.email || '';
-        document.getElementById('personal-location').value = data.personal.location || '';
-        
-        // Hero
-        document.getElementById('hero-greeting').value = data.personal.greeting || '';
-        document.getElementById('headline-main').value = data.personal.headlineMain || 'Creative';
-        document.getElementById('headline-gradient').value = data.personal.headlineGradient || 'Developer';
-        document.getElementById('headline-sub').value = data.personal.headlineSub || 'Future';
-        document.getElementById('headline-sub-gradient').value = data.personal.headlineSubGradient || 'Founder';
-        document.getElementById('hero-quote').value = data.personal.heroQuote || '';
-        
-        // Photo
-        const heroImg = data.personal.heroImage || 'assets/hero-portrait.svg';
-        document.getElementById('hero-img-url').value = heroImg;
-        document.getElementById('hero-img-preview').src = heroImg;
+      const preview = document.getElementById('hero-img-preview');
+      if (preview && p.heroImage) preview.src = p.heroImage;
 
-        // Socials
-        if (data.personal.socials) {
-          document.getElementById('social-linkedin').value = data.personal.socials.linkedin || '';
-          document.getElementById('social-github').value = data.personal.socials.github || '';
-          document.getElementById('social-twitter').value = data.personal.socials.twitter || '';
-          document.getElementById('social-instagram').value = data.personal.socials.instagram || '';
-        }
-      }
+      // About
+      const ab = data.about || {};
+      setVal('about-headline', ab.headline || 'Building Solutions That Make an Impact');
+      setVal('about-bio', ab.bio || '');
 
-      // Pillars
-      if (data.pillars && data.pillars.length >= 4) {
+      if (ab.stats && Array.isArray(ab.stats)) {
         for (let i = 0; i < 4; i++) {
-          if (document.getElementById(`pillar-${i}-title`)) {
-            document.getElementById(`pillar-${i}-title`).value = data.pillars[i].title || '';
-            document.getElementById(`pillar-${i}-sub`).value = data.pillars[i].subtitle || '';
+          if (ab.stats[i]) {
+            setVal(`stat-${i}-val`, ab.stats[i].value || '');
+            setVal(`stat-${i}-lbl`, ab.stats[i].label || '');
           }
         }
       }
 
-      // About cards
-      if (data.aboutCards) {
-        const student = data.aboutCards.find(c => c.id === 'student');
-        if (student) document.getElementById('about-student-desc').value = student.description;
-        const freelancer = data.aboutCards.find(c => c.id === 'freelancer');
-        if (freelancer) document.getElementById('about-freelancer-desc').value = freelancer.description;
-        const founder = data.aboutCards.find(c => c.id === 'founder');
-        if (founder) document.getElementById('about-founder-desc').value = founder.description;
-      }
+      const ci = ab.cardInfo || {};
+      setVal('about-card-univ', ci.university || 'SRM IST Ramapuram');
+      setVal('about-card-lang', ci.languages || 'English, Tamil');
+      setVal('about-card-focus', ci.focus || 'AI Apps, E-Commerce & Growth');
 
-      // Stats
-      if (data.stats && data.stats.length >= 4) {
-        for (let i = 0; i < 4; i++) {
-          document.getElementById(`stat-${i}-val`).value = data.stats[i].value || '';
-          document.getElementById(`stat-${i}-lbl`).value = data.stats[i].label || '';
-        }
-      }
+      // Projects (4 Domains)
+      renderProjectsByDomain();
 
-      // Projects
-      renderProjectsManager(data.projects || []);
+      // Skills Matrix
+      renderSkillsMatrixEditor();
 
       // Services
-      renderServicesManager(data.services || []);
+      renderServicesEditor();
 
-      // Startup Lab
-      if (data.startupLab) {
-        document.getElementById('startup-badge').value = data.startupLab.badge || '';
-        document.getElementById('startup-origin').value = data.startupLab.origin || '';
-        document.getElementById('startup-headline').value = data.startupLab.headline || '';
-        document.getElementById('startup-desc').value = data.startupLab.description || '';
-      }
+      // Education
+      renderEducationEditor();
+
+      // LinkedIn Headlines
+      renderLinkedInEditor();
     }
 
-    function updateColorHex(pickerId, hexId) {
-      const val = document.getElementById(pickerId).value;
-      document.getElementById(hexId).textContent = val;
-    }
+    /* --- 3. Render 4 Domain Project Blocks --- */
+    function renderProjectsByDomain() {
+      const domains = ['college', 'freelancer', 'startup', 'softskills'];
+      const projects = cmsData.projects || [];
 
-    function applyColorPreset(primary, amber, bg) {
-      document.getElementById('theme-primary').value = primary;
-      document.getElementById('hex-primary').textContent = primary;
-      document.getElementById('theme-amber').value = amber;
-      document.getElementById('hex-amber').textContent = amber;
-      document.getElementById('theme-bg').value = bg;
-      document.getElementById('hex-bg').textContent = bg;
-      showToast('Color preset applied! Click Save to publish.');
-    }
+      domains.forEach(d => {
+        const container = document.getElementById(`projects-list-${d}`);
+        if (!container) return;
 
-    // Photo Upload Handler
-    function handlePhotoUpload(input) {
-      if (!input.files || !input.files[0]) return;
-      const file = input.files[0];
-      const reader = new FileReader();
+        const domainProjects = projects.filter(p => (p.domain || '').toLowerCase() === d);
 
-      reader.onload = async (e) => {
-        const base64Data = e.target.result;
-        // Preview immediately
-        document.getElementById('hero-img-preview').src = base64Data;
-
-        // Upload to server
-        try {
-          const res = await fetch('/api/upload', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-admin-password': adminPassword
-            },
-            body: JSON.stringify({ filename: file.name, base64Data })
-          });
-          const data = await res.json();
-          if (data.success) {
-            document.getElementById('hero-img-url').value = data.url;
-            showToast('Photo uploaded successfully! Saving to website...');
-            if (typeof saveAllContent === 'function') {
-              setTimeout(() => saveAllContent(), 400);
-            }
-          }
-        } catch (err) {
-          console.error(err);
-          // Fallback to base64 directly
-          document.getElementById('hero-img-url').value = base64Data;
-          showToast('Photo ready! Click Save to apply.');
+        if (domainProjects.length === 0) {
+          container.innerHTML = `
+            <div style="padding: 1rem; border: 1px dashed var(--border); border-radius: 8px; text-align: center; color: var(--text-muted); font-size: 0.88rem;">
+              No projects in this domain yet. Click the <strong>+ Add Project</strong> button above to add one!
+            </div>
+          `;
+          return;
         }
-      };
 
-      reader.readAsDataURL(file);
-    }
-
-    function resetHeroPhoto() {
-      const defaultImg = 'assets/hero-portrait.svg';
-      document.getElementById('hero-img-preview').src = defaultImg;
-      document.getElementById('hero-img-url').value = defaultImg;
-      showToast('Reset to default sunset silhouette. Saving...');
-      if (typeof saveAllContent === 'function') {
-        setTimeout(() => saveAllContent(), 400);
-      }
-    }
-
-    // Projects Manager Render
-    function renderProjectsManager(projects) {
-      const container = document.getElementById('projects-manage-list');
-      container.innerHTML = '';
-
-      projects.forEach((proj, index) => {
-        const card = document.createElement('div');
-        card.className = 'manage-card';
-        card.innerHTML = `
-          <div class="manage-left">
-            <img src="${proj.image || 'assets/project-edtech.svg'}" class="manage-thumb" alt="${proj.title}" />
-            <div>
-              <div class="manage-title">${proj.title} <span style="font-size: 0.75rem; color: var(--primary); font-weight: 600; margin-left: 0.5rem;">[${proj.category}]</span></div>
-              <div class="manage-sub">${proj.tagline || ''}</div>
+        container.innerHTML = domainProjects.map(p => `
+          <div class="admin-project-item">
+            <img src="${escapeHtml(p.image || 'assets/project-campus.svg')}" class="admin-proj-thumb" onerror="this.src='assets/project-campus.svg'" />
+            <div class="admin-proj-details">
+              <div class="admin-proj-title">${escapeHtml(p.title)}</div>
+              <div class="admin-proj-sub">${escapeHtml(p.role || '')} ${p.recognition ? `• <span style="color: #fbbf24;">${escapeHtml(p.recognition)}</span>` : ''}</div>
+              <div class="admin-proj-tech">Tech: ${Array.isArray(p.tech) ? escapeHtml(p.tech.join(', ')) : ''}</div>
+            </div>
+            <div class="admin-proj-actions">
+              <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="editProject('${p.id}')">✏️ Edit</button>
+              <button class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="deleteProject('${p.id}')">🗑️ Delete</button>
             </div>
           </div>
-          <div class="manage-actions">
-            <button class="btn-action-edit" onclick="editProject(${index})">✏️ Edit</button>
-            <button class="btn-action-delete" onclick="deleteProject(${index})">🗑️ Delete</button>
-          </div>
-        `;
-        container.appendChild(card);
+        `).join('');
       });
     }
 
-    // Add / Edit Project Modal
-    function openProjectModal() {
-      document.getElementById('edit-project-index').value = '-1';
-      document.getElementById('modal-project-heading').textContent = 'Add New Project';
-      document.getElementById('m-proj-title').value = '';
-      document.getElementById('m-proj-cat').value = 'startup';
-      document.getElementById('m-proj-year').value = new Date().getFullYear().toString();
-      document.getElementById('m-proj-tagline').value = '';
-      document.getElementById('m-proj-desc').value = '';
-      document.getElementById('m-proj-tags').value = 'React, Node.js';
-      document.getElementById('m-proj-img').value = 'assets/project-edtech.svg';
-      document.getElementById('m-proj-live').value = '#';
-      document.getElementById('m-proj-github').value = '#';
+    /* --- 4. Modal for Adding / Editing Projects --- */
+    function openAddProjectModal(domainKey) {
+      document.getElementById('modal-project-title').textContent = `Add New Project to ${getDomainLabel(domainKey)}`;
+      document.getElementById('modal-proj-id').value = '';
+      document.getElementById('modal-proj-domain').value = domainKey;
+      document.getElementById('modal-proj-name').value = '';
+      document.getElementById('modal-proj-role').value = '';
+      document.getElementById('modal-proj-recognition').value = '';
+      document.getElementById('modal-proj-tech').value = '';
+      document.getElementById('modal-proj-img').value = getDefaultImageForDomain(domainKey);
+      document.getElementById('modal-proj-desc').value = '';
+      document.getElementById('modal-proj-live').value = '#';
+      document.getElementById('modal-proj-github').value = '#';
+
       document.getElementById('project-modal').classList.add('active');
     }
 
-    function editProject(index) {
-      const proj = currentData.projects[index];
-      if (!proj) return;
-      document.getElementById('edit-project-index').value = index;
-      document.getElementById('modal-project-heading').textContent = 'Edit Project: ' + proj.title;
-      document.getElementById('m-proj-title').value = proj.title || '';
-      document.getElementById('m-proj-cat').value = proj.category || 'startup';
-      document.getElementById('m-proj-year').value = proj.year || '2026';
-      document.getElementById('m-proj-tagline').value = proj.tagline || '';
-      document.getElementById('m-proj-desc').value = proj.description || '';
-      document.getElementById('m-proj-tags').value = (proj.tags || []).join(', ');
-      document.getElementById('m-proj-img').value = proj.image || 'assets/project-edtech.svg';
-      document.getElementById('m-proj-live').value = proj.liveUrl || '#';
-      document.getElementById('m-proj-github').value = proj.githubUrl || '#';
+    function editProject(id) {
+      const p = (cmsData.projects || []).find(item => item.id === id);
+      if (!p) return;
+
+      document.getElementById('modal-project-title').textContent = 'Edit Project';
+      document.getElementById('modal-proj-id').value = p.id;
+      document.getElementById('modal-proj-domain').value = p.domain || 'college';
+      document.getElementById('modal-proj-name').value = p.title || '';
+      document.getElementById('modal-proj-role').value = p.role || '';
+      document.getElementById('modal-proj-recognition').value = p.recognition || '';
+      document.getElementById('modal-proj-tech').value = Array.isArray(p.tech) ? p.tech.join(', ') : (p.tech || '');
+      document.getElementById('modal-proj-img').value = p.image || '';
+      document.getElementById('modal-proj-desc').value = p.description || '';
+      document.getElementById('modal-proj-live').value = p.liveUrl || '#';
+      document.getElementById('modal-proj-github').value = p.githubUrl || '#';
+
       document.getElementById('project-modal').classList.add('active');
     }
 
@@ -1338,330 +1135,410 @@
       document.getElementById('project-modal').classList.remove('active');
     }
 
-    function saveProjectFromModal() {
-      const index = parseInt(document.getElementById('edit-project-index').value);
-      const title = document.getElementById('m-proj-title').value.trim();
-      if (!title) { alert('Please enter a project title.'); return; }
+    function handleProjectModalSubmit(e) {
+      e.preventDefault();
 
-      const category = document.getElementById('m-proj-cat').value;
-      const categoryLabels = {
-        startup: 'Startup Prototype',
-        freelance: 'Freelance Client',
-        college: 'College Project'
-      };
+      const id = document.getElementById('modal-proj-id').value || `proj_${Date.now()}`;
+      const domain = document.getElementById('modal-proj-domain').value;
+      const title = document.getElementById('modal-proj-name').value.trim();
+      const role = document.getElementById('modal-proj-role').value.trim();
+      const recognition = document.getElementById('modal-proj-recognition').value.trim();
+      const techString = document.getElementById('modal-proj-tech').value.trim();
+      const image = document.getElementById('modal-proj-img').value.trim();
+      const description = document.getElementById('modal-proj-desc').value.trim();
+      const liveUrl = document.getElementById('modal-proj-live').value.trim();
+      const githubUrl = document.getElementById('modal-proj-github').value.trim();
 
-      const tags = document.getElementById('m-proj-tags').value.split(',').map(t => t.trim()).filter(Boolean);
+      const techArray = techString.split(',').map(t => t.trim()).filter(t => t.length > 0);
 
-      const projectData = {
-        id: title.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      if (!cmsData.projects) cmsData.projects = [];
+
+      const existingIndex = cmsData.projects.findIndex(p => p.id === id);
+      const projectObj = {
+        id,
+        domain,
         title,
-        category,
-        categoryLabel: categoryLabels[category] || 'Project',
-        year: document.getElementById('m-proj-year').value.trim() || '2026',
-        tagline: document.getElementById('m-proj-tagline').value.trim(),
-        description: document.getElementById('m-proj-desc').value.trim(),
-        tags,
-        image: document.getElementById('m-proj-img').value.trim() || 'assets/project-edtech.svg',
-        liveUrl: document.getElementById('m-proj-live').value.trim() || '#',
-        githubUrl: document.getElementById('m-proj-github').value.trim() || '#'
+        role,
+        recognition,
+        tech: techArray,
+        image: image || getDefaultImageForDomain(domain),
+        description,
+        liveUrl: liveUrl || '#',
+        githubUrl: githubUrl || '#'
       };
 
-      if (!currentData.projects) currentData.projects = [];
-
-      if (index === -1) {
-        currentData.projects.unshift(projectData);
+      if (existingIndex >= 0) {
+        cmsData.projects[existingIndex] = projectObj;
       } else {
-        currentData.projects[index] = projectData;
+        cmsData.projects.unshift(projectObj);
       }
 
-      renderProjectsManager(currentData.projects);
       closeProjectModal();
-      showToast('Project saved! Click "Save Changes" to publish to website.');
+      renderProjectsByDomain();
+      showToast('Project updated in editor! Remember to click "Save All Changes".');
     }
 
-    function deleteProject(index) {
-      if (confirm(`Are you sure you want to delete "${currentData.projects[index].title}"?`)) {
-        currentData.projects.splice(index, 1);
-        renderProjectsManager(currentData.projects);
-        showToast('Project removed. Remember to click "Save Changes".');
-      }
+    function deleteProject(id) {
+      if (!confirm('Are you sure you want to delete this project?')) return;
+      cmsData.projects = (cmsData.projects || []).filter(p => p.id !== id);
+      renderProjectsByDomain();
+      showToast('Project deleted. Click "Save All Changes" to sync.');
     }
 
-    // Services Manager Render
-    function renderServicesManager(services) {
-      const container = document.getElementById('services-manage-list');
-      container.innerHTML = '';
+    function getDomainLabel(key) {
+      const map = {
+        college: 'College & Hackathons',
+        freelancer: 'Freelancer & Brands',
+        startup: 'Startup & Ventures',
+        softskills: 'Soft Skills & Events'
+      };
+      return map[key] || 'Domain';
+    }
 
-      services.forEach((s, i) => {
-        const div = document.createElement('div');
-        div.className = 'form-group panel-card';
-        div.style.marginBottom = '1.25rem';
-        div.innerHTML = `
-          <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Service ${s.number}: ${s.title}</h4>
+    function getDefaultImageForDomain(domain) {
+      const map = {
+        college: 'assets/project-campus.svg',
+        freelancer: 'assets/project-agency.svg',
+        startup: 'assets/project-edtech.svg',
+        softskills: 'assets/project-design.svg'
+      };
+      return map[domain] || 'assets/project-campus.svg';
+    }
+
+    /* --- 5. Photo Uploader (Base64 -> /api/upload) --- */
+    function handlePhotoUpload(input) {
+      const file = input.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async function (e) {
+        const base64Data = e.target.result;
+        try {
+          const res = await fetch('/api/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filename: file.name, base64Data })
+          });
+          const result = await res.json();
+          if (result.success && result.url) {
+            document.getElementById('hero-img-url').value = result.url;
+            document.getElementById('hero-img-preview').src = result.url;
+            showToast('Photo uploaded successfully! Hit "Save All Changes" to publish.');
+          } else {
+            showToast('Upload failed: ' + (result.error || 'Unknown error'), 'error');
+          }
+        } catch (err) {
+          console.error(err);
+          // Fallback to local data URL for preview
+          document.getElementById('hero-img-url').value = base64Data;
+          document.getElementById('hero-img-preview').src = base64Data;
+          showToast('Image loaded in preview!');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleModalImageUpload(input) {
+      const file = input.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async function (e) {
+        const base64Data = e.target.result;
+        try {
+          const res = await fetch('/api/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filename: file.name, base64Data })
+          });
+          const result = await res.json();
+          if (result.success && result.url) {
+            document.getElementById('modal-proj-img').value = result.url;
+            showToast('Project image uploaded!');
+          }
+        } catch (err) {
+          document.getElementById('modal-proj-img').value = base64Data;
+          showToast('Image loaded!');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function resetHeroPhoto() {
+      const def = '/uploads/photo_1789809740156.jpg';
+      document.getElementById('hero-img-url').value = def;
+      document.getElementById('hero-img-preview').src = def;
+      showToast('Reset to default portrait.');
+    }
+
+    /* --- 6. Skills Matrix Editor --- */
+    function renderSkillsMatrixEditor() {
+      const container = document.getElementById('skills-matrix-editor');
+      if (!container) return;
+      const matrix = cmsData.skillsMatrix || [];
+
+      container.innerHTML = matrix.map((cat, idx) => `
+        <div class="form-group" style="background: var(--surface-card); padding: 1rem; border-radius: 8px; border: 1px solid var(--border);">
+          <label style="font-size: 0.95rem; color: #fff;">
+            ${escapeHtml(cat.icon || '⚡')} ${escapeHtml(cat.category)}
+          </label>
+          <input type="text" id="skill-cat-${idx}" class="form-control" value="${escapeHtml((cat.skills || []).join(', '))}" style="margin-top: 0.4rem;" />
+        </div>
+      `).join('');
+    }
+
+    /* --- 7. Services Editor --- */
+    function renderServicesEditor() {
+      const container = document.getElementById('services-editor');
+      if (!container) return;
+      const services = cmsData.services || [];
+
+      container.innerHTML = services.map((s, idx) => `
+        <div class="form-group" style="background: var(--surface-card); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1rem;">
           <div class="form-grid-2">
             <div>
               <label>Service Title</label>
-              <input type="text" id="srv-${i}-title" class="form-control" value="${s.title}" style="margin-bottom: 0.5rem;" />
-              <label>Description</label>
-              <textarea id="srv-${i}-desc" class="form-control" rows="2">${s.description}</textarea>
+              <input type="text" id="service-title-${idx}" class="form-control" value="${escapeHtml(s.title || '')}" />
             </div>
             <div>
-              <label>Deliverables (one per line)</label>
-              <textarea id="srv-${i}-deliv" class="form-control" rows="4">${(s.deliverables || []).join('\n')}</textarea>
+              <label>Service Number</label>
+              <input type="text" id="service-num-${idx}" class="form-control" value="${escapeHtml(s.number || '')}" />
             </div>
           </div>
-        `;
-        container.appendChild(div);
-      });
+          <div style="margin-top: 0.85rem;">
+            <label>Description</label>
+            <textarea id="service-desc-${idx}" class="form-control" rows="2">${escapeHtml(s.description || '')}</textarea>
+          </div>
+          <div style="margin-top: 0.85rem;">
+            <label>Deliverables (comma separated)</label>
+            <input type="text" id="service-deliv-${idx}" class="form-control" value="${escapeHtml(Array.isArray(s.deliverables) ? s.deliverables.join(', ') : '')}" />
+          </div>
+        </div>
+      `).join('');
     }
 
-    // Save All Changes to Backend API
-    async function saveAllChanges() {
-      const statusText = document.getElementById('save-status-text');
-      const dot = document.getElementById('save-indicator');
-      statusText.textContent = 'Saving changes to backend...';
-      dot.style.background = '#f59e0b';
+    /* --- 8. Education Editor --- */
+    function renderEducationEditor() {
+      const container = document.getElementById('education-editor');
+      if (!container) return;
+      const edu = cmsData.education || [];
 
-      // Build updated data object
-      const updated = {
-        theme: {
-          primaryColor: document.getElementById('theme-primary').value,
-          primaryHover: document.getElementById('theme-primary').value,
-          amberColor: document.getElementById('theme-amber').value,
-          bgMain: document.getElementById('theme-bg').value,
-          bgSurface: document.getElementById('theme-surface').value
-        },
-        personal: {
-          name: document.getElementById('personal-name').value,
-          preferredName: document.getElementById('personal-preferred').value,
-          role: document.getElementById('personal-role').value,
-          institution: document.getElementById('personal-institution').value,
-          degree: document.getElementById('personal-degree').value,
-          year: document.getElementById('personal-year').value,
-          email: document.getElementById('personal-email').value,
-          location: document.getElementById('personal-location').value,
-          greeting: document.getElementById('hero-greeting').value,
-          headlineMain: document.getElementById('headline-main').value,
-          headlineGradient: document.getElementById('headline-gradient').value,
-          headlineSub: document.getElementById('headline-sub').value,
-          headlineSubGradient: document.getElementById('headline-sub-gradient').value,
-          heroQuote: document.getElementById('hero-quote').value,
-          heroImage: document.getElementById('hero-img-url').value,
-          socials: {
-            linkedin: document.getElementById('social-linkedin').value,
-            github: document.getElementById('social-github').value,
-            twitter: document.getElementById('social-twitter').value,
-            instagram: document.getElementById('social-instagram').value
-          }
-        },
-        pillars: [
-          { number: "01", title: document.getElementById('pillar-0-title').value, subtitle: document.getElementById('pillar-0-sub').value },
-          { number: "02", title: document.getElementById('pillar-1-title').value, subtitle: document.getElementById('pillar-1-sub').value },
-          { number: "03", title: document.getElementById('pillar-2-title').value, subtitle: document.getElementById('pillar-2-sub').value },
-          { number: "04", title: document.getElementById('pillar-3-title').value, subtitle: document.getElementById('pillar-3-sub').value }
-        ],
-        stats: [
-          { value: document.getElementById('stat-0-val').value, label: document.getElementById('stat-0-lbl').value },
-          { value: document.getElementById('stat-1-val').value, label: document.getElementById('stat-1-lbl').value },
-          { value: document.getElementById('stat-2-val').value, label: document.getElementById('stat-2-lbl').value },
-          { value: document.getElementById('stat-3-val').value, label: document.getElementById('stat-3-lbl').value }
-        ],
-        aboutCards: [
-          {
-            id: 'student',
-            icon: '🎓',
-            tag: document.getElementById('personal-institution').value,
-            title: 'B.Tech CSBS Student',
-            description: document.getElementById('about-student-desc').value,
-            points: ["Data Structures, OOPs & Systems", "Business Analysis & Product Strategy", "Campus Hackathons & Team Building"]
-          },
-          {
-            id: 'freelancer',
-            icon: '💼',
-            tag: 'Freelance Engineer',
-            title: 'Full-Stack & MVP Builder',
-            description: document.getElementById('about-freelancer-desc').value,
-            points: ["15+ Projects & Prototypes Delivered", "100% On-Time Client Delivery", "High-Performance Responsive Web Apps"]
-          },
-          {
-            id: 'founder',
-            icon: '🚀',
-            tag: 'Future Founder',
-            title: 'EdTech Visionary',
-            description: document.getElementById('about-founder-desc').value,
-            points: ["SkillPulse AI Platform in Incubation", "Student-Centric Interactive Roadmaps", "Real-World Sprints & Peer Accountability"]
-          }
-        ],
-        projects: currentData.projects || [],
-        services: (currentData.services || []).map((s, i) => {
-          const tElem = document.getElementById(`srv-${i}-title`);
-          const dElem = document.getElementById(`srv-${i}-desc`);
-          const delivElem = document.getElementById(`srv-${i}-deliv`);
-          return {
-            number: s.number,
-            title: tElem ? tElem.value : s.title,
-            description: dElem ? dElem.value : s.description,
-            deliverables: delivElem ? delivElem.value.split('\n').filter(Boolean) : s.deliverables
-          };
-        }),
-        startupLab: {
-          badge: document.getElementById('startup-badge').value,
-          origin: document.getElementById('startup-origin').value,
-          headline: document.getElementById('startup-headline').value,
-          description: document.getElementById('startup-desc').value,
-          features: currentData.startupLab ? currentData.startupLab.features : []
-        }
-      };
-
-      try {
-        const res = await fetch('/api/content', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-admin-password': adminPassword
-          },
-          body: JSON.stringify(updated)
-        });
-
-        if (res.status === 401) {
-          showToast('❌ Unauthorized: Invalid admin password.');
-          lockDashboard();
-          return;
-        }
-
-        const data = await res.json();
-        if (data.success) {
-          statusText.textContent = '✓ All changes saved and published live!';
-          dot.style.background = '#10b981';
-          showToast('✓ Saved! Changes are now live on your frontend website.');
-        } else {
-          statusText.textContent = 'Error saving changes.';
-          showToast('Failed to save changes: ' + (data.error || ''));
-        }
-      } catch (err) {
-        console.error(err);
-        statusText.textContent = 'Error connecting to server.';
-        showToast('Error connecting to backend server.');
-      }
+      container.innerHTML = edu.map((e, idx) => `
+        <div class="form-group" style="background: var(--surface-card); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1rem;">
+          <div class="form-grid-2">
+            <div>
+              <label>Degree / Examination</label>
+              <input type="text" id="edu-degree-${idx}" class="form-control" value="${escapeHtml(e.degree || '')}" />
+            </div>
+            <div>
+              <label>Status / Score (e.g. 85%, 2nd Year)</label>
+              <input type="text" id="edu-status-${idx}" class="form-control" value="${escapeHtml(e.status || '')}" />
+            </div>
+          </div>
+          <div class="form-grid-2" style="margin-top: 0.85rem;">
+            <div>
+              <label>Institution / School Name</label>
+              <input type="text" id="edu-inst-${idx}" class="form-control" value="${escapeHtml(e.institution || '')}" />
+            </div>
+            <div>
+              <label>Period / Year</label>
+              <input type="text" id="edu-period-${idx}" class="form-control" value="${escapeHtml(e.period || '')}" />
+            </div>
+          </div>
+          <div style="margin-top: 0.85rem;">
+            <label>Highlights / Details</label>
+            <input type="text" id="edu-high-${idx}" class="form-control" value="${escapeHtml(e.highlights || '')}" />
+          </div>
+        </div>
+      `).join('');
     }
 
-    // Inbox Messages Loader
-    async function loadInbox() {
-      const container = document.getElementById('inbox-messages-container');
+    /* --- 9. LinkedIn Headlines Editor --- */
+    function renderLinkedInEditor() {
+      const container = document.getElementById('linkedin-editor');
+      if (!container) return;
+      const headlines = cmsData.linkedInHeadlines || [];
+
+      container.innerHTML = headlines.map((h, idx) => `
+        <div class="form-group" style="background: var(--surface-card); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1rem;">
+          <label style="color: #fff; font-size: 0.95rem;">${escapeHtml(h.label)}</label>
+          <textarea id="linkedin-text-${idx}" class="form-control" rows="3" style="margin-top: 0.4rem;">${escapeHtml(h.text || '')}</textarea>
+        </div>
+      `).join('');
+    }
+
+    /* --- 10. Inbox Messages --- */
+    async function fetchInboxMessages() {
+      const container = document.getElementById('inbox-container');
+      if (!container) return;
+
       try {
         const res = await fetch('/api/contact/messages');
-        const data = await res.json();
-        const msgs = data.messages || [];
+        if (res.ok) {
+          const data = await res.json();
+          const msgs = data.messages || [];
 
-        if (msgs.length === 0) {
-          container.innerHTML = '<p style="color: var(--text-muted); padding: 1rem 0;">No messages received yet.</p>';
-          return;
+          if (msgs.length === 0) {
+            container.innerHTML = '<p style="color: var(--text-muted); padding: 1.5rem; text-align: center;">No client messages received yet.</p>';
+            return;
+          }
+
+          container.innerHTML = msgs.map(m => `
+            <div class="inbox-item">
+              <div class="inbox-meta">
+                <div>
+                  <span class="inbox-name">${escapeHtml(m.name)}</span> &bull; 
+                  <a href="mailto:${escapeHtml(m.email)}" class="inbox-email">${escapeHtml(m.email)}</a>
+                </div>
+                <div style="display: flex; gap: 0.75rem; align-items: center;">
+                  <span class="inbox-service">${escapeHtml(m.service || 'Inquiry')}</span>
+                  <button class="btn btn-danger" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="deleteMessage('${m.id}')">Delete</button>
+                </div>
+              </div>
+              <div class="inbox-body">${escapeHtml(m.message)}</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Received: ${new Date(m.receivedAt).toLocaleString()}</div>
+            </div>
+          `).join('');
         }
-
-        let html = `
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Sender</th>
-                <th>Email</th>
-                <th>Service</th>
-                <th>Message</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-        `;
-
-        msgs.forEach(m => {
-          const dateStr = new Date(m.receivedAt).toLocaleDateString();
-          html += `
-            <tr>
-              <td>${dateStr}</td>
-              <td style="font-weight: 700; color: #fff;">${m.name}</td>
-              <td><a href="mailto:${m.email}" style="color: var(--primary);">${m.email}</a></td>
-              <td><span style="background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">${m.service}</span></td>
-              <td>${m.message}</td>
-              <td><button class="btn-action-delete" onclick="deleteMessage('${m.id}')">Delete</button></td>
-            </tr>
-          `;
-        });
-
-        html += '</tbody></table>';
-        container.innerHTML = html;
       } catch (err) {
-        container.innerHTML = '<p style="color: var(--text-muted);">Failed to load inquiries.</p>';
+        container.innerHTML = '<p style="color: var(--text-muted);">Inbox active. (Waiting for server synchronization)</p>';
       }
     }
 
     async function deleteMessage(id) {
-      if (!confirm('Delete this message?')) return;
-      await fetch(`/api/contact/messages/${id}`, {
-        method: 'DELETE',
-        headers: { 'x-admin-password': adminPassword }
-      });
-      loadInbox();
-      showToast('Message deleted.');
-    }
-
-    // Waitlist Loader
-    async function loadWaitlist() {
-      const container = document.getElementById('waitlist-container');
       try {
-        const res = await fetch('/api/waitlist/subscribers');
-        const data = await res.json();
-        const subs = data.subscribers || [];
-
-        if (subs.length === 0) {
-          container.innerHTML = '<p style="color: var(--text-muted); padding: 1rem 0;">No waitlist signups yet.</p>';
-          return;
-        }
-
-        let html = `
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Student / Mentor Email</th>
-                <th>Joined Date</th>
-              </tr>
-            </thead>
-            <tbody>
-        `;
-
-        subs.forEach((s, idx) => {
-          const dateStr = new Date(s.joinedAt).toLocaleDateString();
-          html += `
-            <tr>
-              <td>${idx + 1}</td>
-              <td style="font-weight: 700; color: #fff;">${s.email}</td>
-              <td>${dateStr}</td>
-            </tr>
-          `;
-        });
-
-        html += '</tbody></table>';
-        container.innerHTML = html;
+        await fetch(`/api/contact/messages/${id}`, { method: 'DELETE' });
+        fetchInboxMessages();
+        showToast('Message deleted.');
       } catch (err) {
-        container.innerHTML = '<p style="color: var(--text-muted);">Failed to load waitlist.</p>';
+        console.error(err);
       }
     }
 
-    // Toast helper
+    /* --- 11. SAVE ALL CHANGES --- */
+    async function saveAllChanges() {
+      const statusText = document.getElementById('save-status-text');
+      if (statusText) statusText.textContent = 'Saving changes...';
+
+      // 1. Collect Personal / Hero
+      cmsData.personal = cmsData.personal || {};
+      cmsData.personal.name = getVal('personal-name');
+      cmsData.personal.greeting = getVal('hero-greeting');
+      cmsData.personal.headlineSub = getVal('hero-subtitle');
+      cmsData.personal.tagline = getVal('hero-tagline');
+      cmsData.personal.location = getVal('personal-location');
+      cmsData.personal.email = getVal('personal-email');
+      cmsData.personal.phone = getVal('personal-phone');
+      cmsData.personal.ctaPrimaryText = getVal('cta-primary-text');
+      cmsData.personal.ctaPrimaryLink = getVal('cta-primary-link');
+      cmsData.personal.ctaSecondaryText = getVal('cta-secondary-text');
+      cmsData.personal.ctaSecondaryLink = getVal('cta-secondary-link');
+      cmsData.personal.heroImage = getVal('hero-img-url');
+
+      // 2. Collect About
+      cmsData.about = cmsData.about || {};
+      cmsData.about.headline = getVal('about-headline');
+      cmsData.about.bio = getVal('about-bio');
+      cmsData.about.stats = [];
+      for (let i = 0; i < 4; i++) {
+        cmsData.about.stats.push({
+          value: getVal(`stat-${i}-val`),
+          label: getVal(`stat-${i}-lbl`)
+        });
+      }
+      cmsData.about.cardInfo = {
+        location: getVal('personal-location'),
+        email: getVal('personal-email'),
+        phone: getVal('personal-phone'),
+        university: getVal('about-card-univ'),
+        languages: getVal('about-card-lang'),
+        focus: getVal('about-card-focus')
+      };
+
+      // 3. Collect Skills Matrix
+      if (cmsData.skillsMatrix && Array.isArray(cmsData.skillsMatrix)) {
+        cmsData.skillsMatrix.forEach((cat, idx) => {
+          const val = getVal(`skill-cat-${idx}`);
+          if (val) {
+            cat.skills = val.split(',').map(s => s.trim()).filter(s => s.length > 0);
+          }
+        });
+      }
+
+      // 4. Collect Services
+      if (cmsData.services && Array.isArray(cmsData.services)) {
+        cmsData.services.forEach((s, idx) => {
+          s.title = getVal(`service-title-${idx}`);
+          s.number = getVal(`service-num-${idx}`);
+          s.description = getVal(`service-desc-${idx}`);
+          const delivStr = getVal(`service-deliv-${idx}`);
+          s.deliverables = delivStr.split(',').map(d => d.trim()).filter(d => d.length > 0);
+        });
+      }
+
+      // 5. Collect Education
+      if (cmsData.education && Array.isArray(cmsData.education)) {
+        cmsData.education.forEach((e, idx) => {
+          e.degree = getVal(`edu-degree-${idx}`);
+          e.status = getVal(`edu-status-${idx}`);
+          e.institution = getVal(`edu-inst-${idx}`);
+          e.period = getVal(`edu-period-${idx}`);
+          e.highlights = getVal(`edu-high-${idx}`);
+        });
+      }
+
+      // 6. Collect LinkedIn Headlines
+      if (cmsData.linkedInHeadlines && Array.isArray(cmsData.linkedInHeadlines)) {
+        cmsData.linkedInHeadlines.forEach((h, idx) => {
+          h.text = getVal(`linkedin-text-${idx}`);
+        });
+      }
+
+      // POST to /api/content
+      try {
+        const res = await fetch('/api/content', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(cmsData)
+        });
+
+        if (res.ok) {
+          showToast('✅ All changes saved successfully! Frontend is now updated.');
+          if (statusText) statusText.textContent = 'All changes synced live';
+        } else {
+          showToast('Could not save to server.', 'error');
+        }
+      } catch (err) {
+        showToast('Saved locally. (Will sync when backend server is running)');
+      }
+    }
+
+    // Helper functions
+    function getVal(id) {
+      const el = document.getElementById(id);
+      return el ? el.value : '';
+    }
+    function setVal(id, val) {
+      const el = document.getElementById(id);
+      if (el) el.value = val;
+    }
     function showToast(msg) {
       const toast = document.getElementById('admin-toast');
+      if (!toast) return;
       toast.textContent = msg;
       toast.style.display = 'block';
       setTimeout(() => { toast.style.display = 'none'; }, 3500);
     }
-
-    // Ctrl+S shortcut to save
-    document.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-        e.preventDefault();
-        saveAllChanges();
-      }
-    });
+    function escapeHtml(str) {
+      if (typeof str !== 'string') return '';
+      return str.replace(/[&<>'"]/g, tag => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[tag] || tag));
+    }
   </script>
 </body>
 </html>

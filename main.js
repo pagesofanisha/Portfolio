@@ -1,568 +1,484 @@
 /**
- * ANISHA VANJINATHAN - PORTFOLIO INTERACTIVITY & DYNAMIC CMS BINDING
- * Loads content live from backend API (/api/content) or falls back to profile-config.js.
- * Everything edited in the Admin Dashboard is instantly reflected here.
+ * ANISHA VANJINATHAN - PREMIUM FULLSTACK PORTFOLIO
+ * Dynamic CMS data binding, 4-domain project filters, and interactive features.
  */
 
 import { profileConfig } from './profile-config.js';
 
-// State: starts with default config, then merges live data from backend CMS
-let contentData = { ...profileConfig };
+let appData = { ...profileConfig };
+let currentDomainFilter = 'all';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  initNavigation();
-  initCopyEmail();
-  initForms();
-  initModal();
-  initScrollEffects();
+  initMobileDrawer();
+  initContactForm();
+  initDomainFilters();
 
-  // Load live data from Backend CMS
-  await loadDynamicContent();
-  
+  // Load dynamic data from Backend CMS
+  await fetchLiveCMSData();
+
   // Initial renders
-  renderAllProjects('all');
-  renderServices();
+  renderAllSections();
 });
 
 /* ==========================================================================
-   0. DYNAMIC CMS BINDING (LIVE THEME & CONTENT UPDATES)
+   1. DATA LOADING FROM BACKEND API
    ========================================================================== */
-async function loadDynamicContent() {
+async function fetchLiveCMSData() {
   try {
     const res = await fetch('/api/content');
     if (res.ok) {
       const liveData = await res.json();
       if (liveData && Object.keys(liveData).length > 0) {
-        contentData = { ...contentData, ...liveData };
-        applyLiveThemeAndContent(contentData);
+        appData = { ...appData, ...liveData };
+        console.log('[CMS] Successfully synced latest content from backend API.');
       }
     }
   } catch (err) {
-    console.log('Running in offline/static mode with default profile.');
-  }
-}
-
-function applyLiveThemeAndContent(data) {
-  if (!data) return;
-
-  // 1. Theme & Colors
-  if (data.theme) {
-    const root = document.documentElement;
-    if (data.theme.primaryColor) {
-      root.style.setProperty('--primary-orange', data.theme.primaryColor);
-      root.style.setProperty('--primary-orange-hover', data.theme.primaryHover || data.theme.primaryColor);
-    }
-    if (data.theme.amberColor) {
-      root.style.setProperty('--primary-amber', data.theme.amberColor);
-    }
-    if (data.theme.bgMain) {
-      root.style.setProperty('--bg-main', data.theme.bgMain);
-    }
-    if (data.theme.bgSurface) {
-      root.style.setProperty('--bg-surface', data.theme.bgSurface);
-    }
-  }
-
-  // 2. Personal & Hero Section
-  if (data.personal) {
-    const p = data.personal;
-
-    // Logos
-    document.querySelectorAll('.logo-accent').forEach(el => el.textContent = p.preferredName || 'Anisha');
-    document.querySelectorAll('.mobile-logo').forEach(el => el.innerHTML = `${p.preferredName || 'Anisha'}<span>.v</span>`);
-
-    // Hero Greeting
-    const heroBadge = document.getElementById('hero-badge-text');
-    if (heroBadge && p.greeting) heroBadge.textContent = p.greeting;
-
-    // Hero Headline
-    const heroHeadline = document.getElementById('hero-headline');
-    if (heroHeadline) {
-      heroHeadline.innerHTML = `
-        ${p.headlineMain || 'Creative'} <span class="gradient-text">${p.headlineGradient || 'Developer'}</span> &amp;<br />
-        ${p.headlineSub || 'Future'} <span class="gradient-text-amber">${p.headlineSubGradient || 'Founder'}</span>
-      `;
-    }
-
-    // Hero Quote
-    const heroQuote = document.getElementById('hero-quote');
-    if (heroQuote && p.heroQuote) {
-      heroQuote.textContent = `"${p.heroQuote.replace(/^"|"$/g, '')}"`;
-    }
-
-    // Hero Portrait Image
-    const portraitImg = document.getElementById('hero-portrait-img');
-    if (portraitImg && p.heroImage) {
-      portraitImg.src = p.heroImage;
-    }
-
-    // Hero Caption
-    const capName = document.getElementById('hero-caption-name');
-    if (capName && p.name) capName.textContent = p.name;
-    const capSub = document.getElementById('hero-caption-sub');
-    if (capSub) capSub.textContent = `${p.year || '2nd Year'} • ${p.institution || 'SRM IST Ramapuram'}`;
-
-    // Direct Email
-    document.querySelectorAll('#contact-email-display, .mobile-email').forEach(el => {
-      if (p.email) el.textContent = p.email;
-    });
-  }
-
-  // 3. 4 Pillars Strip
-  if (data.pillars && data.pillars.length >= 4) {
-    const pillarsGrid = document.getElementById('hero-pillars-grid');
-    if (pillarsGrid) {
-      pillarsGrid.innerHTML = data.pillars.map(p => `
-        <div class="pillar-card">
-          <span class="pillar-num">${p.number}</span>
-          <div class="pillar-info">
-            <h4 class="pillar-title">${p.title}</h4>
-            <p class="pillar-sub">${p.subtitle}</p>
-          </div>
-        </div>
-      `).join('');
-    }
-  }
-
-  // 4. About Persona Cards
-  if (data.aboutCards) {
-    const personaGrid = document.getElementById('persona-grid');
-    if (personaGrid) {
-      personaGrid.innerHTML = data.aboutCards.map((c, idx) => `
-        <div class="persona-card glass-card ${idx === 1 ? 'highlighted-persona' : ''}">
-          <div class="persona-card-header">
-            <span class="persona-icon-box">${c.icon || '💼'}</span>
-            <span class="persona-tag">${c.tag || ''}</span>
-          </div>
-          <h3 class="persona-title">${c.title}</h3>
-          <p class="persona-desc">${c.description}</p>
-          <ul class="persona-points">
-            ${(c.points || []).map(pt => `<li><span class="check-bullet">✓</span> ${pt}</li>`).join('')}
-          </ul>
-        </div>
-      `).join('');
-    }
-  }
-
-  // 5. Metrics Row
-  if (data.stats) {
-    const metricsRow = document.getElementById('metrics-row');
-    if (metricsRow) {
-      metricsRow.innerHTML = data.stats.map((s, idx) => `
-        ${idx > 0 ? '<div class="metric-divider"></div>' : ''}
-        <div class="metric-item">
-          <span class="metric-number">${s.value}</span>
-          <span class="metric-label">${s.label}</span>
-        </div>
-      `).join('');
-    }
-  }
-
-  // 6. Startup Section
-  if (data.startupLab) {
-    const s = data.startupLab;
-    const badge = document.getElementById('startup-badge');
-    if (badge && s.badge) badge.textContent = s.badge;
-    const origin = document.getElementById('startup-origin');
-    if (origin && s.origin) origin.textContent = s.origin;
-    const headline = document.getElementById('startup-headline');
-    if (headline && s.headline) headline.textContent = s.headline;
-    const desc = document.getElementById('startup-desc');
-    if (desc && s.description) desc.textContent = s.description;
+    console.log('[CMS] Running with local profile configuration.');
   }
 }
 
 /* ==========================================================================
-   1. NAVIGATION & MOBILE DRAWER
+   2. RENDER ALL SECTIONS
    ========================================================================== */
-function initNavigation() {
-  const header = document.getElementById('site-header');
-  const toggleBtn = document.getElementById('mobile-toggle');
-  const mobileDrawer = document.getElementById('mobile-drawer');
-  const mobileLinks = document.querySelectorAll('.mobile-link, .mobile-cta-btn');
-  const desktopLinks = document.querySelectorAll('.nav-link');
+function renderAllSections() {
+  renderNavigation();
+  renderHero();
+  renderAbout();
+  renderServices();
+  renderProjects(currentDomainFilter);
+  renderSkillsMatrix();
+  renderEducation();
+  renderLinkedInHeadlines();
+  renderContactInfo();
+}
 
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 30) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
-    }
-    highlightActiveNavLink();
-  }, { passive: true });
+/* --- Navigation & Brand --- */
+function renderNavigation() {
+  const p = appData.personal || {};
+  const navBrandName = document.getElementById('nav-brand-name');
+  const navBrandTitle = document.getElementById('nav-brand-title');
+  const mobileBrandName = document.getElementById('mobile-brand-name');
+  const footerName = document.getElementById('footer-name');
 
-  if (toggleBtn && mobileDrawer) {
-    toggleBtn.addEventListener('click', () => {
-      const isOpen = mobileDrawer.classList.contains('open');
-      if (isOpen) {
-        closeMobileDrawer();
-      } else {
-        openMobileDrawer();
-      }
-    });
+  if (navBrandName && p.name) navBrandName.textContent = p.name;
+  if (navBrandTitle && p.role) navBrandTitle.textContent = p.role.toUpperCase();
+  if (mobileBrandName && p.name) mobileBrandName.textContent = p.name;
+  if (footerName && p.name) footerName.textContent = p.name;
+}
 
-    mobileLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        closeMobileDrawer();
-      });
-    });
+/* --- Hero Section --- */
+function renderHero() {
+  const p = appData.personal || {};
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && mobileDrawer.classList.contains('open')) {
-        closeMobileDrawer();
-      }
-    });
+  const heroGreeting = document.getElementById('hero-greeting');
+  const heroName = document.getElementById('hero-name');
+  const heroSubtitle = document.getElementById('hero-subtitle');
+  const heroTagline = document.getElementById('hero-tagline');
+  const heroLocation = document.getElementById('hero-location');
+  const heroEmail = document.getElementById('hero-email');
+  const heroPhone = document.getElementById('hero-phone');
+  const heroEmailLink = document.getElementById('hero-email-link');
+  const heroPhoneLink = document.getElementById('hero-phone-link');
+  const heroPortrait = document.getElementById('hero-portrait-img');
+  const heroCtaPrimary = document.getElementById('hero-cta-primary');
+  const heroCtaSecondary = document.getElementById('hero-cta-secondary');
+
+  if (heroGreeting && p.greeting) heroGreeting.textContent = p.greeting;
+  if (heroName && p.name) heroName.textContent = p.name;
+  if (heroSubtitle && p.headlineSub) heroSubtitle.textContent = p.headlineSub;
+  if (heroTagline && p.tagline) heroTagline.textContent = p.tagline;
+  if (heroLocation && p.location) heroLocation.textContent = p.location;
+  if (heroEmail && p.email) heroEmail.textContent = p.email;
+  if (heroPhone && p.phone) heroPhone.textContent = p.phone;
+
+  if (heroEmailLink && p.email) heroEmailLink.href = `mailto:${p.email}`;
+  if (heroPhoneLink && p.phone) heroPhoneLink.href = `tel:${p.phone.replace(/[^0-9+]/g, '')}`;
+
+  if (heroPortrait && p.heroImage) {
+    heroPortrait.src = p.heroImage;
   }
 
-  function openMobileDrawer() {
-    mobileDrawer.classList.add('open');
-    toggleBtn.classList.add('active');
-    toggleBtn.setAttribute('aria-expanded', 'true');
-    mobileDrawer.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
+  if (heroCtaPrimary && p.ctaPrimaryText) {
+    heroCtaPrimary.querySelector('span').textContent = p.ctaPrimaryText;
+    if (p.ctaPrimaryLink) heroCtaPrimary.href = p.ctaPrimaryLink;
   }
-
-  function closeMobileDrawer() {
-    mobileDrawer.classList.remove('open');
-    toggleBtn.classList.remove('active');
-    toggleBtn.setAttribute('aria-expanded', 'false');
-    mobileDrawer.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-  }
-
-  function highlightActiveNavLink() {
-    const sections = document.querySelectorAll('section[id]');
-    const scrollY = window.scrollY + 120;
-
-    sections.forEach(current => {
-      const sectionHeight = current.offsetHeight;
-      const sectionTop = current.offsetTop;
-      const sectionId = current.getAttribute('id');
-
-      if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-        desktopLinks.forEach(link => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === `#${sectionId}`) {
-            link.classList.add('active');
-          }
-        });
-      }
-    });
+  if (heroCtaSecondary && p.ctaSecondaryText) {
+    heroCtaSecondary.querySelector('span').textContent = p.ctaSecondaryText;
+    if (p.ctaSecondaryLink) heroCtaSecondary.href = p.ctaSecondaryLink;
   }
 }
 
-/* ==========================================================================
-   2. DYNAMIC PROJECTS & FILTERING
-   ========================================================================== */
-function renderAllProjects(filter = 'all') {
-  const projectsGrid = document.getElementById('projects-grid');
-  const filterTabs = document.querySelectorAll('.filter-tab');
-  if (!projectsGrid) return;
+/* --- About Me Section --- */
+function renderAbout() {
+  const ab = appData.about || {};
+  const badge = document.getElementById('about-badge');
+  const headline = document.getElementById('about-headline');
+  const bioContainer = document.getElementById('about-bio-container');
+  const statsGrid = document.getElementById('about-stats-grid');
+  const infoLocation = document.getElementById('info-location');
+  const infoEmail = document.getElementById('info-email');
+  const infoPhone = document.getElementById('info-phone');
+  const infoUniv = document.getElementById('info-univ');
+  const infoLanguages = document.getElementById('info-languages');
+  const infoFocus = document.getElementById('info-focus');
 
-  const projectsList = contentData.projects || profileConfig.projects;
-  const filtered = filter === 'all' 
-    ? projectsList 
-    : projectsList.filter(p => p.category === filter);
+  if (badge && ab.badge) badge.textContent = ab.badge;
+  if (headline && ab.headline) headline.textContent = ab.headline;
 
-  projectsGrid.innerHTML = '';
+  if (bioContainer && ab.bio) {
+    const paragraphs = ab.bio.split('\n\n').filter(p => p.trim().length > 0);
+    bioContainer.innerHTML = paragraphs.map(text => `<p>${escapeHtml(text)}</p>`).join('');
+  }
 
-  filtered.forEach((project, index) => {
-    const card = document.createElement('article');
-    card.className = 'project-card';
-    card.style.animation = `fade-up 0.4s ease forwards ${index * 0.08}s`;
-
-    card.innerHTML = `
-      <div class="project-media">
-        <img 
-          src="${project.image || 'assets/project-edtech.svg'}" 
-          alt="${project.title} Preview" 
-          class="project-img" 
-          loading="lazy" 
-        />
-        <span class="project-category-badge">${project.categoryLabel || project.category}</span>
-        <span class="project-year">${project.year || ''}</span>
-      </div>
-      <div class="project-content">
-        <h3 class="project-title">${project.title}</h3>
-        <p class="project-tagline">${project.tagline || ''}</p>
-        <div class="project-tags">
-          ${(project.tags || []).map(t => `<span class="project-tag">${t}</span>`).join('')}
-        </div>
-        <div class="project-actions">
-          <button class="btn-case-study" data-project-id="${project.id}">
-            Case Study
-          </button>
-          <div class="project-links">
-            ${project.liveUrl && project.liveUrl !== '#' ? `<a href="${project.liveUrl}" target="_blank" rel="noopener" class="icon-link">Live ↗</a>` : ''}
-            ${project.githubUrl && project.githubUrl !== '#' ? `<a href="${project.githubUrl}" target="_blank" rel="noopener" class="icon-link">Code ↗</a>` : ''}
-          </div>
+  if (statsGrid && ab.stats && Array.isArray(ab.stats)) {
+    statsGrid.innerHTML = ab.stats.map(s => `
+      <div class="stat-pill-item">
+        <span class="check-icon">✓</span>
+        <div>
+          <strong class="stat-val">${escapeHtml(s.value)}</strong>
+          <span class="stat-lbl">${escapeHtml(s.label)}</span>
         </div>
       </div>
-    `;
-
-    projectsGrid.appendChild(card);
-  });
-
-  // Attach modal listeners
-  const caseStudyButtons = projectsGrid.querySelectorAll('.btn-case-study');
-  caseStudyButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const pId = btn.getAttribute('data-project-id');
-      openCaseStudyModal(pId);
-    });
-  });
-
-  // Attach tab clicks once
-  if (!window.__tabsInitialized) {
-    window.__tabsInitialized = true;
-    filterTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        filterTabs.forEach(t => {
-          t.classList.remove('active');
-          t.setAttribute('aria-selected', 'false');
-        });
-        tab.classList.add('active');
-        tab.setAttribute('aria-selected', 'true');
-        const category = tab.getAttribute('data-filter');
-        renderAllProjects(category);
-      });
-    });
+    `).join('');
   }
+
+  const ci = ab.cardInfo || {};
+  const p = appData.personal || {};
+
+  if (infoLocation) infoLocation.textContent = ci.location || p.location || 'Chennai, India';
+  if (infoEmail) {
+    infoEmail.textContent = ci.email || p.email || 'anisha8020@gmail.com';
+    infoEmail.href = `mailto:${ci.email || p.email}`;
+  }
+  if (infoPhone) {
+    infoPhone.textContent = ci.phone || p.phone || '+91 8668177527';
+    infoPhone.href = `tel:${(ci.phone || p.phone || '').replace(/[^0-9+]/g, '')}`;
+  }
+  if (infoUniv) infoUniv.textContent = ci.university || p.institution || 'SRM IST Ramapuram';
+  if (infoLanguages) infoLanguages.textContent = ci.languages || 'English, Tamil';
+  if (infoFocus) infoFocus.textContent = ci.focus || 'AI Apps, E-Commerce & Growth';
 }
 
-/* ==========================================================================
-   3. SERVICES SECTION RENDERING
-   ========================================================================== */
+/* --- Services Section --- */
 function renderServices() {
-  const servicesGrid = document.getElementById('services-grid');
-  if (!servicesGrid) return;
+  const container = document.getElementById('services-container');
+  if (!container) return;
 
-  servicesGrid.innerHTML = '';
-  const servicesList = contentData.services || profileConfig.services;
-
-  servicesList.forEach(service => {
-    const card = document.createElement('div');
-    card.className = 'service-card glass-card';
-
-    card.innerHTML = `
-      <span class="service-num">${service.number}</span>
-      <h3 class="service-title">${service.title}</h3>
-      <p class="service-desc">${service.description}</p>
-      <ul class="service-deliverables">
-        ${(service.deliverables || []).map(item => `
-          <li><span class="service-check">✓</span> ${item}</li>
-        `).join('')}
-      </ul>
-    `;
-
-    servicesGrid.appendChild(card);
-  });
-}
-
-/* ==========================================================================
-   4. CASE STUDY MODAL DIALOG
-   ========================================================================== */
-let openCaseStudyModal = () => {};
-
-function initModal() {
-  const modal = document.getElementById('case-study-modal');
-  const modalBody = document.getElementById('modal-content');
-  const closeBtn = document.getElementById('modal-close-btn');
-
-  if (!modal || !modalBody) return;
-
-  openCaseStudyModal = (projectId) => {
-    const projectsList = contentData.projects || profileConfig.projects;
-    const project = projectsList.find(p => p.id === projectId);
-    if (!project) return;
-
-    modalBody.innerHTML = `
-      <img src="${project.image || 'assets/project-edtech.svg'}" alt="${project.title}" />
-      <span class="modal-tag">${project.categoryLabel || project.category} • ${project.year || ''}</span>
-      <h3 class="modal-title">${project.title}</h3>
-      <p class="modal-desc">${project.description || project.tagline}</p>
-      <div class="modal-tags-list">
-        ${(project.tags || []).map(tag => `<span class="project-tag">${tag}</span>`).join('')}
-      </div>
-      <div class="modal-links-row">
-        <a href="#contact" class="btn btn-primary" id="modal-hire-cta">
-          <span>Inquire About Similar Project</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </a>
-      </div>
-    `;
-
-    modal.classList.add('active');
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-
-    const modalHire = document.getElementById('modal-hire-cta');
-    if (modalHire) {
-      modalHire.addEventListener('click', () => {
-        closeModal();
-      });
-    }
+  const services = appData.services || [];
+  const iconMap = {
+    'ai-dev': '💻',
+    'shopify': '🛍️',
+    'content': '📈',
+    'design-art': '🎨'
   };
 
-  function closeModal() {
-    modal.classList.remove('active');
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+  container.innerHTML = services.map(s => {
+    const icon = iconMap[s.id] || '⚡';
+    const deliverables = s.deliverables && Array.isArray(s.deliverables)
+      ? s.deliverables.map(d => `<li>${escapeHtml(d)}</li>`).join('')
+      : '';
+
+    return `
+      <div class="service-card">
+        <span class="service-number">${escapeHtml(s.number || '01')}</span>
+        <div class="service-icon-box">${icon}</div>
+        <h3 class="service-title">${escapeHtml(s.title)}</h3>
+        <p class="service-desc">${escapeHtml(s.description)}</p>
+        <ul class="service-deliverables-list">
+          ${deliverables}
+        </ul>
+      </div>
+    `;
+  }).join('');
+}
+
+/* --- Featured Projects (4 Domains - NO '+' Button on Frontend) --- */
+function initDomainFilters() {
+  const filterButtons = document.querySelectorAll('.domain-tab-btn');
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.getAttribute('data-filter');
+      currentDomainFilter = filter;
+      renderProjects(filter);
+    });
+  });
+}
+
+function renderProjects(filter = 'all') {
+  const grid = document.getElementById('projects-grid');
+  if (!grid) return;
+
+  const allProjects = appData.projects || [];
+  const filtered = filter === 'all' 
+    ? allProjects 
+    : allProjects.filter(p => (p.domain || '').toLowerCase() === filter.toLowerCase());
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: var(--bg-surface); border: 1px dashed var(--border); border-radius: 14px;">
+        <p style="color: var(--text-muted); font-size: 1.1rem;">No projects added under this domain yet.</p>
+        <p style="color: var(--text-dim); font-size: 0.85rem; margin-top: 0.5rem;">Add one easily via the <a href="/admin" style="color: var(--primary);">Backend CMS</a>.</p>
+      </div>
+    `;
+    return;
   }
 
-  if (closeBtn) closeBtn.addEventListener('click', closeModal);
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
-  });
+  const domainLabels = {
+    college: '🏛️ College & Hackathon',
+    freelancer: '💼 Freelancer & Brand',
+    startup: '🚀 Startup Venture',
+    softskills: '🎭 Soft Skills & Events'
+  };
+
+  grid.innerHTML = filtered.map(p => {
+    const domainTag = domainLabels[p.domain] || 'Project';
+    const techPills = p.tech && Array.isArray(p.tech) 
+      ? p.tech.map(t => `<span class="tech-tag">${escapeHtml(t)}</span>`).join('')
+      : '';
+    const imgUrl = p.image || 'assets/project-campus.svg';
+
+    return `
+      <div class="project-card">
+        <div class="project-media-wrap">
+          <img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(p.title)}" onerror="this.src='assets/project-campus.svg'" />
+          <span class="project-domain-pill">${escapeHtml(domainTag)}</span>
+        </div>
+        <div class="project-body">
+          ${p.recognition ? `<span class="project-recognition-tag">${escapeHtml(p.recognition)}</span>` : ''}
+          <h3 class="project-title">${escapeHtml(p.title)}</h3>
+          ${p.role ? `<div class="project-role">${escapeHtml(p.role)}</div>` : ''}
+          <p class="project-desc">${escapeHtml(p.description || '')}</p>
+          <div class="project-tech-tags">
+            ${techPills}
+          </div>
+          <div class="project-links-row">
+            ${p.liveUrl && p.liveUrl !== '#' ? `
+              <a href="${escapeHtml(p.liveUrl)}" target="_blank" rel="noopener" class="project-btn">
+                <span>Live Demo</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+              </a>
+            ` : ''}
+            ${p.githubUrl && p.githubUrl !== '#' ? `
+              <a href="${escapeHtml(p.githubUrl)}" target="_blank" rel="noopener" class="project-btn">
+                <span>View Details</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </a>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* --- Skills Matrix (5 Categories) --- */
+function renderSkillsMatrix() {
+  const container = document.getElementById('skills-matrix-container');
+  if (!container) return;
+
+  const matrix = appData.skillsMatrix || [];
+  container.innerHTML = matrix.map(cat => {
+    const badges = (cat.skills || []).map(skill => `
+      <span class="skill-badge">${escapeHtml(skill)}</span>
+    `).join('');
+
+    return `
+      <div class="skill-domain-card">
+        <div class="skill-card-header">
+          <span class="skill-icon">${escapeHtml(cat.icon || '⚡')}</span>
+          <h3 class="skill-card-title">${escapeHtml(cat.category)}</h3>
+        </div>
+        <div class="skills-tags-cluster">
+          ${badges}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* --- Education Section --- */
+function renderEducation() {
+  const container = document.getElementById('education-container');
+  if (!container) return;
+
+  const eduList = appData.education || [];
+  container.innerHTML = eduList.map(item => `
+    <div class="education-card">
+      <div class="edu-status-pill">${escapeHtml(item.status || 'Verified')}</div>
+      <h3 class="edu-degree">${escapeHtml(item.degree)}</h3>
+      <div class="edu-institution">${escapeHtml(item.institution)}</div>
+      <div class="edu-period">${escapeHtml(item.period)}</div>
+      <p class="edu-highlights">${escapeHtml(item.highlights || '')}</p>
+    </div>
+  `).join('');
+}
+
+/* --- LinkedIn Profile Assets (1-Click Copy) --- */
+function renderLinkedInHeadlines() {
+  const container = document.getElementById('linkedin-headlines-container');
+  if (!container) return;
+
+  const headlines = appData.linkedInHeadlines || [];
+  container.innerHTML = headlines.map(h => `
+    <div class="headline-card">
+      <div class="headline-header">
+        <span class="headline-label">${escapeHtml(h.label)}</span>
+        <span class="headline-badge">${escapeHtml(h.badge || 'Preset')}</span>
+      </div>
+      <div class="headline-text-box" id="headline-box-${h.id}">
+        ${escapeHtml(h.text)}
+      </div>
+      <button class="btn-copy-headline" onclick="copyTextToClipboard('${escapeHtml(h.text)}', this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        <span>Copy Headline</span>
+      </button>
+    </div>
+  `).join('');
+}
+
+/* --- Contact Info --- */
+function renderContactInfo() {
+  const p = appData.personal || {};
+  const emailVal = document.getElementById('contact-email-val');
+  const phoneVal = document.getElementById('contact-phone-val');
+  const locVal = document.getElementById('contact-loc-val');
+  const mobileEmail = document.getElementById('mobile-email-text');
+  const mobileLoc = document.getElementById('mobile-location-text');
+
+  if (emailVal && p.email) emailVal.textContent = p.email;
+  if (phoneVal && p.phone) phoneVal.textContent = p.phone;
+  if (locVal && p.location) locVal.textContent = p.location;
+  if (mobileEmail && p.email) mobileEmail.textContent = p.email;
+  if (mobileLoc && p.location) mobileLoc.textContent = `📍 ${p.location}`;
 }
 
 /* ==========================================================================
-   5. EMAIL COPY & TOAST NOTIFICATIONS
+   3. INTERACTIVE CONTACT FORM & CLIPBOARD
    ========================================================================== */
-function initCopyEmail() {
-  const copyBtn = document.getElementById('copy-email-btn');
-  const copyText = document.getElementById('copy-text');
+function initContactForm() {
+  const form = document.getElementById('contact-form');
+  if (!form) return;
 
-  if (copyBtn) {
-    copyBtn.addEventListener('click', () => {
-      const email = (contentData.personal && contentData.personal.email) || profileConfig.personal.email;
-      navigator.clipboard.writeText(email).then(() => {
-        if (copyText) copyText.textContent = 'Copied!';
-        showToast(`Email copied to clipboard: ${email}`);
-        setTimeout(() => {
-          if (copyText) copyText.textContent = 'Copy';
-        }, 2500);
-      }).catch(() => {
-        showToast(`Email: ${email}`);
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = document.getElementById('contact-submit-btn');
+    const originalText = submitBtn.innerHTML;
+
+    const payload = {
+      name: form.name.value,
+      email: form.email.value,
+      service: form.service.value,
+      message: form.message.value
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<span>Sending...</span>`;
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       });
-    });
-  }
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        showToast(data.message || 'Thank you! Your message has been sent to Anisha.');
+        form.reset();
+      } else {
+        showToast(data.error || 'Could not send message. Please try again.', 'error');
+      }
+    } catch (err) {
+      showToast('Thank you! Inquiry saved (Offline mode).', 'success');
+      form.reset();
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalText;
+    }
+  });
 }
 
-function showToast(message) {
+// Global Clipboard Helpers
+window.copyEmailToClipboard = function () {
+  const email = appData.personal?.email || 'anisha8020@gmail.com';
+  navigator.clipboard.writeText(email).then(() => {
+    const btnText = document.getElementById('copy-email-btn-text');
+    if (btnText) {
+      const orig = btnText.textContent;
+      btnText.textContent = 'Copied!';
+      setTimeout(() => { btnText.textContent = orig; }, 2000);
+    }
+    showToast(`Email copied: ${email}`);
+  });
+};
+
+window.copyTextToClipboard = function (text, buttonElement) {
+  navigator.clipboard.writeText(text).then(() => {
+    if (buttonElement) {
+      const span = buttonElement.querySelector('span');
+      if (span) {
+        const orig = span.textContent;
+        span.textContent = 'Copied! ✓';
+        setTimeout(() => { span.textContent = orig; }, 2000);
+      }
+    }
+    showToast('Headline copied to clipboard! Ready to paste into LinkedIn.');
+  });
+};
+
+/* --- Toast Notification --- */
+function showToast(message, type = 'success') {
   const container = document.getElementById('toast-container');
   if (!container) return;
 
   const toast = document.createElement('div');
-  toast.className = 'toast';
-  toast.innerHTML = `
-    <span>⚡</span>
-    <span>${message}</span>
-  `;
+  toast.className = `toast-item ${type}`;
+  toast.textContent = message;
 
   container.appendChild(toast);
-
   setTimeout(() => {
     toast.style.opacity = '0';
-    toast.style.transform = 'translateY(15px)';
+    toast.style.transform = 'translateY(-10px)';
+    toast.style.transition = 'all 0.3s ease';
     setTimeout(() => toast.remove(), 300);
-  }, 4000);
+  }, 3500);
 }
 
-/* ==========================================================================
-   6. CONTACT & WAITLIST FORMS (CONNECTED TO BACKEND API)
-   ========================================================================== */
-function initForms() {
-  // Contact Form
-  const contactForm = document.getElementById('contact-form');
-  const submitBtn = document.getElementById('form-submit-btn');
+/* --- Mobile Drawer Menu --- */
+function initMobileDrawer() {
+  const toggle = document.getElementById('mobile-toggle');
+  const drawer = document.getElementById('mobile-drawer');
+  if (!toggle || !drawer) return;
 
-  if (contactForm && submitBtn) {
-    contactForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const nameInput = document.getElementById('contact-name');
-      const emailInput = document.getElementById('contact-email');
-      const serviceInput = document.getElementById('contact-service');
-      const messageInput = document.getElementById('contact-message');
+  toggle.addEventListener('click', () => {
+    const isOpen = drawer.classList.contains('active');
+    if (isOpen) {
+      drawer.classList.remove('active');
+      toggle.setAttribute('aria-expanded', 'false');
+    } else {
+      drawer.classList.add('active');
+      toggle.setAttribute('aria-expanded', 'true');
+    }
+  });
 
-      const payload = {
-        name: nameInput ? nameInput.value : '',
-        email: emailInput ? emailInput.value : '',
-        service: serviceInput ? serviceInput.value : 'General',
-        message: messageInput ? messageInput.value : ''
-      };
-
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span>Sending message...</span>';
-
-      try {
-        const response = await fetch('/api/contact', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          showToast(data.message || `Thank you, ${payload.name}! Your message has been received.`);
-        } else {
-          showToast(`Thank you, ${payload.name}! Your message has been recorded.`);
-        }
-      } catch (err) {
-        showToast(`Thank you, ${payload.name}! Your message has been recorded.`);
-      } finally {
-        contactForm.reset();
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = `
-          <span>Send Message</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <line x1="22" y1="2" x2="11" y2="13"></line>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-          </svg>
-        `;
-      }
-    });
-  }
-
-  // Startup Waitlist Form
-  const waitlistForm = document.getElementById('waitlist-form');
-  const waitlistEmail = document.getElementById('waitlist-email');
-
-  if (waitlistForm && waitlistEmail) {
-    waitlistForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = waitlistEmail.value;
-
-      try {
-        const response = await fetch('/api/waitlist', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          showToast(data.message || `Welcome to the SkillPulse AI waitlist!`);
-        } else {
-          showToast(`Welcome! ${email} has been added to the SkillPulse AI waitlist.`);
-        }
-      } catch (err) {
-        showToast(`Welcome! ${email} has been added to the SkillPulse AI waitlist.`);
-      } finally {
-        waitlistForm.reset();
-      }
-    });
-  }
+  drawer.addEventListener('click', (e) => {
+    if (e.target === drawer || e.target.classList.contains('mobile-link') || e.target.closest('.mobile-cta-btn')) {
+      drawer.classList.remove('active');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
 }
 
-/* ==========================================================================
-   7. SCROLL EFFECTS & BACK TO TOP
-   ========================================================================== */
-function initScrollEffects() {
-  const backToTopBtn = document.getElementById('back-to-top-btn');
-
-  if (backToTopBtn) {
-    backToTopBtn.addEventListener('click', () => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    });
-  }
+function escapeHtml(str) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/[&<>'"]/g, tag => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag] || tag));
 }

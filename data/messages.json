@@ -1,5 +1,14 @@
 [
   {
+    "id": "msg_1789814102363",
+    "name": "Test Client",
+    "email": "client@example.com",
+    "service": "Shopify Store & E-Commerce",
+    "message": "Hello Anisha, I saw your portfolio and would like to collaborate on an e-commerce website!",
+    "receivedAt": "2026-09-19T10:35:02.363Z",
+    "status": "unread"
+  },
+  {
     "id": "msg_1789796721567",
     "name": "Priya",
     "email": "priya@example.com",
