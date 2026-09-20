@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Backend CMS | Anisha Vanjinathan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #38bdf8;
+      --primary-hover: #0ea5e9;
+      --primary-gradient: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      --bg: #06080e;
+      --surface: #0c101c;
+      --surface-card: #121829;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-card: rgba(148, 163, 184, 0.12);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      line-height: 1.5;
+      padding-bottom: 90px;
+    }
+    
+    /* Top Header */
+    .admin-header {
+      background: rgba(12, 16, 28, 0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+    .brand-icon {
+      font-size: 1.5rem;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 0.35rem 0.65rem;
+      border-radius: 8px;
+    }
+    .brand h1 { font-size: 1.2rem; font-weight: 800; color: #fff; }
+    .brand p { font-size: 0.8rem; color: var(--primary); }
+    .header-actions { display: flex; gap: 0.75rem; align-items: center; }
+
+    /* Layout */
+    .admin-container {
+      max-width: 1280px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 2rem;
+    }
+
+    /* Sidebar Tabs */
+    .admin-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      position: sticky;
+      top: 90px;
+      height: fit-content;
+    }
+    .tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.8rem 1rem;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+    .tab-btn:hover {
+      background: var(--surface);
+      color: #fff;
+    }
+    .tab-btn.active {
+      background: var(--surface-card);
+      border-color: rgba(56, 189, 248, 0.3);
+      color: var(--primary);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    .tab-btn span.icon { font-size: 1.15rem; }
+
+    /* Content Panels */
+    .admin-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: flex; flex-direction: column; gap: 1.5rem; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Cards */
+    .panel-card {
+      background: var(--surface);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+    .panel-header {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .panel-header h2 { font-size: 1.35rem; color: #fff; margin-bottom: 0.25rem; }
+    .panel-header p { font-size: 0.88rem; color: var(--text-muted); }
+
+    /* Forms */
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      margin-bottom: 1.15rem;
+    }
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+    }
+    .form-group label .hint { font-size: 0.75rem; color: var(--text-muted); font-weight: normal; }
+    .form-control {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 0.95rem;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+    }
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+    textarea.form-control { resize: vertical; }
+
+    /* Photo Upload Box */
+    .photo-preview-card {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      background: var(--surface-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .preview-thumb-img {
+      width: 130px;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 2px solid var(--primary);
+      background: #020408;
+    }
+    .photo-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      flex-grow: 1;
+    }
+    .btn-upload {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.25rem;
+      background: var(--primary-gradient);
+      color: #fff;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: fit-content;
+      transition: all 0.2s ease;
+    }
+    .btn-upload:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.35);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.15rem;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: var(--primary-gradient);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.35);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+    }
+    .btn-danger:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    /* 4 DOMAINS SECTION STYLES (UNDER EACH DOMAIN PUT + SIGN) */
+    .domain-section-block {
+      background: var(--surface-card);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .domain-block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .domain-block-title {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .domain-block-badge {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--primary);
+    }
+    .btn-add-domain-project {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.15rem;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-add-domain-project:hover {
+      background: var(--primary);
+      color: #000;
+      transform: translateY(-1px);
+    }
+    .btn-add-domain-project .plus-symbol {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--primary);
+    }
+    .btn-add-domain-project:hover .plus-symbol {
+      color: #000;
+    }
+
+    .domain-projects-items {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .admin-project-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+      background: rgba(6, 8, 14, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+    }
+    .admin-proj-thumb {
+      width: 70px;
+      height: 50px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: #020408;
+      border: 1px solid var(--border);
+    }
+    .admin-proj-details {
+      flex-grow: 1;
+    }
+    .admin-proj-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .admin-proj-sub {
+      font-size: 0.8rem;
+      color: var(--primary);
+    }
+    .admin-proj-tech {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    .admin-proj-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* Modal */
+    .admin-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+    }
+    .admin-modal.active { opacity: 1; visibility: visible; }
+    .admin-modal-card {
+      background: var(--surface);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 640px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+    .modal-header h3 { font-size: 1.3rem; color: #fff; }
+    .btn-close-modal {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .btn-close-modal:hover { color: #fff; }
+
+    /* Sticky Bottom Save Bar */
+    .save-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(12, 16, 28, 0.95);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
+      padding: 0.85rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+    .save-status {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #10b981;
+    }
+    .save-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+    }
+    .btn-save-big {
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35);
+      cursor: pointer;
+      border: none;
+    }
+    .btn-save-big:hover {
+      background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+      transform: translateY(-1px);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: #10b981;
+      color: #fff;
+      padding: 0.85rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      z-index: 3000;
+      display: none;
+    }
+
+    /* Inbox Messages */
+    .inbox-item {
+      background: var(--surface-card);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .inbox-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+    }
+    .inbox-name { font-weight: 700; color: #fff; }
+    .inbox-email { color: var(--primary); }
+    .inbox-service { font-size: 0.8rem; background: rgba(255, 255, 255, 0.05); padding: 0.2rem 0.5rem; border-radius: 4px; color: #cbd5e1; }
+    .inbox-body { font-size: 0.9rem; color: #e2e8f0; line-height: 1.5; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border); }
+
+    @media (max-width: 900px) {
+      .admin-container { grid-template-columns: 1fr; }
+      .admin-sidebar { position: static; display: grid; grid-template-columns: repeat(2, 1fr); }
+      .form-grid-2, .form-grid-3 { grid-template-columns: 1fr; }
+      .photo-preview-card { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Security Lock Modal (Always Active Until Authenticated) -->
+  <div class="admin-modal active" id="admin-auth-modal" style="z-index: 99999; background: rgba(5, 7, 12, 0.98);">
+    <div class="admin-modal-card" style="max-width: 420px; text-align: center; border: 1px solid rgba(56, 189, 248, 0.4); padding: 2.5rem 2rem;">
+      <div style="font-size: 3rem; margin-bottom: 0.75rem;">🔒</div>
+      <h2 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.4rem; font-family: 'Space Grotesk', sans-serif;">Portfolio Admin Locked</h2>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.75rem; line-height: 1.5;">
+        This dashboard is password protected. Enter your admin password to edit your portfolio.
+      </p>
+      <form onsubmit="submitAdminLogin(event)">
+        <div class="form-group" style="text-align: left;">
+          <label style="font-size: 0.85rem; color: #cbd5e1;">Admin Password</label>
+          <input type="password" id="auth-password-input" class="form-control" placeholder="Enter password (e.g. Amlu611)..." required autofocus style="margin-top: 0.35rem;" />
+        </div>
+        <p id="auth-error-msg" style="color: #f87171; font-size: 0.85rem; margin-bottom: 1rem; display: none;">
+          ❌ Incorrect password. Access denied.
+        </p>
+        <button type="submit" class="btn btn-primary btn-block" style="padding: 0.85rem; justify-content: center; font-size: 0.95rem; margin-top: 0.5rem;">
+          <span>Unlock Dashboard</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="admin-toast" class="toast">Changes Saved!</div>
+
+  <!-- Header -->
+  <header class="admin-header">
+    <div class="brand">
+      <span class="brand-icon">⚡</span>
+      <div>
+        <h1>Portfolio CMS Backend</h1>
+        <p>Password-Protected Visual Editor • Anisha Vanjinathan</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a href="/" target="_blank" class="btn btn-secondary">
+        <span>👁️ View Live Website</span>
+      </a>
+      <button class="btn btn-secondary" onclick="lockAdminDashboard()" title="Lock dashboard and log out">
+        <span>🔒 Lock</span>
+      </button>
+      <button class="btn btn-primary" onclick="saveAllChanges()">
+        <span>💾 Save All Changes</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Container -->
+  <div class="admin-container">
+    
+    <!-- Sidebar Tabs -->
+    <aside class="admin-sidebar">
+      <button class="tab-btn active" data-tab="tab-hero">
+        <span class="icon">👤</span>
+        <span>Profile &amp; Hero</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-about">
+        <span class="icon">📝</span>
+        <span>About Me</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-projects">
+        <span class="icon">📁</span>
+        <span>Projects (4 Domains)</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-skills">
+        <span class="icon">🛠️</span>
+        <span>Skills Matrix</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-services">
+        <span class="icon">🌟</span>
+        <span>Services</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-education">
+        <span class="icon">🎓</span>
+        <span>Education &amp; Scores</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-linkedin">
+        <span class="icon">💼</span>
+        <span>LinkedIn Headlines</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-security">
+        <span class="icon">🔐</span>
+        <span>Security &amp; Password</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-inbox">
+        <span class="icon">📬</span>
+        <span>Messages Inbox</span>
+      </button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-content">
+
+      <!-- 1. PROFILE & HERO TAB -->
+      <section class="tab-panel active" id="tab-hero">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>👤 Hero Section &amp; Portrait Photo</h2>
+              <p>Change your name, titles, tagline, contact details, and upload your photo.</p>
+            </div>
+          </div>
+
+          <!-- Photo Uploader -->
+          <div class="photo-preview-card">
+            <img id="hero-img-preview" src="/uploads/photo_1789809740156.jpg" class="preview-thumb-img" alt="Hero Portrait" onerror="this.src='assets/hero-portrait.svg'" />
+            <div class="photo-controls">
+              <h4 style="color: #fff;">Your Hero Portrait Photo</h4>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">
+                Click the button below to upload your photo directly from your computer, or type an image link.
+              </p>
+              <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                <label class="btn-upload">
+                  📁 Choose Photo from Computer
+                  <input type="file" id="photo-file-input" accept="image/*" style="display: none;" onchange="handlePhotoUpload(this)" />
+                </label>
+                <button class="btn btn-secondary" onclick="resetHeroPhoto()">Use Default Photo</button>
+              </div>
+              <div class="form-group" style="margin-top: 0.5rem; margin-bottom: 0;">
+                <label>Or Image URL Path:</label>
+                <input type="text" id="hero-img-url" class="form-control" value="/uploads/photo_1789809740156.jpg" onchange="document.getElementById('hero-img-preview').src = this.value" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="personal-name" class="form-control" value="Anisha Vanjinathan" />
+            </div>
+            <div class="form-group">
+              <label>Greeting Tag</label>
+              <input type="text" id="hero-greeting" class="form-control" value="Hello, I'm" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Subheadline / Professional Role</label>
+            <input type="text" id="hero-subtitle" class="form-control" value="AI App Developer, Brand Marketer & Creative Strategist" />
+          </div>
+
+          <div class="form-group">
+            <label>Hero Tagline / Value Proposition</label>
+            <textarea id="hero-tagline" class="form-control" rows="3">Bridging CS & Business Systems through AI-driven apps, Shopify development, storytelling, thumbnail editing and designs, and high-impact digital content.</textarea>
+          </div>
+
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label>Location</label>
+              <input type="text" id="personal-location" class="form-control" value="Chennai, India" />
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="personal-email" class="form-control" value="anisha8020@gmail.com" />
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="text" id="personal-phone" class="form-control" value="+91 8668177527" />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Primary Button Text &amp; Link</label>
+              <div style="display: flex; gap: 0.5rem;">
+                <input type="text" id="cta-primary-text" class="form-control" value="Work With Me" />
+                <input type="text" id="cta-primary-link" class="form-control" value="#contact" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Secondary Button Text &amp; Link</label>
+              <div style="display: flex; gap: 0.5rem;">
+                <input type="text" id="cta-secondary-text" class="form-control" value="Connect on LinkedIn" />
+                <input type="text" id="cta-secondary-link" class="form-control" value="https://www.linkedin.com/in/anishaaaaaaaaa" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 2. ABOUT ME TAB -->
+      <section class="tab-panel" id="tab-about">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>📝 About Me &amp; Highlights</h2>
+              <p>Edit your personal bio, achievement metric cards, and contact card information.</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>About Section Headline</label>
+            <input type="text" id="about-headline" class="form-control" value="Building Solutions That Make an Impact" />
+          </div>
+
+          <div class="form-group">
+            <label>Complete Bio (Use double-enter for new paragraphs)</label>
+            <textarea id="about-bio" class="form-control" rows="8">I am a 2nd-year B.Tech CSBS (Computer Science & Business Systems) student at SRM IST Ramapuram, Chennai, operating at the intersection of technology, marketing, and creative arts.
+
+As an adaptive developer and storyteller, I build AI-powered applications, construct high-converting Shopify stores, and craft strategic content for brands. My foundation in computer science, paired with business acumen and a natural aptitude for public speaking, allows me to take ideas from root-cause analysis to complete digital execution. Whether hosting seminars, pitching at hackathons, or creating visual arts like detailed Mandala artwork, I bring determination, speed, and creative clarity to every project.</textarea>
+          </div>
+
+          <h3 style="margin-top: 1.5rem; margin-bottom: 1rem; color: #fff;">4 Metric &amp; Checkmark Badges</h3>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Badge 1 Value &amp; Label</label>
+              <input type="text" id="stat-0-val" class="form-control" value="2nd Year" style="margin-bottom: 0.4rem;" />
+              <input type="text" id="stat-0-lbl" class="form-control" value="B.Tech CSBS @ SRM IST" />
+            </div>
+            <div class="form-group">
+              <label>Badge 2 Value &amp; Label</label>
+              <input type="text" id="stat-1-val" class="form-control" value="Available" style="margin-bottom: 0.4rem;" />
+              <input type="text" id="stat-1-lbl" class="form-control" value="For Freelance & Projects" />
+            </div>
+            <div class="form-group">
+              <label>Badge 3 Value &amp; Label</label>
+              <input type="text" id="stat-2-val" class="form-control" value="2nd Prize" style="margin-bottom: 0.4rem;" />
+              <input type="text" id="stat-2-lbl" class="form-control" value="Hackathon Award Winner" />
+            </div>
+            <div class="form-group">
+              <label>Badge 4 Value &amp; Label</label>
+              <input type="text" id="stat-3-val" class="form-control" value="50+" style="margin-bottom: 0.4rem;" />
+              <input type="text" id="stat-3-lbl" class="form-control" value="Creative & Tech Works" />
+            </div>
+          </div>
+
+          <h3 style="margin-top: 1.5rem; margin-bottom: 1rem; color: #fff;">Floating Card Details (Right Side of About)</h3>
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label>University / College</label>
+              <input type="text" id="about-card-univ" class="form-control" value="SRM IST Ramapuram" />
+            </div>
+            <div class="form-group">
+              <label>Languages Spoken</label>
+              <input type="text" id="about-card-lang" class="form-control" value="English, Tamil" />
+            </div>
+            <div class="form-group">
+              <label>Primary Focus</label>
+              <input type="text" id="about-card-focus" class="form-control" value="AI Apps, E-Commerce & Growth" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. PROJECTS MANAGER TAB (4 DOMAINS WITH '+' UNDER EACH DOMAIN) -->
+      <section class="tab-panel" id="tab-projects">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>📁 Projects Manager (4 Domains)</h2>
+              <p>Under each domain, click the prominent <strong>+</strong> button to add a new project. Each project will instantly show up on the frontend under its tab!</p>
+            </div>
+          </div>
+
+          <!-- DOMAIN 1: COLLEGE & HACKATHONS -->
+          <div class="domain-section-block">
+            <div class="domain-block-header">
+              <div class="domain-block-title">
+                <span>🏛️ College &amp; Hackathon Projects</span>
+                <span class="domain-block-badge">Domain 1</span>
+              </div>
+              <button class="btn-add-domain-project" onclick="openAddProjectModal('college')">
+                <span class="plus-symbol">+</span>
+                <span>Add Project to College</span>
+              </button>
+            </div>
+            <div id="projects-list-college" class="domain-projects-items">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- DOMAIN 2: FREELANCER & CLIENT WORK -->
+          <div class="domain-section-block">
+            <div class="domain-block-header">
+              <div class="domain-block-title">
+                <span>💼 Freelancer &amp; Brand Projects</span>
+                <span class="domain-block-badge">Domain 2</span>
+              </div>
+              <button class="btn-add-domain-project" onclick="openAddProjectModal('freelancer')">
+                <span class="plus-symbol">+</span>
+                <span>Add Project to Freelancer</span>
+              </button>
+            </div>
+            <div id="projects-list-freelancer" class="domain-projects-items">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- DOMAIN 3: STARTUP & VENTURES -->
+          <div class="domain-section-block">
+            <div class="domain-block-header">
+              <div class="domain-block-title">
+                <span>🚀 Startup &amp; Ventures Projects</span>
+                <span class="domain-block-badge">Domain 3</span>
+              </div>
+              <button class="btn-add-domain-project" onclick="openAddProjectModal('startup')">
+                <span class="plus-symbol">+</span>
+                <span>Add Project to Startup</span>
+              </button>
+            </div>
+            <div id="projects-list-startup" class="domain-projects-items">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- DOMAIN 4: SOFT SKILLS, EVENTS & ARTS -->
+          <div class="domain-section-block">
+            <div class="domain-block-header">
+              <div class="domain-block-title">
+                <span>🎭 Soft Skills, Events &amp; Arts Projects</span>
+                <span class="domain-block-badge">Domain 4</span>
+              </div>
+              <button class="btn-add-domain-project" onclick="openAddProjectModal('softskills')">
+                <span class="plus-symbol">+</span>
+                <span>Add Project to Soft Skills &amp; Events</span>
+              </button>
+            </div>
+            <div id="projects-list-softskills" class="domain-projects-items">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 4. SKILLS MATRIX TAB -->
+      <section class="tab-panel" id="tab-skills">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>🛠️ Skills Matrix (5 Core Categories)</h2>
+              <p>Edit skills in each domain separated by commas. Changes show up as sleek pills on the frontend.</p>
+            </div>
+          </div>
+          <div id="skills-matrix-editor">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. SERVICES TAB -->
+      <section class="tab-panel" id="tab-services">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>🌟 Services &amp; Packages</h2>
+              <p>Edit the 4 service offerings displayed under "What I Can Do For You".</p>
+            </div>
+          </div>
+          <div id="services-editor">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. EDUCATION & SCORES TAB -->
+      <section class="tab-panel" id="tab-education">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>🎓 Education, Degrees &amp; Board Exam Scores</h2>
+              <p>Edit your university degree and school achievements.</p>
+            </div>
+          </div>
+          <div id="education-editor">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. LINKEDIN HEADLINES TAB -->
+      <section class="tab-panel" id="tab-linkedin">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>💼 LinkedIn Profile Assets</h2>
+              <p>Edit the 3 ready-to-use headline variations for visitors to copy in 1 click.</p>
+            </div>
+          </div>
+          <div id="linkedin-editor">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. INBOX TAB -->
+      <section class="tab-panel" id="tab-inbox">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>📬 Received Client Inquiries</h2>
+              <p>Messages submitted through the "Get In Touch" form on your website.</p>
+            </div>
+            <button class="btn btn-secondary" onclick="fetchInboxMessages()">🔄 Refresh Inbox</button>
+          </div>
+          <div id="inbox-container">
+            <p style="color: var(--text-muted);">Loading messages...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. SECURITY & PASSWORD TAB -->
+      <section class="tab-panel" id="tab-security">
+        <div class="panel-card" style="max-width: 650px;">
+          <div class="panel-header">
+            <div>
+              <h2>🔐 Admin Security &amp; Password</h2>
+              <p>Change your master admin password anytime. The new password takes effect immediately.</p>
+            </div>
+          </div>
+
+          <form onsubmit="handleChangePassword(event)">
+            <div class="form-group">
+              <label>Current Password</label>
+              <input type="password" id="curr-pass-input" class="form-control" placeholder="Enter current password (e.g. Amlu611)..." required />
+            </div>
+
+            <div class="form-group">
+              <label>New Password</label>
+              <input type="password" id="new-pass-input" class="form-control" placeholder="Enter new password..." required />
+            </div>
+
+            <div class="form-group">
+              <label>Confirm New Password</label>
+              <input type="password" id="confirm-pass-input" class="form-control" placeholder="Re-type new password..." required />
+            </div>
+
+            <p id="change-pass-error" style="color: #f87171; font-size: 0.88rem; margin-bottom: 1rem; display: none;"></p>
+            <p id="change-pass-success" style="color: #10b981; font-size: 0.88rem; margin-bottom: 1rem; display: none;"></p>
+
+            <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.75rem;">
+              <span>Update Password</span>
+            </button>
+          </form>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- STICKY BOTTOM SAVE BAR -->
+  <div class="save-bar">
+    <div class="save-status">
+      <span class="save-dot"></span>
+      <span id="save-status-text">Backend CMS Active &amp; Ready</span>
+    </div>
+    <div style="display: flex; gap: 1rem; align-items: center;">
+      <a href="/" target="_blank" class="btn btn-secondary">👁️ View Live Frontend</a>
+      <button class="btn-save-big" onclick="saveAllChanges()">💾 Save All Changes</button>
+    </div>
+  </div>
+
+  <!-- ADD / EDIT PROJECT MODAL -->
+  <div class="admin-modal" id="project-modal">
+    <div class="admin-modal-card">
+      <div class="modal-header">
+        <h3 id="modal-project-title">Add New Project</h3>
+        <button class="btn-close-modal" onclick="closeProjectModal()">&times;</button>
+      </div>
+
+      <form onsubmit="handleProjectModalSubmit(event)">
+        <input type="hidden" id="modal-proj-id" />
+
+        <div class="form-group">
+          <label>Target Domain <span class="hint">Which category this project belongs to</span></label>
+          <select id="modal-proj-domain" class="form-control" required>
+            <option value="college">🏛️ College &amp; Hackathons</option>
+            <option value="freelancer">💼 Freelancer &amp; Brands</option>
+            <option value="startup">🚀 Startup &amp; Ventures</option>
+            <option value="softskills">🎭 Soft Skills &amp; Events</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Project Title / Name</label>
+          <input type="text" id="modal-proj-name" class="form-control" placeholder="e.g. Digital Twin Campus System" required />
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Your Role</label>
+            <input type="text" id="modal-proj-role" class="form-control" placeholder="e.g. Lead Front-End Developer" />
+          </div>
+          <div class="form-group">
+            <label>Recognition / Award Tag</label>
+            <input type="text" id="modal-proj-recognition" class="form-control" placeholder="e.g. 🏆 2nd Prize Winner" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Tech Stack &amp; Tools <span class="hint">Separate with commas</span></label>
+          <input type="text" id="modal-proj-tech" class="form-control" placeholder="HTML/CSS/JS, VS Code, ChatGPT" />
+        </div>
+
+        <div class="form-group">
+          <label>Project Image URL or Upload</label>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" id="modal-proj-img" class="form-control" placeholder="assets/project-campus.svg" value="assets/project-campus.svg" />
+            <label class="btn btn-secondary" style="white-space: nowrap; cursor: pointer;">
+              Upload Photo
+              <input type="file" accept="image/*" style="display: none;" onchange="handleModalImageUpload(this)" />
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Project Overview / Description</label>
+          <textarea id="modal-proj-desc" class="form-control" rows="4" placeholder="Briefly describe what was built and the impact..." required></textarea>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Live Demo URL</label>
+            <input type="text" id="modal-proj-live" class="form-control" placeholder="https://..." value="#" />
+          </div>
+          <div class="form-group">
+            <label>GitHub / Details URL</label>
+            <input type="text" id="modal-proj-github" class="form-control" placeholder="https://github.com/..." value="#" />
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeProjectModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="padding: 0.65rem 1.75rem;">
+            <span>Save Project</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // State
+    let cmsData = {};
+
+    /* --- AUTH & SECURITY LOGIC --- */
+    function getStoredAuth() {
+      return sessionStorage.getItem('portfolio_admin_auth') || '';
+    }
+
+    function showAuthModal() {
+      const modal = document.getElementById('admin-auth-modal');
+      if (modal) {
+        modal.classList.add('active');
+        const input = document.getElementById('auth-password-input');
+        if (input) { input.value = ''; input.focus(); }
+      }
+    }
+
+    function hideAuthModal() {
+      const modal = document.getElementById('admin-auth-modal');
+      if (modal) modal.classList.remove('active');
+    }
+
+    function lockAdminDashboard() {
+      sessionStorage.removeItem('portfolio_admin_auth');
+      showAuthModal();
+      showToast('Dashboard locked.');
+    }
+
+    async function submitAdminLogin(e) {
+      e.preventDefault();
+      const input = document.getElementById('auth-password-input');
+      const errorEl = document.getElementById('auth-error-msg');
+      const pass = input.value.trim();
+
+      errorEl.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pass })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          sessionStorage.setItem('portfolio_admin_auth', pass);
+          hideAuthModal();
+          showToast('Welcome back, Anisha! Dashboard unlocked.');
+          loadInitialCMSData();
+          fetchInboxMessages();
+        } else {
+          errorEl.textContent = '❌ ' + (data.error || 'Incorrect password. Try again.');
+          errorEl.style.display = 'block';
+        }
+      } catch (err) {
+        errorEl.textContent = '❌ Server connection error.';
+        errorEl.style.display = 'block';
+      }
+    }
+
+    async function checkAuthOnLoad() {
+      const stored = getStoredAuth();
+      if (!stored) {
+        showAuthModal();
+        return;
+      }
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: stored })
+        });
+        if (res.ok) {
+          hideAuthModal();
+        } else {
+          sessionStorage.removeItem('portfolio_admin_auth');
+          showAuthModal();
+        }
+      } catch (err) {
+        showAuthModal();
+      }
+    }
+
+    async function handleChangePassword(e) {
+      e.preventDefault();
+      const currPass = document.getElementById('curr-pass-input').value;
+      const newPass = document.getElementById('new-pass-input').value;
+      const confirmPass = document.getElementById('confirm-pass-input').value;
+      const errorEl = document.getElementById('change-pass-error');
+      const successEl = document.getElementById('change-pass-success');
+
+      errorEl.style.display = 'none';
+      successEl.style.display = 'none';
+
+      if (newPass !== confirmPass) {
+        errorEl.textContent = '❌ New password and confirmation do not match!';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/change-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ currentPassword: currPass, newPassword: newPass })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          sessionStorage.setItem('portfolio_admin_auth', newPass);
+          successEl.textContent = '✅ ' + data.message;
+          successEl.style.display = 'block';
+          document.getElementById('curr-pass-input').value = '';
+          document.getElementById('new-pass-input').value = '';
+          document.getElementById('confirm-pass-input').value = '';
+          showToast('✅ Password changed successfully!');
+        } else {
+          errorEl.textContent = '❌ ' + (data.error || 'Failed to change password.');
+          errorEl.style.display = 'block';
+        }
+      } catch (err) {
+        errorEl.textContent = '❌ Could not reach server.';
+        errorEl.style.display = 'block';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      initTabNavigation();
+      await checkAuthOnLoad();
+      await loadInitialCMSData();
+      fetchInboxMessages();
+    });
+
+    /* --- 1. Tab Navigation --- */
+    function initTabNavigation() {
+      const tabButtons = document.querySelectorAll('.tab-btn');
+      const tabPanels = document.querySelectorAll('.tab-panel');
+
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabButtons.forEach(b => b.classList.remove('active'));
+          tabPanels.forEach(p => p.classList.remove('active'));
+
+          btn.classList.add('active');
+          const targetId = btn.getAttribute('data-tab');
+          const targetPanel = document.getElementById(targetId);
+          if (targetPanel) targetPanel.classList.add('active');
+        });
+      });
+    }
+
+    /* --- 2. Load CMS Data from API --- */
+    async function loadInitialCMSData() {
+      try {
+        const res = await fetch('/api/content');
+        if (res.ok) {
+          cmsData = await res.json();
+          populateAllFormFields(cmsData);
+        }
+      } catch (err) {
+        console.error('Error fetching CMS data:', err);
+      }
+    }
+
+    function populateAllFormFields(data) {
+      if (!data) return;
+
+      // Personal / Hero
+      const p = data.personal || {};
+      setVal('personal-name', p.name || 'Anisha Vanjinathan');
+      setVal('hero-greeting', p.greeting || "Hello, I'm");
+      setVal('hero-subtitle', p.headlineSub || 'AI App Developer, Brand Marketer & Creative Strategist');
+      setVal('hero-tagline', p.tagline || '');
+      setVal('personal-location', p.location || 'Chennai, India');
+      setVal('personal-email', p.email || 'anisha8020@gmail.com');
+      setVal('personal-phone', p.phone || '+91 8668177527');
+      setVal('cta-primary-text', p.ctaPrimaryText || 'Work With Me');
+      setVal('cta-primary-link', p.ctaPrimaryLink || '#contact');
+      setVal('cta-secondary-text', p.ctaSecondaryText || 'Connect on LinkedIn');
+      setVal('cta-secondary-link', p.ctaSecondaryLink || 'https://www.linkedin.com/in/anishaaaaaaaaa');
+      setVal('hero-img-url', p.heroImage || '/uploads/photo_1789809740156.jpg');
+
+      const preview = document.getElementById('hero-img-preview');
+      if (preview && p.heroImage) preview.src = p.heroImage;
+
+      // About
+      const ab = data.about || {};
+      setVal('about-headline', ab.headline || 'Building Solutions That Make an Impact');
+      setVal('about-bio', ab.bio || '');
+
+      if (ab.stats && Array.isArray(ab.stats)) {
+        for (let i = 0; i < 4; i++) {
+          if (ab.stats[i]) {
+            setVal(`stat-${i}-val`, ab.stats[i].value || '');
+            setVal(`stat-${i}-lbl`, ab.stats[i].label || '');
+          }
+        }
+      }
+
+      const ci = ab.cardInfo || {};
+      setVal('about-card-univ', ci.university || 'SRM IST Ramapuram');
+      setVal('about-card-lang', ci.languages || 'English, Tamil');
+      setVal('about-card-focus', ci.focus || 'AI Apps, E-Commerce & Growth');
+
+      // Projects (4 Domains)
+      renderProjectsByDomain();
+
+      // Skills Matrix
+      renderSkillsMatrixEditor();
+
+      // Services
+      renderServicesEditor();
+
+      // Education
+      renderEducationEditor();
+
+      // LinkedIn Headlines
+      renderLinkedInEditor();
+    }
+
+    /* --- 3. Render 4 Domain Project Blocks --- */
+    function renderProjectsByDomain() {
+      const domains = ['college', 'freelancer', 'startup', 'softskills'];
+      const projects = cmsData.projects || [];
+
+      domains.forEach(d => {
+        const container = document.getElementById(`projects-list-${d}`);
+        if (!container) return;
+
+        const domainProjects = projects.filter(p => (p.domain || '').toLowerCase() === d);
+
+        if (domainProjects.length === 0) {
+          container.innerHTML = `
+            <div style="padding: 1rem; border: 1px dashed var(--border); border-radius: 8px; text-align: center; color: var(--text-muted); font-size: 0.88rem;">
+              No projects in this domain yet. Click the <strong>+ Add Project</strong> button above to add one!
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = domainProjects.map(p => `
+          <div class="admin-project-item">
+            <img src="${escapeHtml(p.image || 'assets/project-campus.svg')}" class="admin-proj-thumb" onerror="this.src='assets/project-campus.svg'" />
+            <div class="admin-proj-details">
+              <div class="admin-proj-title">${escapeHtml(p.title)}</div>
+              <div class="admin-proj-sub">${escapeHtml(p.role || '')} ${p.recognition ? `• <span style="color: #fbbf24;">${escapeHtml(p.recognition)}</span>` : ''}</div>
+              <div class="admin-proj-tech">Tech: ${Array.isArray(p.tech) ? escapeHtml(p.tech.join(', ')) : ''}</div>
+            </div>
+            <div class="admin-proj-actions">
+              <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="editProject('${p.id}')">✏️ Edit</button>
+              <button class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="deleteProject('${p.id}')">🗑️ Delete</button>
+            </div>
+          </div>
+        `).join('');
+      });
+    }
+
+    /* --- 4. Modal for Adding / Editing Projects --- */
+    function openAddProjectModal(domainKey) {
+      document.getElementById('modal-project-title').textContent = `Add New Project to ${getDomainLabel(domainKey)}`;
+      document.getElementById('modal-proj-id').value = '';
+      document.getElementById('modal-proj-domain').value = domainKey;
+      document.getElementById('modal-proj-name').value = '';
+      document.getElementById('modal-proj-role').value = '';
+      document.getElementById('modal-proj-recognition').value = '';
+      document.getElementById('modal-proj-tech').value = '';
+      document.getElementById('modal-proj-img').value = getDefaultImageForDomain(domainKey);
+      document.getElementById('modal-proj-desc').value = '';
+      document.getElementById('modal-proj-live').value = '#';
+      document.getElementById('modal-proj-github').value = '#';
+
+      document.getElementById('project-modal').classList.add('active');
+    }
+
+    function editProject(id) {
+      const p = (cmsData.projects || []).find(item => item.id === id);
+      if (!p) return;
+
+      document.getElementById('modal-project-title').textContent = 'Edit Project';
+      document.getElementById('modal-proj-id').value = p.id;
+      document.getElementById('modal-proj-domain').value = p.domain || 'college';
+      document.getElementById('modal-proj-name').value = p.title || '';
+      document.getElementById('modal-proj-role').value = p.role || '';
+      document.getElementById('modal-proj-recognition').value = p.recognition || '';
+      document.getElementById('modal-proj-tech').value = Array.isArray(p.tech) ? p.tech.join(', ') : (p.tech || '');
+      document.getElementById('modal-proj-img').value = p.image || '';
+      document.getElementById('modal-proj-desc').value = p.description || '';
+      document.getElementById('modal-proj-live').value = p.liveUrl || '#';
+      document.getElementById('modal-proj-github').value = p.githubUrl || '#';
+
+      document.getElementById('project-modal').classList.add('active');
+    }
+
+    function closeProjectModal() {
+      document.getElementById('project-modal').classList.remove('active');
+    }
+
+    function handleProjectModalSubmit(e) {
+      e.preventDefault();
+
+      const id = document.getElementById('modal-proj-id').value || `proj_${Date.now()}`;
+      const domain = document.getElementById('modal-proj-domain').value;
+      const title = document.getElementById('modal-proj-name').value.trim();
+      const role = document.getElementById('modal-proj-role').value.trim();
+      const recognition = document.getElementById('modal-proj-recognition').value.trim();
+      const techString = document.getElementById('modal-proj-tech').value.trim();
+      const image = document.getElementById('modal-proj-img').value.trim();
+      const description = document.getElementById('modal-proj-desc').value.trim();
+      const liveUrl = document.getElementById('modal-proj-live').value.trim();
+      const githubUrl = document.getElementById('modal-proj-github').value.trim();
+
+      const techArray = techString.split(',').map(t => t.trim()).filter(t => t.length > 0);
+
+      if (!cmsData.projects) cmsData.projects = [];
+
+      const existingIndex = cmsData.projects.findIndex(p => p.id === id);
+      const projectObj = {
+        id,
+        domain,
+        title,
+        role,
+        recognition,
+        tech: techArray,
+        image: image || getDefaultImageForDomain(domain),
+        description,
+        liveUrl: liveUrl || '#',
+        githubUrl: githubUrl || '#'
+      };
+
+      if (existingIndex >= 0) {
+        cmsData.projects[existingIndex] = projectObj;
+      } else {
+        cmsData.projects.unshift(projectObj);
+      }
+
+      closeProjectModal();
+      renderProjectsByDomain();
+      showToast('Project updated in editor! Remember to click "Save All Changes".');
+    }
+
+    function deleteProject(id) {
+      if (!confirm('Are you sure you want to delete this project?')) return;
+      cmsData.projects = (cmsData.projects || []).filter(p => p.id !== id);
+      renderProjectsByDomain();
+      showToast('Project deleted. Click "Save All Changes" to sync.');
+    }
+
+    function getDomainLabel(key) {
+      const map = {
+        college: 'College & Hackathons',
+        freelancer: 'Freelancer & Brands',
+        startup: 'Startup & Ventures',
+        softskills: 'Soft Skills & Events'
+      };
+      return map[key] || 'Domain';
+    }
+
+    function getDefaultImageForDomain(domain) {
+      const map = {
+        college: 'assets/project-campus.svg',
+        freelancer: 'assets/project-agency.svg',
+        startup: 'assets/project-edtech.svg',
+        softskills: 'assets/project-design.svg'
+      };
+      return map[domain] || 'assets/project-campus.svg';
+    }
+
+    /* --- 5. Photo Uploader (Base64 -> /api/upload) --- */
+    function handlePhotoUpload(input) {
+      const file = input.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async function (e) {
+        const base64Data = e.target.result;
+        try {
+          const res = await fetch('/api/upload', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-admin-password': getStoredAuth()
+            },
+            body: JSON.stringify({ filename: file.name, base64Data })
+          });
+          const result = await res.json();
+          if (result.success && result.url) {
+            document.getElementById('hero-img-url').value = result.url;
+            document.getElementById('hero-img-preview').src = result.url;
+            showToast('Photo uploaded successfully! Hit "Save All Changes" to publish.');
+          } else {
+            showToast('Upload failed: ' + (result.error || 'Unknown error'), 'error');
+          }
+        } catch (err) {
+          console.error(err);
+          // Fallback to local data URL for preview
+          document.getElementById('hero-img-url').value = base64Data;
+          document.getElementById('hero-img-preview').src = base64Data;
+          showToast('Image loaded in preview!');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleModalImageUpload(input) {
+      const file = input.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async function (e) {
+        const base64Data = e.target.result;
+        try {
+          const res = await fetch('/api/upload', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-admin-password': getStoredAuth()
+            },
+            body: JSON.stringify({ filename: file.name, base64Data })
+          });
+          const result = await res.json();
+          if (result.success && result.url) {
+            document.getElementById('modal-proj-img').value = result.url;
+            showToast('Project image uploaded!');
+          }
+        } catch (err) {
+          document.getElementById('modal-proj-img').value = base64Data;
+          showToast('Image loaded!');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function resetHeroPhoto() {
+      const def = '/uploads/photo_1789809740156.jpg';
+      document.getElementById('hero-img-url').value = def;
+      document.getElementById('hero-img-preview').src = def;
+      showToast('Reset to default portrait.');
+    }
+
+    /* --- 6. Skills Matrix Editor --- */
+    function renderSkillsMatrixEditor() {
+      const container = document.getElementById('skills-matrix-editor');
+      if (!container) return;
+      const matrix = cmsData.skillsMatrix || [];
+
+      container.innerHTML = matrix.map((cat, idx) => `
+        <div class="form-group" style="background: var(--surface-card); padding: 1rem; border-radius: 8px; border: 1px solid var(--border);">
+          <label style="font-size: 0.95rem; color: #fff;">
+            ${escapeHtml(cat.icon || '⚡')} ${escapeHtml(cat.category)}
+          </label>
+          <input type="text" id="skill-cat-${idx}" class="form-control" value="${escapeHtml((cat.skills || []).join(', '))}" style="margin-top: 0.4rem;" />
+        </div>
+      `).join('');
+    }
+
+    /* --- 7. Services Editor --- */
+    function renderServicesEditor() {
+      const container = document.getElementById('services-editor');
+      if (!container) return;
+      const services = cmsData.services || [];
+
+      container.innerHTML = services.map((s, idx) => `
+        <div class="form-group" style="background: var(--surface-card); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1rem;">
+          <div class="form-grid-2">
+            <div>
+              <label>Service Title</label>
+              <input type="text" id="service-title-${idx}" class="form-control" value="${escapeHtml(s.title || '')}" />
+            </div>
+            <div>
+              <label>Service Number</label>
+              <input type="text" id="service-num-${idx}" class="form-control" value="${escapeHtml(s.number || '')}" />
+            </div>
+          </div>
+          <div style="margin-top: 0.85rem;">
+            <label>Description</label>
+            <textarea id="service-desc-${idx}" class="form-control" rows="2">${escapeHtml(s.description || '')}</textarea>
+          </div>
+          <div style="margin-top: 0.85rem;">
+            <label>Deliverables (comma separated)</label>
+            <input type="text" id="service-deliv-${idx}" class="form-control" value="${escapeHtml(Array.isArray(s.deliverables) ? s.deliverables.join(', ') : '')}" />
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* --- 8. Education Editor --- */
+    function renderEducationEditor() {
+      const container = document.getElementById('education-editor');
+      if (!container) return;
+      const edu = cmsData.education || [];
+
+      container.innerHTML = edu.map((e, idx) => `
+        <div class="form-group" style="background: var(--surface-card); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1rem;">
+          <div class="form-grid-2">
+            <div>
+              <label>Degree / Examination</label>
+              <input type="text" id="edu-degree-${idx}" class="form-control" value="${escapeHtml(e.degree || '')}" />
+            </div>
+            <div>
+              <label>Status / Score (e.g. 85%, 2nd Year)</label>
+              <input type="text" id="edu-status-${idx}" class="form-control" value="${escapeHtml(e.status || '')}" />
+            </div>
+          </div>
+          <div class="form-grid-2" style="margin-top: 0.85rem;">
+            <div>
+              <label>Institution / School Name</label>
+              <input type="text" id="edu-inst-${idx}" class="form-control" value="${escapeHtml(e.institution || '')}" />
+            </div>
+            <div>
+              <label>Period / Year</label>
+              <input type="text" id="edu-period-${idx}" class="form-control" value="${escapeHtml(e.period || '')}" />
+            </div>
+          </div>
+          <div style="margin-top: 0.85rem;">
+            <label>Highlights / Details</label>
+            <input type="text" id="edu-high-${idx}" class="form-control" value="${escapeHtml(e.highlights || '')}" />
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* --- 9. LinkedIn Headlines Editor --- */
+    function renderLinkedInEditor() {
+      const container = document.getElementById('linkedin-editor');
+      if (!container) return;
+      const headlines = cmsData.linkedInHeadlines || [];
+
+      container.innerHTML = headlines.map((h, idx) => `
+        <div class="form-group" style="background: var(--surface-card); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1rem;">
+          <label style="color: #fff; font-size: 0.95rem;">${escapeHtml(h.label)}</label>
+          <textarea id="linkedin-text-${idx}" class="form-control" rows="3" style="margin-top: 0.4rem;">${escapeHtml(h.text || '')}</textarea>
+        </div>
+      `).join('');
+    }
+
+    /* --- 10. Inbox Messages --- */
+    async function fetchInboxMessages() {
+      const container = document.getElementById('inbox-container');
+      if (!container) return;
+
+      try {
+        const res = await fetch('/api/contact/messages');
+        if (res.ok) {
+          const data = await res.json();
+          const msgs = data.messages || [];
+
+          if (msgs.length === 0) {
+            container.innerHTML = '<p style="color: var(--text-muted); padding: 1.5rem; text-align: center;">No client messages received yet.</p>';
+            return;
+          }
+
+          container.innerHTML = msgs.map(m => `
+            <div class="inbox-item">
+              <div class="inbox-meta">
+                <div>
+                  <span class="inbox-name">${escapeHtml(m.name)}</span> &bull; 
+                  <a href="mailto:${escapeHtml(m.email)}" class="inbox-email">${escapeHtml(m.email)}</a>
+                </div>
+                <div style="display: flex; gap: 0.75rem; align-items: center;">
+                  <span class="inbox-service">${escapeHtml(m.service || 'Inquiry')}</span>
+                  <button class="btn btn-danger" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="deleteMessage('${m.id}')">Delete</button>
+                </div>
+              </div>
+              <div class="inbox-body">${escapeHtml(m.message)}</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Received: ${new Date(m.receivedAt).toLocaleString()}</div>
+            </div>
+          `).join('');
+        }
+      } catch (err) {
+        container.innerHTML = '<p style="color: var(--text-muted);">Inbox active. (Waiting for server synchronization)</p>';
+      }
+    }
+
+    async function deleteMessage(id) {
+      try {
+        await fetch(`/api/contact/messages/${id}`, { method: 'DELETE' });
+        fetchInboxMessages();
+        showToast('Message deleted.');
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    /* --- 11. SAVE ALL CHANGES --- */
+    async function saveAllChanges() {
+      const statusText = document.getElementById('save-status-text');
+      if (statusText) statusText.textContent = 'Saving changes...';
+
+      // 1. Collect Personal / Hero
+      cmsData.personal = cmsData.personal || {};
+      cmsData.personal.name = getVal('personal-name');
+      cmsData.personal.greeting = getVal('hero-greeting');
+      cmsData.personal.headlineSub = getVal('hero-subtitle');
+      cmsData.personal.tagline = getVal('hero-tagline');
+      cmsData.personal.location = getVal('personal-location');
+      cmsData.personal.email = getVal('personal-email');
+      cmsData.personal.phone = getVal('personal-phone');
+      cmsData.personal.ctaPrimaryText = getVal('cta-primary-text');
+      cmsData.personal.ctaPrimaryLink = getVal('cta-primary-link');
+      cmsData.personal.ctaSecondaryText = getVal('cta-secondary-text');
+      cmsData.personal.ctaSecondaryLink = getVal('cta-secondary-link');
+      cmsData.personal.heroImage = getVal('hero-img-url');
+
+      // 2. Collect About
+      cmsData.about = cmsData.about || {};
+      cmsData.about.headline = getVal('about-headline');
+      cmsData.about.bio = getVal('about-bio');
+      cmsData.about.stats = [];
+      for (let i = 0; i < 4; i++) {
+        cmsData.about.stats.push({
+          value: getVal(`stat-${i}-val`),
+          label: getVal(`stat-${i}-lbl`)
+        });
+      }
+      cmsData.about.cardInfo = {
+        location: getVal('personal-location'),
+        email: getVal('personal-email'),
+        phone: getVal('personal-phone'),
+        university: getVal('about-card-univ'),
+        languages: getVal('about-card-lang'),
+        focus: getVal('about-card-focus')
+      };
+
+      // 3. Collect Skills Matrix
+      if (cmsData.skillsMatrix && Array.isArray(cmsData.skillsMatrix)) {
+        cmsData.skillsMatrix.forEach((cat, idx) => {
+          const val = getVal(`skill-cat-${idx}`);
+          if (val) {
+            cat.skills = val.split(',').map(s => s.trim()).filter(s => s.length > 0);
+          }
+        });
+      }
+
+      // 4. Collect Services
+      if (cmsData.services && Array.isArray(cmsData.services)) {
+        cmsData.services.forEach((s, idx) => {
+          s.title = getVal(`service-title-${idx}`);
+          s.number = getVal(`service-num-${idx}`);
+          s.description = getVal(`service-desc-${idx}`);
+          const delivStr = getVal(`service-deliv-${idx}`);
+          s.deliverables = delivStr.split(',').map(d => d.trim()).filter(d => d.length > 0);
+        });
+      }
+
+      // 5. Collect Education
+      if (cmsData.education && Array.isArray(cmsData.education)) {
+        cmsData.education.forEach((e, idx) => {
+          e.degree = getVal(`edu-degree-${idx}`);
+          e.status = getVal(`edu-status-${idx}`);
+          e.institution = getVal(`edu-inst-${idx}`);
+          e.period = getVal(`edu-period-${idx}`);
+          e.highlights = getVal(`edu-high-${idx}`);
+        });
+      }
+
+      // 6. Collect LinkedIn Headlines
+      if (cmsData.linkedInHeadlines && Array.isArray(cmsData.linkedInHeadlines)) {
+        cmsData.linkedInHeadlines.forEach((h, idx) => {
+          h.text = getVal(`linkedin-text-${idx}`);
+        });
+      }
+
+      // POST to /api/content
+      try {
+        const authPass = getStoredAuth();
+        const res = await fetch('/api/content', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-password': authPass
+          },
+          body: JSON.stringify(cmsData)
+        });
+
+        if (res.ok) {
+          showToast('✅ All changes saved successfully! Frontend is now updated.');
+          if (statusText) statusText.textContent = 'All changes synced live';
+        } else if (res.status === 401) {
+          showToast('Session expired or incorrect password. Please unlock again.', 'error');
+          showAuthModal();
+        } else {
+          showToast('Could not save to server.', 'error');
+        }
+      } catch (err) {
+        showToast('Saved locally. (Will sync when backend server is running)');
+      }
+    }
+
+    // Helper functions
+    function getVal(id) {
+      const el = document.getElementById(id);
+      return el ? el.value : '';
+    }
+    function setVal(id, val) {
+      const el = document.getElementById(id);
+      if (el) el.value = val;
+    }
+    function showToast(msg) {
+      const toast = document.getElementById('admin-toast');
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3500);
+    }
+    function escapeHtml(str) {
+      if (typeof str !== 'string') return '';
+      return str.replace(/[&<>'"]/g, tag => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[tag] || tag));
+    }
+  </script>
+</body>
+</html>

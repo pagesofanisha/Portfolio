@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host",
     "server": "node server.js",
-    "build": "vite build",
+    "build": "vite build && node -e \"require('fs').copyFileSync('admin.html', 'dist/admin.html')\"",
     "preview": "vite preview",
     "start": "node server.js"
   },
