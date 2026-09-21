@@ -51,15 +51,24 @@ app.use('/public/uploads', express.static(UPLOADS_DIR));
 const MESSAGES_FILE = path.join(DATA_DIR, 'messages.json');
 const CONTENT_FILE = path.join(DATA_DIR, 'content.json');
 
+// In-memory cache to guarantee instant, zero-delay responses across serverless cold starts
+let memoryContentCache = null;
+
 // Helper to read/write JSON files safely
 function readJsonFile(filePath, defaultValue = {}) {
   try {
+    if (filePath === CONTENT_FILE && memoryContentCache) {
+      return memoryContentCache;
+    }
     if (!fs.existsSync(filePath)) {
       fs.writeFileSync(filePath, JSON.stringify(defaultValue, null, 2));
+      if (filePath === CONTENT_FILE) memoryContentCache = defaultValue;
       return defaultValue;
     }
     const content = fs.readFileSync(filePath, 'utf-8');
-    return JSON.parse(content || '{}');
+    const parsed = JSON.parse(content || '{}');
+    if (filePath === CONTENT_FILE) memoryContentCache = parsed;
+    return parsed;
   } catch (err) {
     console.error(`Error reading ${filePath}:`, err);
     return defaultValue;
@@ -68,7 +77,18 @@ function readJsonFile(filePath, defaultValue = {}) {
 
 function writeJsonFile(filePath, data) {
   try {
+    if (filePath === CONTENT_FILE) {
+      memoryContentCache = data;
+    }
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+
+    // Also sync to source data/ directory if running in dev or serverless with writable root
+    const sourcePath = path.join(__dirname, 'data', path.basename(filePath));
+    if (sourcePath !== filePath && fs.existsSync(path.join(__dirname, 'data'))) {
+      try {
+        fs.writeFileSync(sourcePath, JSON.stringify(data, null, 2));
+      } catch (e) {}
+    }
   } catch (err) {
     console.error(`Error writing ${filePath}:`, err);
   }

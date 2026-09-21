@@ -1,23 +1,55 @@
 /**
  * ANISHA VANJINATHAN - PREMIUM FULLSTACK PORTFOLIO
- * Dynamic CMS data binding, 4-domain project filters, and interactive features.
+ * Dynamic CMS data binding, 4-domain project filters, theme toggle, and unbreakable persistence.
  */
 
 import { profileConfig } from './profile-config.js';
+import {
+  getPortfolioContent,
+  getSyncLocalContent,
+  listenForContentUpdates,
+  savePortfolioContent
+} from './storage-helper.js';
 
 let appData = { ...profileConfig };
 let currentDomainFilter = 'all';
 
 document.addEventListener('DOMContentLoaded', async () => {
+  initThemeToggle();
   initMobileDrawer();
   initContactForm();
   initDomainFilters();
 
-  // Load dynamic data from Backend CMS
-  await fetchLiveCMSData();
-
-  // Initial renders
+  // 1. Instant 0ms Pre-Hydration from Local Storage
+  const syncLocal = getSyncLocalContent();
+  if (syncLocal && typeof syncLocal === 'object') {
+    appData = { ...appData, ...syncLocal };
+  }
   renderAllSections();
+
+  // 2. High-Capacity IndexedDB Hydration (Photos & Full State)
+  try {
+    const idbData = await getPortfolioContent();
+    if (idbData && typeof idbData === 'object' && Object.keys(idbData).length > 0) {
+      appData = { ...appData, ...idbData };
+      renderAllSections();
+    }
+  } catch (e) {
+    console.warn('[CMS] IndexedDB hydration note:', e);
+  }
+
+  // 3. Live Server API Synchronization
+  await fetchLiveCMSData();
+  renderAllSections();
+
+  // 4. Real-time Multi-Tab Sync Listener
+  listenForContentUpdates((liveData) => {
+    if (liveData && typeof liveData === 'object') {
+      appData = { ...appData, ...liveData };
+      renderAllSections();
+      showToast('Frontend updated live with changes from Admin!');
+    }
+  });
 });
 
 /* ==========================================================================
@@ -25,16 +57,18 @@ document.addEventListener('DOMContentLoaded', async () => {
    ========================================================================== */
 async function fetchLiveCMSData() {
   try {
-    const res = await fetch('/api/content');
+    const res = await fetch('/api/content', { cache: 'no-store' });
     if (res.ok) {
       const liveData = await res.json();
       if (liveData && Object.keys(liveData).length > 0) {
         appData = { ...appData, ...liveData };
+        // Keep client storage in sync with server data
+        await savePortfolioContent(appData);
         console.log('[CMS] Successfully synced latest content from backend API.');
       }
     }
   } catch (err) {
-    console.log('[CMS] Running with local profile configuration.');
+    console.log('[CMS] Running with persistent client storage and profile configuration.');
   }
 }
 
@@ -482,3 +516,28 @@ function escapeHtml(str) {
     '"': '&quot;'
   }[tag] || tag));
 }
+
+/* --- Theme Toggle Controller --- */
+function initThemeToggle() {
+  const toggleBtns = document.querySelectorAll('.theme-toggle-btn');
+  if (toggleBtns.length === 0) return;
+
+  function applyTheme(theme) {
+    if (theme === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+      localStorage.setItem('portfolio_theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('portfolio_theme', 'dark');
+    }
+  }
+
+  toggleBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'light' ? 'dark' : 'light';
+      applyTheme(next);
+    });
+  });
+}
+
