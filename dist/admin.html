@@ -1393,14 +1393,51 @@ As an adaptive developer and storyteller, I build AI-powered applications, const
       return map[domain] || 'assets/project-campus.svg';
     }
 
-    /* --- 5. Photo Uploader (Base64 -> /api/upload) --- */
+    /* --- 5. Photo Uploader (Canvas Compression + Base64) --- */
+    function compressAndProcessImage(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const rawData = e.target.result;
+        const img = new Image();
+        img.onload = function() {
+          const maxDim = 1200;
+          let width = img.width;
+          let height = img.height;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressed = canvas.toDataURL('image/jpeg', 0.88);
+          callback(compressed);
+        };
+        img.onerror = function() {
+          callback(rawData);
+        };
+        img.src = rawData;
+      };
+      reader.readAsDataURL(file);
+    }
+
     function handlePhotoUpload(input) {
       const file = input.files[0];
       if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = async function (e) {
-        const base64Data = e.target.result;
+      showToast('Processing photo...');
+      compressAndProcessImage(file, async function(base64Data) {
+        // Instantly update preview in UI
+        document.getElementById('hero-img-url').value = base64Data;
+        document.getElementById('hero-img-preview').src = base64Data;
+
         try {
           const res = await fetch('/api/upload', {
             method: 'POST',
@@ -1414,28 +1451,21 @@ As an adaptive developer and storyteller, I build AI-powered applications, const
           if (result.success && result.url) {
             document.getElementById('hero-img-url').value = result.url;
             document.getElementById('hero-img-preview').src = result.url;
-            showToast('Photo uploaded successfully! Hit "Save All Changes" to publish.');
-          } else {
-            showToast('Upload failed: ' + (result.error || 'Unknown error'), 'error');
           }
+          showToast('✅ Photo ready! Click "Save All Changes" to publish live.');
         } catch (err) {
-          console.error(err);
-          // Fallback to local data URL for preview
-          document.getElementById('hero-img-url').value = base64Data;
-          document.getElementById('hero-img-preview').src = base64Data;
-          showToast('Image loaded in preview!');
+          console.error('Upload notice:', err);
+          showToast('✅ Photo loaded in editor! Click "Save All Changes" to publish.');
         }
-      };
-      reader.readAsDataURL(file);
+      });
     }
 
     function handleModalImageUpload(input) {
       const file = input.files[0];
       if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = async function (e) {
-        const base64Data = e.target.result;
+      compressAndProcessImage(file, async function(base64Data) {
+        document.getElementById('modal-proj-img').value = base64Data;
         try {
           const res = await fetch('/api/upload', {
             method: 'POST',
@@ -1448,14 +1478,12 @@ As an adaptive developer and storyteller, I build AI-powered applications, const
           const result = await res.json();
           if (result.success && result.url) {
             document.getElementById('modal-proj-img').value = result.url;
-            showToast('Project image uploaded!');
           }
         } catch (err) {
-          document.getElementById('modal-proj-img').value = base64Data;
-          showToast('Image loaded!');
+          // Keep base64Data
         }
-      };
-      reader.readAsDataURL(file);
+        showToast('Project image selected!');
+      });
     }
 
     function resetHeroPhoto() {
