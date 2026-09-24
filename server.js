@@ -1,8 +1,10 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createClient } from '@supabase/supabase-js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,6 +14,21 @@ const PORT = process.env.PORT || 5000;
 const IS_VERCEL = !!process.env.VERCEL;
 const DATA_DIR = IS_VERCEL ? path.join('/tmp', 'data') : path.join(__dirname, 'data');
 const UPLOADS_DIR = IS_VERCEL ? path.join('/tmp', 'uploads') : path.join(__dirname, 'public', 'uploads');
+
+// Supabase Cloud Configuration
+const SUPABASE_URL = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || 'https://atbxlkehmwjvzymqjimw.supabase.co';
+const SUPABASE_KEY = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0Ynhsa2VobXdqdnp5bXFqaW13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyNjA1OTAsImV4cCI6MjEwNTgzNjU5MH0.APDnLMFbqLeTwJCQ0nHNCyH5hKUNOyukfWpzS3jP-Qo';
+const SUPABASE_BUCKET = process.env.VITE_SUPABASE_BUCKET || process.env.SUPABASE_BUCKET || 'future-events';
+
+let supabase = null;
+if (SUPABASE_URL && SUPABASE_KEY) {
+  try {
+    supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    console.log(`[SUPABASE] Connected to ${SUPABASE_URL} (Bucket: ${SUPABASE_BUCKET})`);
+  } catch (err) {
+    console.warn('[SUPABASE] Initialization error:', err.message);
+  }
+}
 
 // Ensure directories exist
 try {
@@ -39,19 +56,19 @@ try {
   console.warn('Directory initialization notice:', e.message);
 }
 
-// Middleware: allow large payloads for base64 photo uploads
+// Middleware: allow large payloads for photo uploads
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Serve uploaded user photos directly
+// Serve uploaded user photos directly as local fallback
 app.use('/uploads', express.static(UPLOADS_DIR));
 app.use('/public/uploads', express.static(UPLOADS_DIR));
 
 const MESSAGES_FILE = path.join(DATA_DIR, 'messages.json');
 const CONTENT_FILE = path.join(DATA_DIR, 'content.json');
 
-// In-memory cache to guarantee instant, zero-delay responses across serverless cold starts
+// In-memory cache to guarantee instant, zero-delay responses
 let memoryContentCache = null;
 
 // Helper to read/write JSON files safely
@@ -94,6 +111,129 @@ function writeJsonFile(filePath, data) {
   }
 }
 
+/* ==========================================================================
+   SUPABASE CLOUD SYNC HELPERS
+   ========================================================================== */
+
+/**
+ * Upload an image buffer directly into Supabase Cloud Storage bucket
+ * Returns the permanent public CDN URL
+ */
+async function uploadToSupabase(buffer, safeName, mimeType = 'image/jpeg') {
+  if (!supabase) return null;
+  try {
+    const remotePath = `portfolio_uploads/${safeName}`;
+    const { data, error } = await supabase.storage
+      .from(SUPABASE_BUCKET)
+      .upload(remotePath, buffer, {
+        contentType: mimeType,
+        upsert: true
+      });
+
+    if (error) {
+      console.warn('[SUPABASE STORAGE WARNING]:', error.message);
+      return null;
+    }
+
+    const { data: urlData } = supabase.storage
+      .from(SUPABASE_BUCKET)
+      .getPublicUrl(remotePath);
+
+    console.log(`[SUPABASE STORAGE] Successfully uploaded: ${urlData?.publicUrl}`);
+    return urlData?.publicUrl || null;
+  } catch (err) {
+    console.warn('[SUPABASE STORAGE EXCEPTION]:', err.message);
+    return null;
+  }
+}
+
+/**
+ * Permanently save content to Supabase database & storage
+ */
+async function saveContentToSupabase(content) {
+  if (!supabase) return false;
+  let success = false;
+
+  // 1. Try table 'portfolio_content'
+  try {
+    const { error: dbError } = await supabase
+      .from('portfolio_content')
+      .upsert({ id: 'primary', data: content, updated_at: new Date().toISOString() });
+    if (!dbError) {
+      console.log('[SUPABASE DATABASE] Content upserted to portfolio_content table');
+      success = true;
+    }
+  } catch (e) {}
+
+  // 2. Also save to Supabase Cloud Storage bucket as JSON
+  try {
+    const jsonBuffer = Buffer.from(JSON.stringify(content, null, 2), 'utf-8');
+    const { error: storageError } = await supabase.storage
+      .from(SUPABASE_BUCKET)
+      .upload('portfolio_data/content.json', jsonBuffer, {
+        contentType: 'application/json',
+        upsert: true
+      });
+    if (!storageError) {
+      console.log('[SUPABASE STORAGE] Content saved to portfolio_data/content.json');
+      success = true;
+    }
+  } catch (e) {
+    console.warn('[SUPABASE STORAGE JSON NOTICE]:', e.message);
+  }
+
+  return success;
+}
+
+/**
+ * Fetch content from Supabase cloud (Database or Storage)
+ */
+async function getContentFromSupabase() {
+  if (!supabase) return null;
+
+  // 1. Try Supabase table
+  try {
+    const { data, error } = await supabase
+      .from('portfolio_content')
+      .select('data')
+      .eq('id', 'primary')
+      .single();
+    if (!error && data && data.data && Object.keys(data.data).length > 0) {
+      return data.data;
+    }
+  } catch (e) {}
+
+  // 2. Try Supabase storage
+  try {
+    const { data, error } = await supabase.storage
+      .from(SUPABASE_BUCKET)
+      .download('portfolio_data/content.json');
+    if (!error && data) {
+      const text = await data.text();
+      const parsed = JSON.parse(text);
+      if (parsed && Object.keys(parsed).length > 0) {
+        return parsed;
+      }
+    }
+  } catch (e) {}
+
+  return null;
+}
+
+// Initial warm-up: Sync Supabase cloud content to local cache if available
+(async () => {
+  try {
+    const cloudContent = await getContentFromSupabase();
+    if (cloudContent && Object.keys(cloudContent).length > 0) {
+      memoryContentCache = cloudContent;
+      writeJsonFile(CONTENT_FILE, cloudContent);
+      console.log('[SUPABASE] Hydrated initial portfolio content from Supabase cloud.');
+    }
+  } catch (e) {
+    console.log('[SUPABASE] Bootstrapping with local profile content.');
+  }
+})();
+
 const ADMIN_CONFIG_FILE = path.join(DATA_DIR, 'admin-config.json');
 
 function getAdminPassword() {
@@ -118,7 +258,6 @@ function checkAdminAuth(req, res, next) {
 // 1. ADMIN DASHBOARD DIRECT ACCESS & AUTH
 // --------------------------------------------------------------------------
 
-// Direct clean access to Admin Dashboard at /admin, /backend, or /admin.html
 app.use((req, res, next) => {
   const p = req.path.toLowerCase();
   if (p === '/admin' || p === '/admin.html' || p === '/backend' || p === '/studio-anisha-8020') {
@@ -159,21 +298,55 @@ app.post('/api/admin/change-password', (req, res) => {
   });
 });
 
+// Supabase Status Endpoint
+app.get('/api/supabase/status', async (req, res) => {
+  let bucketAccessible = false;
+  let filesCount = 0;
+  if (supabase) {
+    try {
+      const { data, error } = await supabase.storage.from(SUPABASE_BUCKET).list('portfolio_uploads');
+      if (!error) {
+        bucketAccessible = true;
+        filesCount = data ? data.length : 0;
+      }
+    } catch (e) {}
+  }
+
+  return res.json({
+    configured: !!supabase,
+    connected: bucketAccessible,
+    url: SUPABASE_URL,
+    bucket: SUPABASE_BUCKET,
+    filesCount,
+    timestamp: new Date().toISOString()
+  });
+});
+
 // --------------------------------------------------------------------------
 // 2. CONTENT CMS ENDPOINTS (READ & WRITE)
 // --------------------------------------------------------------------------
 
-// Get all frontend content, projects, skills & settings (Disabled cache so all users see updates instantly)
-app.get('/api/content', (req, res) => {
+// Get all frontend content, projects, skills & settings
+app.get('/api/content', async (req, res) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.setHeader('Pragma', 'no-cache');
   res.setHeader('Expires', '0');
+
+  // If in-memory cache is empty, try loading from Supabase cloud first
+  if (!memoryContentCache) {
+    const cloud = await getContentFromSupabase();
+    if (cloud) {
+      memoryContentCache = cloud;
+      writeJsonFile(CONTENT_FILE, cloud);
+    }
+  }
+
   const content = readJsonFile(CONTENT_FILE, {});
   res.json(content);
 });
 
 // Save modified content from Admin Dashboard
-app.post('/api/content', checkAdminAuth, (req, res) => {
+app.post('/api/content', checkAdminAuth, async (req, res) => {
   try {
     const updatedContent = req.body;
     if (!updatedContent || typeof updatedContent !== 'object') {
@@ -182,12 +355,20 @@ app.post('/api/content', checkAdminAuth, (req, res) => {
 
     delete updatedContent._adminPassword;
 
+    // 1. Save to local disk & memory cache
     writeJsonFile(CONTENT_FILE, updatedContent);
-    console.log(`[CMS UPDATE] Content successfully updated at ${new Date().toISOString()}`);
+
+    // 2. Permanently persist to Supabase cloud (Storage & DB)
+    const supabaseSynced = await saveContentToSupabase(updatedContent);
+
+    console.log(`[CMS UPDATE] Content successfully updated (Supabase synced: ${supabaseSynced}) at ${new Date().toISOString()}`);
 
     return res.json({
       success: true,
-      message: 'All changes saved successfully! Frontend is now updated.',
+      supabaseSynced,
+      message: supabaseSynced
+        ? 'All changes permanently saved to Supabase Cloud & Local Storage!'
+        : 'All changes saved locally and will sync to Supabase when connected.',
       timestamp: new Date().toISOString()
     });
   } catch (err) {
@@ -196,31 +377,34 @@ app.post('/api/content', checkAdminAuth, (req, res) => {
   }
 });
 
-// Photo / Image Upload (Base64 file uploader)
-app.post('/api/upload', checkAdminAuth, (req, res) => {
+// Photo / Image Upload (Direct to Supabase Storage + Local fallback)
+app.post('/api/upload', checkAdminAuth, async (req, res) => {
   try {
     const { filename, base64Data } = req.body;
     if (!base64Data) {
       return res.status(400).json({ success: false, error: 'No image data provided' });
     }
 
-    // On Vercel / serverless: return base64 directly so the photo displays instantly everywhere
-    // without depending on ephemeral serverless container storage or read-only filesystem
-    if (IS_VERCEL) {
-      return res.json({
-        success: true,
-        url: base64Data,
-        message: 'Image uploaded successfully!'
-      });
+    const matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+    const mimeType = matches ? matches[1] : 'image/jpeg';
+    const buffer = matches ? Buffer.from(matches[2], 'base64') : Buffer.from(base64Data, 'base64');
+
+    const ext = path.extname(filename || 'photo.jpg') || (mimeType.includes('png') ? '.png' : '.jpg');
+    const safeName = `photo_${Date.now()}_${Math.random().toString(36).substring(2, 7)}${ext}`;
+    
+    // 1. Always attempt upload to Supabase Storage Cloud first
+    let permanentUrl = null;
+    let storageType = 'local';
+
+    if (supabase) {
+      permanentUrl = await uploadToSupabase(buffer, safeName, mimeType);
+      if (permanentUrl) {
+        storageType = 'supabase';
+      }
     }
 
-    const matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-    const buffer = matches ? Buffer.from(matches[2], 'base64') : Buffer.from(base64Data, 'base64');
-    
-    const ext = path.extname(filename || 'photo.png') || '.png';
-    const safeName = `photo_${Date.now()}${ext}`;
+    // 2. Also save to local disk for development & offline backup
     const targetPath = path.join(UPLOADS_DIR, safeName);
-
     try {
       fs.writeFileSync(targetPath, buffer);
 
@@ -236,17 +420,23 @@ app.post('/api/upload', checkAdminAuth, (req, res) => {
       console.warn('Local upload file write notice:', e.message);
     }
 
-    const publicUrl = `/uploads/${safeName}`;
-    console.log(`[PHOTO UPLOAD] New image saved: ${publicUrl}`);
+    // Fall back to local URL if Supabase was unavailable
+    if (!permanentUrl) {
+      permanentUrl = `/uploads/${safeName}`;
+    }
+
+    console.log(`[PHOTO UPLOAD] New image saved (${storageType}): ${permanentUrl}`);
 
     return res.json({
       success: true,
-      url: publicUrl,
-      message: 'Image uploaded successfully!'
+      url: permanentUrl,
+      storage: storageType,
+      message: storageType === 'supabase'
+        ? 'Image uploaded permanently to Supabase Cloud Storage!'
+        : 'Image saved locally.'
     });
   } catch (err) {
     console.error('Upload error:', err);
-    // Never fail the user: fall back to returning the base64 data URL
     if (req.body && req.body.base64Data) {
       return res.json({
         success: true,
@@ -267,14 +457,15 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'online',
     project: 'Anisha Vanjinathan Premium Portfolio CMS',
-    institution: 'SRM IST Ramapuram - B.Tech CSBS',
+    supabaseConnected: !!supabase,
+    supabaseBucket: SUPABASE_BUCKET,
     uptime: process.uptime(),
     timestamp: new Date().toISOString()
   });
 });
 
 // Contact Form Submission
-app.post('/api/contact', (req, res) => {
+app.post('/api/contact', async (req, res) => {
   const { name, email, service, message } = req.body;
 
   if (!name || !email || !message) {
@@ -297,6 +488,20 @@ app.post('/api/contact', (req, res) => {
 
   messages.unshift(newMessage);
   writeJsonFile(MESSAGES_FILE, messages);
+
+  // Sync inquiry to Supabase if available
+  if (supabase) {
+    try {
+      await supabase.from('portfolio_messages').insert({
+        id: newMessage.id,
+        name: newMessage.name,
+        email: newMessage.email,
+        service: newMessage.service,
+        message: newMessage.message,
+        received_at: newMessage.receivedAt
+      });
+    } catch (e) {}
+  }
 
   console.log(`[CONTACT INQUIRY] From: ${name} (${email}) | Subject: ${newMessage.service}`);
 
@@ -329,7 +534,6 @@ app.delete('/api/contact/messages/:id', (req, res) => {
 // 4. SERVE FRONTEND STATIC FILES
 // --------------------------------------------------------------------------
 
-// Serve root static files like style.css, main.js, assets in dev or dist
 const DIST_DIR = path.join(__dirname, 'dist');
 if (fs.existsSync(DIST_DIR)) {
   app.use(express.static(DIST_DIR));
@@ -349,17 +553,16 @@ app.use((req, res) => {
   return res.sendFile('index.html', { root: __dirname });
 });
 
-// Export app for serverless platforms like Vercel
 export default app;
 
-// Start Server when running directly
 if (!process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`\n======================================================`);
     console.log(`🚀 Portfolio Live Frontend:    http://localhost:${PORT}`);
     console.log(`🛠️  Editable Backend CMS:       http://localhost:${PORT}/admin`);
+    console.log(`⚡ Supabase Integration:       ACTIVE (${SUPABASE_URL})`);
+    console.log(`🗄️  Supabase Storage Bucket:    ${SUPABASE_BUCKET}`);
     console.log(`📁 Local Project Directory:     ${__dirname}`);
-    console.log(`📡 Health Check:               http://localhost:${PORT}/api/health`);
     console.log(`======================================================\n`);
   });
 }

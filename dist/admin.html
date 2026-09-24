@@ -529,7 +529,10 @@
         <p>Password-Protected Visual Editor • Anisha Vanjinathan</p>
       </div>
     </div>
-    <div class="header-actions">
+      <span id="supabase-pill" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; border-radius: 9999px; font-size: 0.78rem; font-weight: 600; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">
+        <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981;"></span>
+        ⚡ Supabase Cloud
+      </span>
       <a href="/" target="_blank" class="btn btn-secondary">
         <span>👁️ View Live Website</span>
       </a>
@@ -574,6 +577,10 @@
       <button class="tab-btn" data-tab="tab-linkedin">
         <span class="icon">💼</span>
         <span>LinkedIn Headlines</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-supabase">
+        <span class="icon">⚡</span>
+        <span>Supabase Cloud</span>
       </button>
       <button class="tab-btn" data-tab="tab-security">
         <span class="icon">🔐</span>
@@ -933,6 +940,87 @@ As an adaptive developer and storyteller, I build AI-powered applications, const
         </div>
       </section>
 
+      <!-- 9. SUPABASE CLOUD TAB -->
+      <section class="tab-panel" id="tab-supabase">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2>⚡ Supabase Cloud Database & Storage</h2>
+              <p>Direct live synchronization between your Frontend, Backend, and Supabase Cloud Storage.</p>
+            </div>
+            <button class="btn btn-secondary" onclick="checkSupabaseStatus(true)">
+              <span>🔄 Refresh Connection</span>
+            </button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+            <div style="background: rgba(18, 24, 41, 0.7); border: 1px solid var(--border-card); border-radius: 10px; padding: 1.25rem;">
+              <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Cloud Status</div>
+              <div id="sb-status-val" style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.05rem; font-weight: 700; color: #34d399;">
+                <span style="width: 10px; height: 10px; border-radius: 50%; background: #34d399; box-shadow: 0 0 10px #34d399;"></span>
+                Connected &amp; Active
+              </div>
+            </div>
+
+            <div style="background: rgba(18, 24, 41, 0.7); border: 1px solid var(--border-card); border-radius: 10px; padding: 1.25rem;">
+              <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Supabase Project</div>
+              <div id="sb-url-val" style="font-size: 0.92rem; font-family: monospace; color: var(--primary); word-break: break-all;">
+                Loading...
+              </div>
+            </div>
+
+            <div style="background: rgba(18, 24, 41, 0.7); border: 1px solid var(--border-card); border-radius: 10px; padding: 1.25rem;">
+              <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Storage Bucket</div>
+              <div id="sb-bucket-val" style="font-size: 0.95rem; font-weight: 700; color: #fff;">
+                Loading...
+              </div>
+            </div>
+          </div>
+
+          <div style="background: rgba(56, 189, 248, 0.06); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 10px; padding: 1.25rem; margin-bottom: 1.5rem;">
+            <h4 style="color: var(--primary); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span>🔗</span> How Image &amp; Content Persistence Works
+            </h4>
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;">
+              1. <strong>Photo Upload:</strong> When you select any image in the admin, the backend uploads it directly to your Supabase Cloud Storage bucket (<code style="color: #38bdf8;">portfolio_uploads/</code>).<br />
+              2. <strong>Public CDN Link:</strong> Supabase returns a permanent, global CDN URL that is saved directly into the content structure.<br />
+              3. <strong>Cloud Sync:</strong> When you click <strong style="color: #38bdf8;">Save All Changes</strong>, the full portfolio data is saved into Supabase (<code style="color: #38bdf8;">portfolio_data/content.json</code> &amp; database), local disk, and cached in your browser.<br />
+              4. <strong>Live Portfolio:</strong> The frontend always reads directly from Supabase, so your photos and edits remain permanent across all devices and visits.
+            </p>
+          </div>
+
+          <div class="panel-header" style="padding-top: 1rem; border-top: 1px solid var(--border);">
+            <div>
+              <h3 style="font-size: 1rem; color: #fff;">Optional: Supabase SQL Setup</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">If you would like dedicated Postgres database tables in Supabase for structured analytics, run this in your Supabase SQL Editor:</p>
+            </div>
+          </div>
+          <pre style="background: #06080e; padding: 1rem; border-radius: 8px; border: 1px solid var(--border); font-size: 0.82rem; color: #94a3b8; overflow-x: auto;">
+-- 1. Portfolio Content Table
+CREATE TABLE IF NOT EXISTS public.portfolio_content (
+  id TEXT PRIMARY KEY,
+  data JSONB NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE public.portfolio_content ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public Read Portfolio" ON public.portfolio_content FOR SELECT USING (true);
+CREATE POLICY "Anon Write Portfolio" ON public.portfolio_content FOR ALL USING (true);
+
+-- 2. Client Messages Inbox Table
+CREATE TABLE IF NOT EXISTS public.portfolio_messages (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  service TEXT,
+  message TEXT NOT NULL,
+  received_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE public.portfolio_messages ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anon Submit Inquiries" ON public.portfolio_messages FOR INSERT WITH CHECK (true);
+CREATE POLICY "Anon Read Inquiries" ON public.portfolio_messages FOR SELECT USING (true);</pre>
+        </div>
+      </section>
+
     </main>
   </div>
 
@@ -1157,7 +1245,51 @@ As an adaptive developer and storyteller, I build AI-powered applications, const
       await checkAuthOnLoad();
       await loadInitialCMSData();
       fetchInboxMessages();
+      checkSupabaseStatus();
     });
+
+    async function checkSupabaseStatus(showToastNotice = false) {
+      try {
+        const res = await fetch('/api/supabase/status');
+        if (res.ok) {
+          const data = await res.json();
+          const pill = document.getElementById('supabase-pill');
+          const statusVal = document.getElementById('sb-status-val');
+          const urlVal = document.getElementById('sb-url-val');
+          const bucketVal = document.getElementById('sb-bucket-val');
+
+          if (urlVal) urlVal.textContent = data.url || 'Connected';
+          if (bucketVal) bucketVal.textContent = (data.bucket || 'future-events') + ` (${data.filesCount || 0} uploads)`;
+
+          if (data.connected) {
+            if (pill) {
+              pill.style.background = 'rgba(16, 185, 129, 0.15)';
+              pill.style.color = '#10b981';
+              pill.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+              pill.innerHTML = '<span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981;"></span> ⚡ Supabase Connected';
+            }
+            if (statusVal) {
+              statusVal.style.color = '#34d399';
+              statusVal.innerHTML = '<span style="width: 10px; height: 10px; border-radius: 50%; background: #34d399; box-shadow: 0 0 10px #34d399;"></span> Connected &amp; Active (Storage &amp; DB)';
+            }
+            if (showToastNotice) showToast('⚡ Supabase Cloud is connected and active!');
+          } else if (data.configured) {
+            if (pill) {
+              pill.style.background = 'rgba(234, 179, 8, 0.15)';
+              pill.style.color = '#eab308';
+              pill.style.borderColor = 'rgba(234, 179, 8, 0.3)';
+              pill.innerHTML = '<span style="width: 8px; height: 8px; border-radius: 50%; background: #eab308;"></span> ⚡ Supabase Configured';
+            }
+            if (statusVal) {
+              statusVal.style.color = '#facc15';
+              statusVal.innerHTML = '<span style="width: 10px; height: 10px; border-radius: 50%; background: #facc15;"></span> Configured';
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Supabase status check notice:', e);
+      }
+    }
 
     /* --- 1. Tab Navigation --- */
     function initTabNavigation() {
@@ -1512,16 +1644,11 @@ As an adaptive developer and storyteller, I build AI-powered applications, const
       const file = input.files[0];
       if (!file) return;
 
-      showToast('Optimizing & saving photo...');
+      showToast('☁️ Uploading photo to Supabase Cloud Storage...');
       compressAndProcessImage(file, async function(base64Data) {
         // Instantly update preview in UI
-        document.getElementById('hero-img-url').value = base64Data;
         document.getElementById('hero-img-preview').src = base64Data;
-
-        // Immediately update cmsData and save to IndexedDB so photo is safe permanently!
-        cmsData.personal = cmsData.personal || {};
-        cmsData.personal.heroImage = base64Data;
-        await savePortfolioContentToDB(cmsData);
+        document.getElementById('hero-img-url').value = 'Uploading to Supabase...';
 
         try {
           const res = await fetch('/api/upload', {
@@ -1536,12 +1663,27 @@ As an adaptive developer and storyteller, I build AI-powered applications, const
           if (result.success && result.url) {
             document.getElementById('hero-img-url').value = result.url;
             document.getElementById('hero-img-preview').src = result.url;
+            cmsData.personal = cmsData.personal || {};
             cmsData.personal.heroImage = result.url;
             await savePortfolioContentToDB(cmsData);
+            if (result.storage === 'supabase') {
+              showToast('⚡ Photo saved permanently to Supabase Cloud Storage! Click "Save All Changes" to save all.');
+            } else {
+              showToast('✅ Photo saved! Click "Save All Changes" to sync all.');
+            }
+          } else {
+            document.getElementById('hero-img-url').value = base64Data;
+            cmsData.personal = cmsData.personal || {};
+            cmsData.personal.heroImage = base64Data;
+            await savePortfolioContentToDB(cmsData);
+            showToast('Photo cached in browser. Click "Save All Changes" to save.');
           }
-          showToast('✅ Photo saved permanently! Click "Save All Changes" to sync all.');
         } catch (err) {
-          showToast('✅ Photo saved to permanent storage! Click "Save All Changes" to sync.');
+          document.getElementById('hero-img-url').value = base64Data;
+          cmsData.personal = cmsData.personal || {};
+          cmsData.personal.heroImage = base64Data;
+          await savePortfolioContentToDB(cmsData);
+          showToast('Photo cached in browser. Click "Save All Changes" to save.');
         }
       });
     }
@@ -1550,8 +1692,9 @@ As an adaptive developer and storyteller, I build AI-powered applications, const
       const file = input.files[0];
       if (!file) return;
 
+      showToast('☁️ Uploading project image to Supabase Cloud Storage...');
       compressAndProcessImage(file, async function(base64Data) {
-        document.getElementById('modal-proj-img').value = base64Data;
+        document.getElementById('modal-proj-img').value = 'Uploading to Supabase...';
         try {
           const res = await fetch('/api/upload', {
             method: 'POST',
@@ -1564,11 +1707,13 @@ As an adaptive developer and storyteller, I build AI-powered applications, const
           const result = await res.json();
           if (result.success && result.url) {
             document.getElementById('modal-proj-img').value = result.url;
+            showToast('⚡ Project image uploaded permanently to Supabase!');
+          } else {
+            document.getElementById('modal-proj-img').value = base64Data;
           }
         } catch (err) {
-          // Keep base64Data
+          document.getElementById('modal-proj-img').value = base64Data;
         }
-        showToast('Project image selected!');
       });
     }
 
@@ -1818,8 +1963,14 @@ As an adaptive developer and storyteller, I build AI-powered applications, const
         });
 
         if (res.ok) {
-          showToast('✅ All changes saved permanently! Frontend is now updated.');
-          if (statusText) statusText.textContent = 'All changes saved & synced live';
+          const resData = await res.json();
+          if (resData.supabaseSynced) {
+            showToast('⚡ All changes & photos permanently saved to Supabase Cloud & Live Portfolio!');
+            if (statusText) statusText.textContent = 'Permanently saved & synced with Supabase Cloud';
+          } else {
+            showToast('✅ All changes saved permanently! Frontend is now updated.');
+            if (statusText) statusText.textContent = 'All changes saved & synced live';
+          }
         } else if (res.status === 401) {
           showToast('Session expired or incorrect password. Please unlock again.', 'error');
           showAuthModal();

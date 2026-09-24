@@ -131,6 +131,9 @@ function renderHero() {
 
   if (heroPortrait && p.heroImage) {
     heroPortrait.src = p.heroImage;
+    heroPortrait.onerror = function() {
+      this.src = 'assets/hero-portrait.svg';
+    };
   }
 
   if (heroCtaPrimary && p.ctaPrimaryText) {
