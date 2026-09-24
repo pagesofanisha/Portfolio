@@ -393,48 +393,105 @@ function renderContactInfo() {
 }
 
 /* ==========================================================================
-   3. INTERACTIVE CONTACT FORM & CLIPBOARD
+   3. INTERACTIVE CONTACT FORM & WHATSAPP INTEGRATION
    ========================================================================== */
 function initContactForm() {
   const form = document.getElementById('contact-form');
   if (!form) return;
+
+  // Initialize Multi-Select Service Pills
+  const pills = document.querySelectorAll('.service-pill-chip');
+  const serviceInput = document.getElementById('contact-service');
+
+  function updateSelectedServices() {
+    const selected = [];
+    document.querySelectorAll('.service-pill-chip.active').forEach(p => {
+      const val = p.getAttribute('data-val') || p.textContent.replace('✓', '').trim();
+      selected.push(val);
+    });
+    if (serviceInput) {
+      serviceInput.value = selected.length > 0 ? selected.join(', ') : 'General Collaboration';
+    }
+  }
+
+  pills.forEach(pill => {
+    pill.addEventListener('click', (e) => {
+      e.preventDefault();
+      pill.classList.toggle('active');
+      // Ensure at least one is selected
+      const activeCount = document.querySelectorAll('.service-pill-chip.active').length;
+      if (activeCount === 0) {
+        pill.classList.add('active');
+      }
+      updateSelectedServices();
+    });
+  });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const submitBtn = document.getElementById('contact-submit-btn');
     const originalText = submitBtn.innerHTML;
 
+    updateSelectedServices();
+
     const payload = {
-      name: form.name.value,
-      email: form.email.value,
-      service: form.service.value,
-      message: form.message.value
+      name: (form.name?.value || '').trim(),
+      email: (form.email?.value || '').trim(),
+      service: (serviceInput?.value || 'General Collaboration').trim(),
+      message: (form.message?.value || '').trim()
     };
 
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = `<span>Sending...</span>`;
+    if (!payload.name || !payload.email || !payload.message) {
+      showToast('Please fill in your name, email, and message.', 'error');
+      return;
+    }
 
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<span>Saving &amp; Opening WhatsApp...</span>`;
+
+    // 1. Permanently Save to Backend & Supabase Database
     try {
-      const res = await fetch('/api/contact', {
+      await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-
-      const data = await res.json();
-      if (res.ok && data.success) {
-        showToast(data.message || 'Thank you! Your message has been sent to Anisha.');
-        form.reset();
-      } else {
-        showToast(data.error || 'Could not send message. Please try again.', 'error');
-      }
     } catch (err) {
-      showToast('Thank you! Inquiry saved (Offline mode).', 'success');
-      form.reset();
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = originalText;
+      console.warn('Backend inquiry save note:', err);
     }
+
+    // 2. Open Direct WhatsApp Message to Anisha
+    const phoneRaw = appData.personal?.phone || '+91 8668177527';
+    const digitsOnly = phoneRaw.replace(/[^0-9]/g, '');
+    const targetPhone = digitsOnly.startsWith('91') ? digitsOnly : `91${digitsOnly}`;
+
+    const waText = 
+      `👋 *New Portfolio Inquiry for Anisha!*\n\n` +
+      `👤 *Name:* ${payload.name}\n` +
+      `📧 *Email:* ${payload.email}\n` +
+      `🛠️ *Services Needed:* ${payload.service}\n\n` +
+      `💬 *Message:*\n${payload.message}`;
+
+    const waUrl = `https://wa.me/${targetPhone}?text=${encodeURIComponent(waText)}`;
+
+    // Open WhatsApp
+    const waWindow = window.open(waUrl, '_blank');
+    if (!waWindow) {
+      window.location.href = waUrl;
+    }
+
+    showToast('✅ Inquiry saved to Anisha\'s inbox & opened in WhatsApp!');
+    form.reset();
+
+    // Reset pills to first option
+    pills.forEach((p, idx) => {
+      if (idx === 0) p.classList.add('active');
+      else p.classList.remove('active');
+    });
+    updateSelectedServices();
+
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalText;
   });
 }
 

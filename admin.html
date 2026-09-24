@@ -607,7 +607,7 @@
 
           <!-- Photo Uploader -->
           <div class="photo-preview-card">
-            <img id="hero-img-preview" src="/uploads/photo_1789809740156.jpg" class="preview-thumb-img" alt="Hero Portrait" onerror="this.src='assets/hero-portrait.svg'" />
+            <img id="hero-img-preview" src="https://atbxlkehmwjvzymqjimw.supabase.co/storage/v1/object/public/future-events/portfolio_uploads/default_portrait_anisha.jpg" class="preview-thumb-img" alt="Hero Portrait" onerror="this.src='assets/hero-portrait.svg'" />
             <div class="photo-controls">
               <h4 style="color: #fff;">Your Hero Portrait Photo</h4>
               <p style="font-size: 0.85rem; color: var(--text-muted);">
@@ -622,7 +622,7 @@
               </div>
               <div class="form-group" style="margin-top: 0.5rem; margin-bottom: 0;">
                 <label>Or Image URL Path:</label>
-                <input type="text" id="hero-img-url" class="form-control" value="/uploads/photo_1789809740156.jpg" onchange="document.getElementById('hero-img-preview').src = this.value" />
+                <input type="text" id="hero-img-url" class="form-control" value="https://atbxlkehmwjvzymqjimw.supabase.co/storage/v1/object/public/future-events/portfolio_uploads/default_portrait_anisha.jpg" onchange="document.getElementById('hero-img-preview').src = this.value" />
               </div>
             </div>
           </div>
@@ -1718,10 +1718,10 @@ CREATE POLICY "Anon Read Inquiries" ON public.portfolio_messages FOR SELECT USIN
     }
 
     function resetHeroPhoto() {
-      const def = '/uploads/photo_1789809740156.jpg';
+      const def = 'https://atbxlkehmwjvzymqjimw.supabase.co/storage/v1/object/public/future-events/portfolio_uploads/default_portrait_anisha.jpg';
       document.getElementById('hero-img-url').value = def;
       document.getElementById('hero-img-preview').src = def;
-      showToast('Reset to default portrait.');
+      showToast('Reset to default Supabase portrait.');
     }
 
     /* --- 6. Skills Matrix Editor --- */
