@@ -24,7 +24,7 @@ export const profileConfig = {
     ctaPrimaryLink: '#contact',
     ctaSecondaryText: 'Connect on LinkedIn',
     ctaSecondaryLink: 'https://www.linkedin.com/in/anishaaaaaaaaa',
-    heroImage: 'https://atbxlkehmwjvzymqjimw.supabase.co/storage/v1/object/public/future-events/portfolio_uploads/default_portrait_anisha.jpg',
+    heroImage: 'https://atbxlkehmwjvzymqjimw.supabase.co/storage/v1/object/public/future-events/portfolio_uploads/photo_1790275123953_efywv.png',
     socials: {
       linkedin: 'https://www.linkedin.com/in/anishaaaaaaaaa',
       github: 'https://github.com/pagesofanisha',

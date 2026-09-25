@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 1. Instant 0ms Pre-Hydration from Local Storage
   const syncLocal = getSyncLocalContent();
   if (syncLocal && typeof syncLocal === 'object') {
+    if (syncLocal.personal?.heroImage?.includes('default_portrait_anisha')) {
+      syncLocal.personal.heroImage = profileConfig.personal.heroImage;
+    }
     appData = { ...appData, ...syncLocal };
   }
   renderAllSections();
@@ -31,6 +34,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     const idbData = await getPortfolioContent();
     if (idbData && typeof idbData === 'object' && Object.keys(idbData).length > 0) {
+      if (idbData.personal?.heroImage?.includes('default_portrait_anisha')) {
+        idbData.personal.heroImage = profileConfig.personal.heroImage;
+      }
       appData = { ...appData, ...idbData };
       renderAllSections();
     }

@@ -605,24 +605,49 @@
             </div>
           </div>
 
-          <!-- Photo Uploader -->
-          <div class="photo-preview-card">
-            <img id="hero-img-preview" src="https://atbxlkehmwjvzymqjimw.supabase.co/storage/v1/object/public/future-events/portfolio_uploads/default_portrait_anisha.jpg" class="preview-thumb-img" alt="Hero Portrait" onerror="this.src='assets/hero-portrait.svg'" />
+          <!-- Cloud & Supabase Photo Uploader Card -->
+          <div class="photo-preview-card" style="border: 1px solid rgba(56, 189, 248, 0.35); background: linear-gradient(135deg, rgba(13, 17, 27, 0.95), rgba(15, 23, 42, 0.8));">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+              <img id="hero-img-preview" src="https://atbxlkehmwjvzymqjimw.supabase.co/storage/v1/object/public/future-events/portfolio_uploads/photo_1790275123953_efywv.png" class="preview-thumb-img" alt="Hero Portrait" onerror="this.src='assets/hero-portrait.svg'" style="box-shadow: 0 8px 24px rgba(56, 189, 248, 0.3);" />
+              <a id="hero-img-external-link" href="https://atbxlkehmwjvzymqjimw.supabase.co/storage/v1/object/public/future-events/portfolio_uploads/photo_1790275123953_efywv.png" target="_blank" rel="noopener" style="font-size: 0.75rem; color: var(--primary); text-decoration: underline;">↗ View Full Image in Cloud</a>
+            </div>
             <div class="photo-controls">
-              <h4 style="color: #fff;">Your Hero Portrait Photo</h4>
-              <p style="font-size: 0.85rem; color: var(--text-muted);">
-                Click the button below to upload your photo directly from your computer, or type an image link.
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                <h4 style="color: #fff; margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+                  <span>Your Hero Portrait Photo</span>
+                  <span id="photo-cloud-badge" class="badge" style="background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4); font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 999px;">⚡ Supabase Cloud Connected</span>
+                </h4>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.4rem 0 0.8rem 0;">
+                Upload your photo directly from your device, or enter a cloud image URL. Any change is <strong>automatically pushed to Supabase Cloud</strong> and goes live on your frontend immediately!
               </p>
-              <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-                <label class="btn-upload">
-                  📁 Choose Photo from Computer
+
+              <!-- Upload Button Group -->
+              <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.75rem;">
+                <label class="btn-upload" style="cursor: pointer; background: linear-gradient(135deg, #0ea5e9, #6366f1); color: #fff; font-weight: 600; padding: 0.6rem 1.2rem; border-radius: 8px; display: inline-flex; align-items: center; gap: 0.5rem;">
+                  ☁️ Choose Photo &amp; Push to Cloud
                   <input type="file" id="photo-file-input" accept="image/*" style="display: none;" onchange="handlePhotoUpload(this)" />
                 </label>
-                <button class="btn btn-secondary" onclick="resetHeroPhoto()">Use Default Photo</button>
+                <button type="button" class="btn btn-secondary" onclick="setPresetPhoto('yesterday')" title="Use Anisha Studio Photo uploaded yesterday" style="display: inline-flex; align-items: center; gap: 0.35rem;">
+                  👩 Set Yesterday's Studio Photo
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="setPresetPhoto('default')" title="Use Default Illustration Avatar">
+                  🎨 Default Avatar
+                </button>
               </div>
+
+              <!-- Manual Cloud URL Push Group -->
               <div class="form-group" style="margin-top: 0.5rem; margin-bottom: 0;">
-                <label>Or Image URL Path:</label>
-                <input type="text" id="hero-img-url" class="form-control" value="https://atbxlkehmwjvzymqjimw.supabase.co/storage/v1/object/public/future-events/portfolio_uploads/default_portrait_anisha.jpg" onchange="document.getElementById('hero-img-preview').src = this.value" />
+                <label style="font-size: 0.82rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+                  <span>Direct Cloud / Supabase Image URL:</span>
+                  <span id="hero-photo-status" style="color: #38bdf8; font-weight: 500;"></span>
+                </label>
+                <div style="display: flex; gap: 0.5rem;">
+                  <input type="text" id="hero-img-url" class="form-control" value="https://atbxlkehmwjvzymqjimw.supabase.co/storage/v1/object/public/future-events/portfolio_uploads/photo_1790275123953_efywv.png" placeholder="https://...supabase.co/.../photo.jpg" oninput="updateHeroPreview(this.value)" />
+                  <button type="button" class="btn btn-primary" onclick="pushPhotoUrlToCloud()" style="white-space: nowrap; padding: 0.5rem 1rem;">
+                    🚀 Push to Cloud
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -1417,10 +1442,9 @@ CREATE POLICY "Anon Read Inquiries" ON public.portfolio_messages FOR SELECT USIN
       setVal('cta-primary-link', p.ctaPrimaryLink || '#contact');
       setVal('cta-secondary-text', p.ctaSecondaryText || 'Connect on LinkedIn');
       setVal('cta-secondary-link', p.ctaSecondaryLink || 'https://www.linkedin.com/in/anishaaaaaaaaa');
-      setVal('hero-img-url', p.heroImage || '/uploads/photo_1789809740156.jpg');
-
-      const preview = document.getElementById('hero-img-preview');
-      if (preview && p.heroImage) preview.src = p.heroImage;
+      const currentPhoto = p.heroImage || 'https://atbxlkehmwjvzymqjimw.supabase.co/storage/v1/object/public/future-events/portfolio_uploads/photo_1790275123953_efywv.png';
+      setVal('hero-img-url', currentPhoto);
+      updateHeroPreview(currentPhoto);
 
       // About
       const ab = data.about || {};
@@ -1640,15 +1664,80 @@ CREATE POLICY "Anon Read Inquiries" ON public.portfolio_messages FOR SELECT USIN
       reader.readAsDataURL(file);
     }
 
+    /* --- 5. Photo Uploader (Supabase Cloud Storage & Auto-Push) --- */
+    function updateHeroPreview(url) {
+      const img = document.getElementById('hero-img-preview');
+      const extLink = document.getElementById('hero-img-external-link');
+      if (img && url) {
+        img.src = url;
+        if (extLink) {
+          extLink.href = url;
+          extLink.style.display = url.startsWith('http') ? 'inline' : 'none';
+        }
+      }
+    }
+
+    async function pushPhotoUrlToCloud() {
+      const urlInput = document.getElementById('hero-img-url');
+      const photoUrl = urlInput ? urlInput.value.trim() : '';
+      if (!photoUrl) {
+        showToast('Please enter a valid image URL', 'error');
+        return;
+      }
+
+      showToast('☁️ Pushing photo URL to Supabase Cloud...');
+      const status = document.getElementById('hero-photo-status');
+      if (status) status.textContent = 'Pushing to cloud...';
+
+      try {
+        const res = await fetch('/api/hero-photo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-password': getStoredAuth()
+          },
+          body: JSON.stringify({ photoUrl })
+        });
+        const result = await res.json();
+        if (res.ok && result.success) {
+          cmsData.personal = cmsData.personal || {};
+          cmsData.personal.heroImage = photoUrl;
+          updateHeroPreview(photoUrl);
+          await savePortfolioContentToDB(cmsData);
+          showToast('⚡ Photo URL permanently pushed to Supabase Cloud & active on frontend!');
+          if (status) status.textContent = 'Synced to Supabase at ' + new Date().toLocaleTimeString();
+        } else {
+          showToast(result.error || 'Failed to update hero photo.', 'error');
+        }
+      } catch (err) {
+        showToast('Could not reach backend server', 'error');
+      }
+    }
+
+    async function setPresetPhoto(type) {
+      let targetUrl = '';
+      if (type === 'yesterday') {
+        targetUrl = 'https://atbxlkehmwjvzymqjimw.supabase.co/storage/v1/object/public/future-events/portfolio_uploads/photo_1790275123953_efywv.png';
+      } else {
+        targetUrl = 'assets/hero-portrait.svg';
+      }
+      document.getElementById('hero-img-url').value = targetUrl;
+      updateHeroPreview(targetUrl);
+      await pushPhotoUrlToCloud();
+    }
+
     function handlePhotoUpload(input) {
       const file = input.files[0];
       if (!file) return;
 
       showToast('☁️ Uploading photo to Supabase Cloud Storage...');
+      const status = document.getElementById('hero-photo-status');
+      if (status) status.textContent = 'Uploading & pushing to Supabase...';
+
       compressAndProcessImage(file, async function(base64Data) {
         // Instantly update preview in UI
-        document.getElementById('hero-img-preview').src = base64Data;
-        document.getElementById('hero-img-url').value = 'Uploading to Supabase...';
+        updateHeroPreview(base64Data);
+        document.getElementById('hero-img-url').value = 'Uploading to Supabase Cloud...';
 
         try {
           const res = await fetch('/api/upload', {
@@ -1657,33 +1746,35 @@ CREATE POLICY "Anon Read Inquiries" ON public.portfolio_messages FOR SELECT USIN
               'Content-Type': 'application/json',
               'x-admin-password': getStoredAuth()
             },
-            body: JSON.stringify({ filename: file.name, base64Data })
+            body: JSON.stringify({ filename: file.name, base64Data, isHero: true })
           });
           const result = await res.json();
           if (result.success && result.url) {
             document.getElementById('hero-img-url').value = result.url;
-            document.getElementById('hero-img-preview').src = result.url;
+            updateHeroPreview(result.url);
             cmsData.personal = cmsData.personal || {};
             cmsData.personal.heroImage = result.url;
             await savePortfolioContentToDB(cmsData);
-            if (result.storage === 'supabase') {
-              showToast('⚡ Photo saved permanently to Supabase Cloud Storage! Click "Save All Changes" to save all.');
-            } else {
-              showToast('✅ Photo saved! Click "Save All Changes" to sync all.');
-            }
+
+            // Automatically trigger full save to ensure database and storage are 100% in sync
+            saveAllChanges();
+
+            showToast('⚡ Photo permanently uploaded to Supabase Cloud & live on website!');
+            if (status) status.textContent = 'Pushed to Supabase at ' + new Date().toLocaleTimeString();
           } else {
             document.getElementById('hero-img-url').value = base64Data;
             cmsData.personal = cmsData.personal || {};
             cmsData.personal.heroImage = base64Data;
             await savePortfolioContentToDB(cmsData);
-            showToast('Photo cached in browser. Click "Save All Changes" to save.');
+            showToast('Photo cached in browser.');
           }
         } catch (err) {
+          console.error(err);
           document.getElementById('hero-img-url').value = base64Data;
           cmsData.personal = cmsData.personal || {};
           cmsData.personal.heroImage = base64Data;
           await savePortfolioContentToDB(cmsData);
-          showToast('Photo cached in browser. Click "Save All Changes" to save.');
+          showToast('Photo cached locally. Backend sync failed.');
         }
       });
     }
@@ -1718,10 +1809,7 @@ CREATE POLICY "Anon Read Inquiries" ON public.portfolio_messages FOR SELECT USIN
     }
 
     function resetHeroPhoto() {
-      const def = 'https://atbxlkehmwjvzymqjimw.supabase.co/storage/v1/object/public/future-events/portfolio_uploads/default_portrait_anisha.jpg';
-      document.getElementById('hero-img-url').value = def;
-      document.getElementById('hero-img-preview').src = def;
-      showToast('Reset to default Supabase portrait.');
+      setPresetPhoto('yesterday');
     }
 
     /* --- 6. Skills Matrix Editor --- */

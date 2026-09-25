@@ -186,44 +186,53 @@ async function saveContentToSupabase(content) {
 }
 
 /**
- * Fetch content from Supabase cloud (Database or Storage)
+ * Fetch content from Supabase cloud (Storage first, then table) with timeout protection
  */
-async function getContentFromSupabase() {
+async function getContentFromSupabase(timeoutMs = 3000) {
   if (!supabase) return null;
 
-  // 1. Try Supabase table
   try {
-    const { data, error } = await supabase
-      .from('portfolio_content')
-      .select('data')
-      .eq('id', 'primary')
-      .single();
-    if (!error && data && data.data && Object.keys(data.data).length > 0) {
-      return data.data;
-    }
-  } catch (e) {}
+    const downloadPromise = (async () => {
+      // 1. Try Supabase storage (fastest and most reliable)
+      try {
+        const { data, error } = await supabase.storage
+          .from(SUPABASE_BUCKET)
+          .download('portfolio_data/content.json');
+        if (!error && data) {
+          const text = await data.text();
+          const parsed = JSON.parse(text);
+          if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
+            return parsed;
+          }
+        }
+      } catch (e) {}
 
-  // 2. Try Supabase storage
-  try {
-    const { data, error } = await supabase.storage
-      .from(SUPABASE_BUCKET)
-      .download('portfolio_data/content.json');
-    if (!error && data) {
-      const text = await data.text();
-      const parsed = JSON.parse(text);
-      if (parsed && Object.keys(parsed).length > 0) {
-        return parsed;
-      }
-    }
-  } catch (e) {}
+      // 2. Try Supabase table if available
+      try {
+        const { data, error } = await supabase
+          .from('portfolio_content')
+          .select('data')
+          .eq('id', 'primary')
+          .single();
+        if (!error && data && data.data && Object.keys(data.data).length > 0) {
+          return data.data;
+        }
+      } catch (e) {}
 
-  return null;
+      return null;
+    })();
+
+    const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(null), timeoutMs));
+    return await Promise.race([downloadPromise, timeoutPromise]);
+  } catch (err) {
+    return null;
+  }
 }
 
 // Initial warm-up: Sync Supabase cloud content to local cache if available
 (async () => {
   try {
-    const cloudContent = await getContentFromSupabase();
+    const cloudContent = await getContentFromSupabase(4000);
     if (cloudContent && Object.keys(cloudContent).length > 0) {
       memoryContentCache = cloudContent;
       writeJsonFile(CONTENT_FILE, cloudContent);
@@ -332,13 +341,16 @@ app.get('/api/content', async (req, res) => {
   res.setHeader('Pragma', 'no-cache');
   res.setHeader('Expires', '0');
 
-  // If in-memory cache is empty, try loading from Supabase cloud first
-  if (!memoryContentCache) {
-    const cloud = await getContentFromSupabase();
-    if (cloud) {
+  // Load from Supabase cloud first so that changes on Supabase or other devices are instantly reflected
+  try {
+    const cloud = await getContentFromSupabase(2500);
+    if (cloud && cloud.personal) {
       memoryContentCache = cloud;
       writeJsonFile(CONTENT_FILE, cloud);
+      return res.json(cloud);
     }
+  } catch (e) {
+    console.warn('[CMS] Supabase live read notice:', e.message);
   }
 
   const content = readJsonFile(CONTENT_FILE, {});
@@ -380,7 +392,7 @@ app.post('/api/content', checkAdminAuth, async (req, res) => {
 // Photo / Image Upload (Direct to Supabase Storage + Local fallback)
 app.post('/api/upload', checkAdminAuth, async (req, res) => {
   try {
-    const { filename, base64Data } = req.body;
+    const { filename, base64Data, isHero } = req.body;
     if (!base64Data) {
       return res.status(400).json({ success: false, error: 'No image data provided' });
     }
@@ -425,14 +437,31 @@ app.post('/api/upload', checkAdminAuth, async (req, res) => {
       permanentUrl = `/uploads/${safeName}`;
     }
 
+    // 3. If flagged as hero, automatically update content and sync to Supabase Cloud
+    let heroUpdated = false;
+    if (isHero) {
+      try {
+        const currentContent = readJsonFile(CONTENT_FILE, {});
+        currentContent.personal = currentContent.personal || {};
+        currentContent.personal.heroImage = permanentUrl;
+        writeJsonFile(CONTENT_FILE, currentContent);
+        await saveContentToSupabase(currentContent);
+        heroUpdated = true;
+        console.log(`[PHOTO UPLOAD] Auto-synced new hero photo to Supabase content: ${permanentUrl}`);
+      } catch (syncErr) {
+        console.warn('[PHOTO UPLOAD] Auto-sync notice:', syncErr.message);
+      }
+    }
+
     console.log(`[PHOTO UPLOAD] New image saved (${storageType}): ${permanentUrl}`);
 
     return res.json({
       success: true,
       url: permanentUrl,
       storage: storageType,
+      heroUpdated,
       message: storageType === 'supabase'
-        ? 'Image uploaded permanently to Supabase Cloud Storage!'
+        ? (heroUpdated ? 'Photo permanently uploaded to Supabase Cloud and set as active Hero Photo!' : 'Image uploaded permanently to Supabase Cloud Storage!')
         : 'Image saved locally.'
     });
   } catch (err) {
@@ -445,6 +474,36 @@ app.post('/api/upload', checkAdminAuth, async (req, res) => {
       });
     }
     return res.status(500).json({ success: false, error: 'Failed to upload photo.' });
+  }
+});
+
+// Dedicated endpoint: Push any photo URL directly to Supabase Cloud & activate immediately on frontend
+app.post('/api/hero-photo', checkAdminAuth, async (req, res) => {
+  try {
+    const { photoUrl } = req.body;
+    if (!photoUrl || typeof photoUrl !== 'string') {
+      return res.status(400).json({ success: false, error: 'No photo URL provided' });
+    }
+
+    const trimmedUrl = photoUrl.trim();
+    const currentContent = readJsonFile(CONTENT_FILE, {});
+    currentContent.personal = currentContent.personal || {};
+    currentContent.personal.heroImage = trimmedUrl;
+
+    writeJsonFile(CONTENT_FILE, currentContent);
+    const supabaseSynced = await saveContentToSupabase(currentContent);
+
+    console.log(`[HERO PHOTO] Pushed to cloud: ${trimmedUrl} (Supabase synced: ${supabaseSynced})`);
+
+    return res.json({
+      success: true,
+      heroImage: trimmedUrl,
+      supabaseSynced,
+      message: 'Photo URL successfully pushed to Supabase Cloud & active on frontend!'
+    });
+  } catch (err) {
+    console.error('Error updating hero photo:', err);
+    return res.status(500).json({ success: false, error: 'Failed to update hero photo.' });
   }
 });
 
