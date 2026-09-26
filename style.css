@@ -1128,79 +1128,6 @@ img {
 }
 
 /* ==========================================================================
-   LINKEDIN PROFILE ASSETS SECTION (1-Click Copy)
-   ========================================================================== */
-.headlines-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.75rem;
-}
-.headline-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-card);
-  border-radius: var(--radius-md);
-  padding: 1.75rem;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  transition: all 0.3s ease;
-}
-.headline-card:hover {
-  border-color: rgba(56, 189, 248, 0.4);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-}
-.headline-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-.headline-label {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #fff;
-}
-.headline-badge {
-  font-size: 0.72rem;
-  padding: 0.2rem 0.6rem;
-  border-radius: var(--radius-full);
-  background: rgba(56, 189, 248, 0.15);
-  color: var(--primary);
-  font-weight: 700;
-}
-.headline-text-box {
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 1rem;
-  font-size: 0.88rem;
-  line-height: 1.5;
-  color: #e2e8f0;
-  font-family: monospace;
-  margin-bottom: 1.25rem;
-  flex-grow: 1;
-}
-.btn-copy-headline {
-  align-self: flex-start;
-  padding: 0.5rem 1rem;
-  font-size: 0.82rem;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: #fff;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.2s ease;
-}
-.btn-copy-headline:hover {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
-}
-
-/* ==========================================================================
    "LET'S WORK TOGETHER" SKYLINE CTA BANNER (Reference Style)
    ========================================================================== */
 .cta-banner-section {
@@ -1579,9 +1506,7 @@ textarea.form-input {
   .education-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  .headlines-grid {
-    grid-template-columns: 1fr;
-  }
+  
 }
 
 @media (max-width: 768px) {
@@ -1944,31 +1869,6 @@ html[data-theme="light"],
   background: rgba(2, 132, 199, 0.08);
   border-color: rgba(2, 132, 199, 0.25);
   color: #0284c7;
-}
-
-/* Light Mode Headlines */
-[data-theme="light"] .headline-card {
-  background: #ffffff;
-  border-color: rgba(15, 23, 42, 0.1);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
-}
-[data-theme="light"] .headline-label {
-  color: #0a0f1d;
-}
-[data-theme="light"] .headline-text-box {
-  background: #f8fafc;
-  border-color: #cbd5e1;
-  color: #0f172a;
-}
-[data-theme="light"] .btn-copy-headline {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
-  color: #0f172a;
-}
-[data-theme="light"] .btn-copy-headline:hover {
-  background: #0284c7;
-  border-color: #0284c7;
-  color: #ffffff;
 }
 
 /* Light Mode Skyline Banner */

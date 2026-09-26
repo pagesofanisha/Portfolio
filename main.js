@@ -89,7 +89,6 @@ function renderAllSections() {
   renderProjects(currentDomainFilter);
   renderSkillsMatrix();
   renderEducation();
-  renderLinkedInHeadlines();
   renderContactInfo();
 }
 
@@ -355,29 +354,6 @@ function renderEducation() {
       <div class="edu-institution">${escapeHtml(item.institution)}</div>
       <div class="edu-period">${escapeHtml(item.period)}</div>
       <p class="edu-highlights">${escapeHtml(item.highlights || '')}</p>
-    </div>
-  `).join('');
-}
-
-/* --- LinkedIn Profile Assets (1-Click Copy) --- */
-function renderLinkedInHeadlines() {
-  const container = document.getElementById('linkedin-headlines-container');
-  if (!container) return;
-
-  const headlines = appData.linkedInHeadlines || [];
-  container.innerHTML = headlines.map(h => `
-    <div class="headline-card">
-      <div class="headline-header">
-        <span class="headline-label">${escapeHtml(h.label)}</span>
-        <span class="headline-badge">${escapeHtml(h.badge || 'Preset')}</span>
-      </div>
-      <div class="headline-text-box" id="headline-box-${h.id}">
-        ${escapeHtml(h.text)}
-      </div>
-      <button class="btn-copy-headline" onclick="copyTextToClipboard('${escapeHtml(h.text)}', this)">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-        <span>Copy Headline</span>
-      </button>
     </div>
   `).join('');
 }
