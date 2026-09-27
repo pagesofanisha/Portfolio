@@ -200,6 +200,13 @@ function renderAbout() {
   if (infoUniv) infoUniv.textContent = ci.university || p.institution || 'SRM IST Ramapuram';
   if (infoLanguages) infoLanguages.textContent = ci.languages || 'English, Tamil';
   if (infoFocus) infoFocus.textContent = ci.focus || 'AI Apps, E-Commerce & Growth';
+
+  const downloadCvBtn = document.getElementById('download-cv-btn');
+  if (downloadCvBtn) {
+    const resumeUrl = (ab.resumeLink && ab.resumeLink !== '#') ? ab.resumeLink : '/Anisha_Vanjinathan_Resume.pdf';
+    downloadCvBtn.href = resumeUrl;
+    downloadCvBtn.setAttribute('download', 'Anisha_Vanjinathan_Resume.pdf');
+  }
 }
 
 /* --- Services Section --- */

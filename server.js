@@ -593,10 +593,23 @@ app.delete('/api/contact/messages/:id', (req, res) => {
 // 4. SERVE FRONTEND STATIC FILES
 // --------------------------------------------------------------------------
 
+// Explicit resume download endpoint (forces download in all browsers)
+app.get(['/Anisha_Vanjinathan_Resume.pdf', '/resume.pdf', '/api/resume'], (req, res) => {
+  const publicResume = path.join(__dirname, 'public', 'Anisha_Vanjinathan_Resume.pdf');
+  const distResume = path.join(__dirname, 'dist', 'Anisha_Vanjinathan_Resume.pdf');
+  const filePath = fs.existsSync(publicResume) ? publicResume : (fs.existsSync(distResume) ? distResume : null);
+  
+  if (filePath) {
+    return res.download(filePath, 'Anisha_Vanjinathan_Resume.pdf');
+  }
+  return res.status(404).send('Resume file not found');
+});
+
 const DIST_DIR = path.join(__dirname, 'dist');
 if (fs.existsSync(DIST_DIR)) {
   app.use(express.static(DIST_DIR));
 }
+app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use(express.static(__dirname));

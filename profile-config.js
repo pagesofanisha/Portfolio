@@ -38,7 +38,7 @@ export const profileConfig = {
     bio: `I am a 2nd-year B.Tech CSBS (Computer Science & Business Systems) student at SRM IST Ramapuram, Chennai, operating at the intersection of technology, marketing, and creative arts.
 
 As an adaptive developer and storyteller, I build AI-powered applications, construct high-converting Shopify stores, and craft strategic content for brands. My foundation in computer science, paired with business acumen and a natural aptitude for public speaking, allows me to take ideas from root-cause analysis to complete digital execution. Whether hosting seminars, pitching at hackathons, or creating visual arts like detailed Mandala artwork, I bring determination, speed, and creative clarity to every project.`,
-    resumeLink: '#',
+    resumeLink: '/Anisha_Vanjinathan_Resume.pdf',
     stats: [
       { value: '2nd Year', label: 'B.Tech CSBS @ SRM IST' },
       { value: 'Available', label: 'For Freelance & Projects' },
