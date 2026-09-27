@@ -142,21 +142,79 @@
   ],
   "projects": [
     {
-      "id": "proj-campus-digital-twin",
-      "domain": "college",
-      "title": "Digital Twin Campus System",
-      "role": "Lead Front-End Developer & AI Implementer",
-      "recognition": "🏆 2nd Prize Winner – SRM IST College Hackathon",
+      "id": "proj-future-events",
+      "domain": "freelancer",
+      "title": "Future Events — Production Event Platform",
+      "role": "Freelance Full-Stack Developer & AI Web Strategist",
+      "recognition": "🚀 Live Client Deployment",
       "tech": [
-        "HTML/CSS/JS",
-        "VS Code",
-        "ChatGPT (AI-Assisted)",
-        "Responsive UI"
+        "React",
+        "Supabase",
+        "AntiGravity / AI",
+        "Tailwind CSS",
+        "Vercel"
       ],
       "image": "assets/project-campus.svg",
-      "description": "Designed and built 50% of the front-end architecture for a digital twin concept designed to visualize and manage campus environments. Leveraged AI prompts and rapid prototyping tools to build functional interfaces under tight competition constraints.",
-      "liveUrl": "#",
-      "githubUrl": "https://github.com/pagesofanisha"
+      "description": "Production-ready web platform architected for event organization and client management. Integrates responsive front-end UI with Supabase backend database for seamless attendee registration and event logistics.",
+      "liveUrl": "https://future-events-kishore.vercel.app/",
+      "liveLabel": "Live Platform",
+      "githubUrl": "#"
+    },
+    {
+      "id": "proj-tt-events",
+      "domain": "freelancer",
+      "title": "TT Events — Interactive Web Platform",
+      "role": "Freelance Full-Stack Developer & AI Strategist",
+      "recognition": "⚡ Production Web App",
+      "tech": [
+        "React",
+        "Vite",
+        "Bolt.host",
+        "AI-Assisted Dev",
+        "Responsive UI"
+      ],
+      "image": "assets/project-evaluator.svg",
+      "description": "Interactive event platform deployed on Bolt.host with scheduling, attendee registration flows, and dynamic responsive UI engineered for client event management.",
+      "liveUrl": "https://tt-events-website-cm-z05f.bolt.host",
+      "liveLabel": "Live Platform",
+      "githubUrl": "#"
+    },
+    {
+      "id": "proj-sassyness-shopify",
+      "domain": "freelancer",
+      "title": "Sassyness E-Commerce — Shopify Store",
+      "role": "Freelance Shopify Developer & Store Designer",
+      "recognition": "🛍️ Live Client Store (Password Protected)",
+      "tech": [
+        "Shopify",
+        "Liquid",
+        "Theme Customization",
+        "E-Commerce CRO",
+        "Catalog Architecture"
+      ],
+      "image": "assets/project-ecommerce.svg",
+      "description": "Custom e-commerce storefront designed and published on Shopify. Features personalized theme layouts, product catalog structure, and conversion-optimized checkout navigation. (Live store is accessible with developer store password).",
+      "liveUrl": "https://sassyness-mvmnapgu.myshopify.com/",
+      "liveLabel": "Visit Store",
+      "githubUrl": "#"
+    },
+    {
+      "id": "proj-ishall-skincare",
+      "domain": "freelancer",
+      "title": "Content Strategy & Scriptwriting — Ishall Natural Skincare",
+      "role": "Content Strategist & Scriptwriter (1-Month Engagement)",
+      "recognition": "📈 Established Brand (7+ Years)",
+      "tech": [
+        "Instagram Reels",
+        "Short-Form Video Hooks",
+        "Copywriting",
+        "Brand Storytelling"
+      ],
+      "image": "assets/project-agency.svg",
+      "description": "Authored original Instagram reel scripts and marketing copy tailored to an established skincare brand running for over 7 years. Focused on personal branding, product storytelling, and engaging short-form video hooks to enhance target audience reach and interaction.",
+      "liveUrl": "https://www.instagram.com/pages_of_anisha/?hl=en",
+      "liveLabel": "View Work",
+      "githubUrl": "#"
     },
     {
       "id": "proj-portfolio-website",
@@ -173,42 +231,26 @@
       ],
       "image": "assets/project-design.svg",
       "description": "End-to-end design and deployment of a responsive, multi-purpose digital portfolio site with an integrated real-time editable backend CMS, custom image uploader, and domain-based project manager.",
+      "liveUrl": "https://portfolio-ani-609e.vercel.app/",
+      "liveLabel": "Live Portfolio",
+      "githubUrl": "https://github.com/pagesofanisha/portfolio"
+    },
+    {
+      "id": "proj-campus-digital-twin",
+      "domain": "college",
+      "title": "Digital Twin Campus System",
+      "role": "Lead Front-End Developer & AI Implementer",
+      "recognition": "🏆 2nd Prize Winner – SRM IST College Hackathon",
+      "tech": [
+        "HTML/CSS/JS",
+        "VS Code",
+        "ChatGPT (AI-Assisted)",
+        "Responsive UI"
+      ],
+      "image": "assets/project-campus.svg",
+      "description": "Designed and built 50% of the front-end architecture for a digital twin concept designed to visualize and manage campus environments. Leveraged AI prompts and rapid prototyping tools to build functional interfaces under tight competition constraints.",
       "liveUrl": "#",
       "githubUrl": "https://github.com/pagesofanisha"
-    },
-    {
-      "id": "proj-ishall-skincare",
-      "domain": "freelancer",
-      "title": "Content Strategy & Scriptwriting — Ishall Natural Skincare",
-      "role": "Content Strategist & Scriptwriter (1-Month Engagement)",
-      "recognition": "📈 Established Brand (7+ Years)",
-      "tech": [
-        "Instagram Reels",
-        "Short-Form Video Hooks",
-        "Copywriting",
-        "Brand Storytelling"
-      ],
-      "image": "assets/project-agency.svg",
-      "description": "Authored original Instagram reel scripts and marketing copy tailored to an established skincare brand running for over 7 years. Focused on personal branding, product storytelling, and engaging short-form video hooks to enhance target audience reach and interaction.",
-      "liveUrl": "#",
-      "githubUrl": "#"
-    },
-    {
-      "id": "proj-ecommerce-solutions",
-      "domain": "freelancer",
-      "title": "E-Commerce & Brand Solutions",
-      "role": "Shopify Developer & Creative Content Lead",
-      "recognition": "💼 Available for Freelance",
-      "tech": [
-        "Shopify Setup",
-        "Theme Customization",
-        "Thumbnail Design",
-        "Video Editing"
-      ],
-      "image": "assets/project-ecommerce.svg",
-      "description": "Custom Shopify store setup, theme customization, and brand website creation. End-to-end content production: Scriptwriting, video editing, photo retouching, and custom YouTube/Instagram thumbnail designs.",
-      "liveUrl": "#",
-      "githubUrl": "#"
     },
     {
       "id": "proj-skillpulse-ai",

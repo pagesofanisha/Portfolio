@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anisha Vanjinathan - Resume</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    :root {
+      --primary: #0284c7;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-light: #64748b;
+      --border: #e2e8f0;
+      --bg: #ffffff;
+      --tag-bg: #f1f5f9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-main);
+      background-color: #f8fafc;
+      line-height: 1.5;
+      font-size: 13.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page-container {
+      max-width: 850px;
+      margin: 24px auto;
+      background: var(--bg);
+      padding: 40px 48px;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
+    }
+
+    @media print {
+      body {
+        background: transparent;
+      }
+      .page-container {
+        margin: 0;
+        padding: 24px 32px;
+        box-shadow: none;
+        border-radius: 0;
+        max-width: 100%;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+
+    /* Action bar */
+    .action-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 12px 18px;
+      background: #0f172a;
+      color: white;
+      border-radius: 8px;
+    }
+    .print-btn {
+      background: #0284c7;
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 13px;
+      transition: background 0.2s;
+    }
+    .print-btn:hover {
+      background: #0369a1;
+    }
+
+    /* Header */
+    header {
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      text-transform: uppercase;
+      color: #0f172a;
+    }
+    .title-sub {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+    .contact-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+      margin-top: 10px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+    .contact-links a {
+      color: var(--text-main);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .contact-links a:hover {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
+    /* Section Styling */
+    section {
+      margin-bottom: 18px;
+    }
+    h2 {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--primary);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 4px;
+      margin-bottom: 10px;
+    }
+
+    /* Profile / Summary */
+    .summary-text {
+      color: var(--text-muted);
+      font-size: 13px;
+      text-align: justify;
+    }
+
+    /* Skills Grid */
+    .skills-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12.8px;
+    }
+    .skill-row {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      line-height: 1.4;
+    }
+    .skill-category {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .skill-items {
+      color: var(--text-muted);
+    }
+
+    /* Experience & Projects */
+    .item {
+      margin-bottom: 12px;
+    }
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .item-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .item-role {
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .item-meta {
+      font-size: 12px;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+    ul {
+      margin-top: 4px;
+      padding-left: 18px;
+    }
+    li {
+      margin-bottom: 3px;
+      color: var(--text-muted);
+      font-size: 12.8px;
+    }
+    li strong {
+      color: var(--text-main);
+    }
+
+    /* Education */
+    .edu-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .edu-main {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .edu-sub {
+      color: var(--text-muted);
+      font-size: 12.5px;
+    }
+    .edu-date {
+      font-size: 12px;
+      color: var(--text-light);
+      text-align: right;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 1px 7px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 4px;
+      background: #e0f2fe;
+      color: #0369a1;
+      margin-left: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-container">
+    <div class="action-bar no-print">
+      <span>📄 <strong>Updated Resume Preview</strong> — Clean, ATS-friendly, professional layout.</span>
+      <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    <!-- Header -->
+    <header>
+      <h1>Anisha Vanjinathan</h1>
+      <div class="title-sub">AI App Developer & Brand Strategist</div>
+      <div class="contact-links">
+        <span>📍 Chennai, Tamil Nadu, India</span>
+        <span>📞 <a href="tel:+918668177527">+91 8668177527</a></span>
+        <span>✉️ <a href="mailto:anisha8020@gmail.com">anisha8020@gmail.com</a></span>
+        <span>🌐 <a href="https://portfolio-ani-609e.vercel.app/" target="_blank">Portfolio</a></span>
+        <span>💼 <a href="https://www.linkedin.com/in/anishaaaaaaaaa" target="_blank">LinkedIn</a></span>
+        <span>💻 <a href="https://github.com/pagesofanisha" target="_blank">GitHub</a></span>
+      </div>
+    </header>
+
+    <!-- Professional Summary -->
+    <section>
+      <h2>Professional Summary</h2>
+      <p class="summary-text">
+        Growth-focused B.Tech Computer Science and Business Systems (CSBS) undergraduate combining full-stack web engineering, AI workflow integration, and high-conversion brand strategy. Proven track record building production web applications, custom Shopify e-commerce stores, and high-retention digital marketing content. Hackathon 2nd Prize winner and campus leader recognized for root-cause analysis, rapid MVP prototyping, and executive public speaking.
+      </p>
+    </section>
+
+    <!-- Core Skills -->
+    <section>
+      <h2>Core Technical & Professional Skills</h2>
+      <div class="skills-block">
+        <div class="skill-row">
+          <span class="skill-category">Languages & Frameworks:</span>
+          <span class="skill-items">Python, C, C++, JavaScript (ES6+), React.js, Node.js, Express.js, HTML5, CSS3, Tailwind CSS</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-category">AI Tools & Modern Stack:</span>
+          <span class="skill-items">AntiGravity, Claude, ChatGPT (LLM Prototyping), Supabase, Git, GitHub, Vite, VS Code</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-category">E-Commerce & CMS:</span>
+          <span class="skill-items">Shopify Store Setup, Theme Customization (Liquid/CSS), Product Catalog Architecture, Conversion Rate Optimization (CRO)</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-category">Brand Strategy & Media:</span>
+          <span class="skill-items">Short-Form Scriptwriting (Reels/Shorts), Content Hooks, Figma UI/UX Prototyping, Video & Thumbnail Editing</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-category">Soft Skills & Leadership:</span>
+          <span class="skill-items">Public Speaking, Technical Seminar Hosting, Executive Pitching, Root-Cause Analysis, PR & Outreach</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Work & Freelance Experience -->
+    <section>
+      <h2>Work Experience & Freelance Engagements</h2>
+
+      <div class="item">
+        <div class="item-header">
+          <div class="item-title">Future Events <span class="item-role">— Freelance Full-Stack Developer & AI Web Strategist</span></div>
+          <div class="item-meta">2026 | Chennai, India</div>
+        </div>
+        <ul>
+          <li>Architected and deployed responsive, production-ready web platforms using React, Supabase, and AI workflows (AntiGravity, Claude, ChatGPT).</li>
+          <li>Engineered full-stack back-end database schemas and API integrations to automate event registration, ticketing, and attendee logistics.</li>
+          <li>Managed the complete client lifecycle from initial requirement analysis and Figma UI/UX prototyping through testing and final paid delivery.</li>
+        </ul>
+      </div>
+
+      <div class="item">
+        <div class="item-header">
+          <div class="item-title">Sassyness E-Commerce <span class="item-role">— Freelance Shopify Developer & Store Designer</span></div>
+          <div class="item-meta">2026 | Remote</div>
+        </div>
+        <ul>
+          <li>Designed and published a complete e-commerce platform on Shopify featuring custom theme styling, branding, and mobile-first responsiveness.</li>
+          <li>Integrated conversion-oriented product catalogs and frictionless navigation structures to maximize shopper engagement and checkout rates.</li>
+        </ul>
+      </div>
+
+      <div class="item">
+        <div class="item-header">
+          <div class="item-title">Ishall Natural Skincare <span class="item-role">— Freelance Content Strategist & Scriptwriter</span></div>
+          <div class="item-meta">2024 | Remote</div>
+        </div>
+        <ul>
+          <li>Authored high-retention video scripts and audience hooks tailored for an established skincare brand with a 7-year market presence.</li>
+          <li>Crafted strategic Instagram storytelling campaigns, substantially increasing organic reach, audience interaction, and brand visibility.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Leadership & Campus Experience -->
+    <section>
+      <h2>Leadership & Campus Experience</h2>
+      <div class="item">
+        <div class="item-header">
+          <div class="item-title">E-Cell — SRM IST Ramapuram <span class="item-role">— Public Relations & Personal Branding Lead</span></div>
+          <div class="item-meta">2026 – Present | Chennai, India</div>
+        </div>
+        <ul>
+          <li>Direct LinkedIn PR, student founder spotlights, and external communications for the campus entrepreneurship cell.</li>
+          <li>Host university-wide seminars and pitch sessions; network with keynote speakers and startup founders to expand club reach.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Key Projects & Competitions -->
+    <section>
+      <h2>Key Projects & Honors</h2>
+
+      <div class="item">
+        <div class="item-header">
+          <div class="item-title">Digital Twin Campus System <span class="badge">🏆 2nd Prize Winner — SRM IST Hackathon</span></div>
+          <div class="item-meta">Lead Front-End & AI Implementer</div>
+        </div>
+        <ul>
+          <li>Built 50% of the front-end architecture for a digital twin concept visualizing campus facilities, completing development under rapid competition constraints.</li>
+        </ul>
+      </div>
+
+      <div class="item">
+        <div class="item-header">
+          <div class="item-title">SkillPulse AI — EdTech Ecosystem</div>
+          <div class="item-meta">Founder & Product Architect | React, Node.js, LLMs</div>
+        </div>
+        <ul>
+          <li>Designed an AI-powered peer learning ecosystem mapping academic syllabi to industry-demanded tech skills with study pods and daily challenges.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Education -->
+    <section>
+      <h2>Education</h2>
+
+      <div class="edu-item">
+        <div>
+          <div class="edu-main">SRM Institute of Science and Technology, Ramapuram, Chennai</div>
+          <div class="edu-sub">Bachelor of Technology (B.Tech) in Computer Science and Business Systems (CSBS) • 2nd Year</div>
+        </div>
+        <div class="edu-date">2024 – 2028 / 2029</div>
+      </div>
+
+      <div class="edu-item">
+        <div>
+          <div class="edu-main">Vivekanandam Vidhyashram CBSE Higher Secondary School, Thiruvarur</div>
+          <div class="edu-sub">Class XII (Higher Secondary) — Score: 85% &nbsp;|&nbsp; Class X (Secondary School) — Score: 95% (Distinction)</div>
+        </div>
+        <div class="edu-date">2023 & 2025</div>
+      </div>
+    </section>
+
+    <!-- Languages & References -->
+    <section>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+          <h2>Languages</h2>
+          <p class="edu-sub"><strong>English:</strong> Professional Working Proficiency &nbsp;|&nbsp; <strong>Tamil:</strong> Native / Bilingual</p>
+        </div>
+        <div>
+          <h2>References</h2>
+          <p class="edu-sub">Available upon request (HOD, Department of CSBS, SRM IST Ramapuram).</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+</body>
+</html>
