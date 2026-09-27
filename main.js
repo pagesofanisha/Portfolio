@@ -205,7 +205,7 @@ function renderAbout() {
   if (downloadCvBtn) {
     const resumeUrl = (ab.resumeLink && ab.resumeLink !== '#') ? ab.resumeLink : '/Anisha_Vanjinathan_Resume.pdf';
     downloadCvBtn.href = resumeUrl;
-    downloadCvBtn.setAttribute('download', 'Anisha_Vanjinathan_Resume.pdf');
+    downloadCvBtn.setAttribute('download', 'Anisha Vanjinathan Resume.pdf');
   }
 }
 

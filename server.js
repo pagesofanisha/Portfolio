@@ -594,13 +594,13 @@ app.delete('/api/contact/messages/:id', (req, res) => {
 // --------------------------------------------------------------------------
 
 // Explicit resume download endpoint (forces download in all browsers)
-app.get(['/Anisha_Vanjinathan_Resume.pdf', '/resume.pdf', '/api/resume'], (req, res) => {
+app.get(['/Anisha_Vanjinathan_Resume.pdf', '/resume.pdf', '/api/resume', '/Anisha%20Vanjinathan%20Resume.pdf'], (req, res) => {
   const publicResume = path.join(__dirname, 'public', 'Anisha_Vanjinathan_Resume.pdf');
   const distResume = path.join(__dirname, 'dist', 'Anisha_Vanjinathan_Resume.pdf');
   const filePath = fs.existsSync(publicResume) ? publicResume : (fs.existsSync(distResume) ? distResume : null);
   
   if (filePath) {
-    return res.download(filePath, 'Anisha_Vanjinathan_Resume.pdf');
+    return res.download(filePath, 'Anisha Vanjinathan Resume.pdf');
   }
   return res.status(404).send('Resume file not found');
 });
